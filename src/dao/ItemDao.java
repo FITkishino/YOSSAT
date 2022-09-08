@@ -20,13 +20,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.iq80.snappy.CorruptionException;
 import org.iq80.snappy.Snappy;
-
 import authentication.bean.User;
 import common.CmnDate;
 import common.CmnDate.DATE_FORMAT;
@@ -944,10 +942,10 @@ public class ItemDao implements ItemInterface {
 			}else if(userInfo2.isTentyo()){
 				// 通常例：201703の予算は、20170201 19:00 - 20170215 23:00まで変更可能
 				// 特殊例：3月と9月は半期分予算の作成に時間がかかる。このため、たとえば3月に入力可能な4月予算は20170301 19:00 - 20170325 23:00まで変更可能
-				// 2021/09/06 依頼 20210924に変更
+				// 2022/09/08 依頼 20220922に変更
 				if(StringUtils.startsWithAny(today, new String[]{ year+"03", year+"09"})){
 					ableDtF = CmnDate.dateFormatYM(CmnDate.getMonthAddedDate(yosandt, -1)) + "011900";
-					ableDtT = CmnDate.dateFormatYM(CmnDate.getMonthAddedDate(yosandt, -1)) + "242300";
+					ableDtT = CmnDate.dateFormatYM(CmnDate.getMonthAddedDate(yosandt, -1)) + "222300";
 				}else{
 					ableDtF = CmnDate.dateFormatYM(CmnDate.getMonthAddedDate(yosandt, -1)) + "011900";
 					ableDtT = CmnDate.dateFormatYM(CmnDate.getMonthAddedDate(yosandt, -1)) + "152300";
@@ -958,10 +956,10 @@ public class ItemDao implements ItemInterface {
 			}else if(userInfo2.isBumonTanto()){
 				// 通常例：201703の予算は、20170201 19:00 - 20170215 23:00まで変更可能
 				// 特殊例：3月と9月は半期分予算の作成に時間がかかる。このため、たとえば3月に入力可能な4月予算は20170301 19:00 - 20170325 23:00まで変更可能
-				// 2021/09/06 依頼 20210924に変更
+				// 2022/09/08 依頼 20220922に変更
 				if(StringUtils.startsWithAny(today, new String[]{ year+"03", year+"09"})){
 					ableDtF = CmnDate.dateFormatYM(CmnDate.getMonthAddedDate(yosandt, -1)) + "011900";
-					ableDtT = CmnDate.dateFormatYM(CmnDate.getMonthAddedDate(yosandt, -1)) + "242300";
+					ableDtT = CmnDate.dateFormatYM(CmnDate.getMonthAddedDate(yosandt, -1)) + "222300";
 				}else{
 					ableDtF = CmnDate.dateFormatYM(CmnDate.getMonthAddedDate(yosandt, -1)) + "011900";
 					ableDtT = CmnDate.dateFormatYM(CmnDate.getMonthAddedDate(yosandt, -1)) + "152300";
