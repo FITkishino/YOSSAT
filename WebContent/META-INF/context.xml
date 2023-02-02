@@ -27,23 +27,29 @@
 
     <!-- Uncomment this to enable Comet connection tacking (provides events
          on session expiration as well as webapp lifecycle) -->
-    <!--172.16.2.145
+    <!--172.16.2.145 172.28.1.31
     <Valve className="org.apache.catalina.valves.CometConnectionManagerValve" />
     -->
- <Resource name="jdbc/bmana"
-           auth="Container"
-           type="javax.sql.DataSource"
-           driverClassName="com.ibm.db2.jcc.DB2Driver"
-           url="jdbc:db2://172.16.2.145:50000/INADB:useJDBC4ColumnNameAndLabelSemantics=2;"
-           username="db2admin"
-           password="Passw0rd"
-           maxActive="150"
-           maxIdle="20"
-           maxWait="5000"
-           logAbandoned="true"
-           removeAbandoned="true"
-           removeAbandonedTimeout="300"
-           testOnBorrow="true"
-           validationQuery="select 1 from SYSIBM.SYSDUMMY1"
+<!--
+172.16.2.145
+172.28.1.31
+-->
+    
+ <Resource
+  name="jdbc/bmana"
+  auth="Container"
+  type="javax.sql.DataSource"
+  driverClassName="com.ibm.db2.jcc.DB2Driver"
+  url="jdbc:db2://172.16.2.145:50000/INADB:useJDBC4ColumnNameAndLabelSemantics=2;"
+  username="db2admin"
+  password="Passw0rd"
+  maxActive="150"
+  maxIdle="20"
+  maxWait="5000"
+  logAbandoned="true"
+  removeAbandoned="true"
+  removeAbandonedTimeout="300"
+  testOnBorrow="true"
+  validationQuery="select 1 from SYSIBM.SYSDUMMY1"
  />
 </Context>
