@@ -130,9 +130,11 @@ public class Report001Dao extends ItemDao {
     String sbWhereT = " and T1.MISECD = '" + szTENPO + "'"; // 店舗条件
     String sbWhereB = ""; // 部門条件
     String sbWhereTB = ""; // 部門条件
+    String sbWhereGB = ""; // 部門条件
     if (isBumon) {
       sbWhereB = " and T1.BUNBMC = '" + szBUMON + "'";
       sbWhereTB = " and TOUKATU_CD_S = '" + szBUMON + "'";
+      sbWhereGB = " and T1.BUNBMC in (select   F1.BUNBMC FROM  SATYS.MCLSTT F1 where F1.BUNBMG_S =  '" + szBUMON + "')";
     }
 
     // 一覧表情報
@@ -149,7 +151,12 @@ public class Report001Dao extends ItemDao {
     sbSQL.append("  ,max(T3.EVENT) as global_EVENT");
     sbSQL.append("  from ");
     sbSQL.append("  (select COMTOB from SATYS.MCALTT where COMTOB" + szWhereK + ") T1 ");
-    sbSQL.append("  left outer join (select DT,EVENT,TYOSAN from SATYS.TTDEVT T1 where DT" + szWhereK + sbWhereT + ") T2 on T1.COMTOB = T2.DT ");
+    sbSQL.append("  left outer join (select DT,EVENT,TYOSAN from SATYS.TTDEVT T1 where DT" + szWhereK + " ");
+    if (szTENPO.equals("-1")) {
+      sbSQL.append(" ) T2 on T1.COMTOB = T2.DT ");
+    } else {
+      sbSQL.append(" " + sbWhereT + ") T2 on T1.COMTOB = T2.DT ");
+    }
     sbSQL.append("  left outer join SATTR.EVENT_MANAGE T3 on T3.DATE = T1.COMTOB and T3.IS_GLOBAL = 1 ");
     sbSQL.append("  group by T1.COMTOB");
     sbSQL.append(") ");
@@ -167,7 +174,12 @@ public class Report001Dao extends ItemDao {
     sbSQL.append("  ,'" + szTENPO + "' as MISECD,max(T4.MISECD_HT) as MISECD_HT ");
     sbSQL.append("  from ");
     sbSQL.append("  (select DT, DT_KIJUN from SATYS.TABKNK where DT" + szWhereK + ") T1 ");
-    sbSQL.append("  left outer join SATYS.TTDEVT T2 on T1.DT_KIJUN = T2.DT" + sbWhereT.replace("T1", "T2"));
+    sbSQL.append("  left outer join SATYS.TTDEVT T2 on T1.DT_KIJUN = T2.DT");
+    if (szTENPO.equals("-1")) {
+      sbSQL.append("  ");
+    } else {
+      sbSQL.append(" " + sbWhereT.replace("T1", "T2") + " ");
+    }
     sbSQL.append(" left outer join SATTR.EVENT_MANAGE T5 on  T1.DT_KIJUN = T5.DATE  and T5.IS_GLOBAL = 1 ");
     sbSQL.append("  left outer join SATYS.TSTKNR T4 on " + sbWhereT.replace("T1", "T4").replace("and", ""));
     sbSQL.append("  group by T1.DT, T1.DT_KIJUN ");
@@ -181,7 +193,18 @@ public class Report001Dao extends ItemDao {
     sbSQL.append("  ,sum(T1.TYOSAN) as TYOSAN ");
     sbSQL.append("  ,sum(T1.AYOSAN*T2.BUNARP/100) as ARAYOS ");
     sbSQL.append("  from SATYS.TTBDYS T1 ");
-    sbSQL.append("  inner join SATYS.MCALTT M1 on T1.DT = M1.COMTOB and T1.DT" + szWhereK + sbWhereT + sbWhereB);
+    sbSQL.append("  inner join SATYS.MCALTT M1 on T1.DT = M1.COMTOB and T1.DT" + szWhereK + " ");
+    if (szTENPO.equals("-1")) {
+      sbSQL.append("  ");
+    } else {
+      sbSQL.append(" " + sbWhereT + " ");
+    }
+
+    if (NumberUtils.isNumber(szBUMON.replaceAll(" ", ""))) {
+      sbSQL.append(" " + sbWhereB + " ");
+    } else {
+      sbSQL.append(" " + sbWhereGB + " ");
+    }
     sbSQL.append("  inner join SATMS.TTBMYS T2 on T2.MISECD = T1.MISECD and T2.NENTUKI = M1.NENTUKI and T2.BUNBMC = T1.BUNBMC");
     sbSQL.append("  group by T1.DT ");
     sbSQL.append(") ");
@@ -218,7 +241,12 @@ public class Report001Dao extends ItemDao {
     sbSQL.append("  from SATYS.TABKNK T2");
     sbSQL.append("  left outer join SATYS.TTDKYK T1 on ");
     sbSQL.append("  T2.DT_KIJUN = T1.DT");
-    sbSQL.append("  where T2.DT" + szWhereK + sbWhereT);
+    sbSQL.append("  where T2.DT" + szWhereK + " ");
+    if (szTENPO.equals("-1")) {
+      sbSQL.append("  ");
+    } else {
+      sbSQL.append(" " + sbWhereT + " ");
+    }
     sbSQL.append("  group by T2.DT ");
     sbSQL.append(") ");
     sbSQL.append(",KYKZ1 as ( ");
@@ -336,7 +364,7 @@ public class Report001Dao extends ItemDao {
     option.put("canChangeEventKikan", canChangeEventKikan);
     setOption(option);
 
-    // System.out.println(getClass().getSimpleName()+"[sql]"+sbSQL.toString());
+    System.out.println(getClass().getSimpleName() + "[sql]" + sbSQL.toString());
     return sbSQL.toString();
   }
 
