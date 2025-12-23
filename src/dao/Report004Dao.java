@@ -116,12 +116,12 @@ public class Report004Dao extends ItemDao {
 		StringBuffer sbSQL = new StringBuffer();
 		sbSQL.append("with MCAL as ( ");
 		sbSQL.append("  select T1.COMTOB as DT");
-		sbSQL.append("  from INAYS.MCALTT T1 ");
+		sbSQL.append("  from SATYS.MCALTT T1 ");
 		sbSQL.append("  where COMTOB"+szWhereK);
 		sbSQL.append(") ");
 		sbSQL.append(",ABKNK as ( ");
 		sbSQL.append(" select DT, max(DT_KIJUN) as DT_KIJUN ");
-		sbSQL.append(" from INAYS.TABKNK T1");
+		sbSQL.append(" from SATYS.TABKNK T1");
 		sbSQL.append(" where DT"+szWhereK);
 		sbSQL.append(" group by DT");
 		sbSQL.append(" )");
@@ -201,7 +201,7 @@ public class Report004Dao extends ItemDao {
 		ArrayList<String> prmData = new ArrayList<String>();
 
 		sbSQL = new StringBuffer();
-		sbSQL.append("merge into INAYS.TABKNK as T");
+		sbSQL.append("merge into SATYS.TABKNK as T");
 		sbSQL.append(" using (select");
 		sbSQL.append(" cast(T1.DT as character(8)) as DT");					// 年月日
 		sbSQL.append(",cast(T1.DT_KIJUN as character(8)) as DT_KIJUN");		// 基準年月日

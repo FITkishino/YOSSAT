@@ -138,8 +138,8 @@ public class Report005Dao extends ItemDao {
 		StringBuffer sbSQL = new StringBuffer();
 		sbSQL.append(" with MST as ( ");
 		sbSQL.append(" select *");
-//		sbSQL.append(" from INAYS.MTNPTT T1 ");
-		sbSQL.append(" from INAMS.TENPO_MST T1 ");	// 20180425 change
+//		sbSQL.append(" from SATYS.MTNPTT T1 ");
+		sbSQL.append(" from SATMS.TENPO_MST T1 ");	// 20180425 change
 		sbSQL.append(" where " + szWhereTenpo);
 		sbSQL.append(" )");
 		sbSQL.append(" select ");
@@ -148,8 +148,8 @@ public class Report005Dao extends ItemDao {
 		sbSQL.append(" ,max(left(M1.TENKAH,6)) as F3 ");
 		sbSQL.append(" ,M1.MISECD as F4 ");
 		sbSQL.append(" from MST M1 ");
-		sbSQL.append(" left join INAYS.TSTKNR T1 on M1.MISECD = T1.MISECD ");
-		sbSQL.append(" left join INAYS.MTNPTT M2 on T1.MISECD_HT= M2.MISECD ");
+		sbSQL.append(" left join SATYS.TSTKNR T1 on M1.MISECD = T1.MISECD ");
+		sbSQL.append(" left join SATYS.MTNPTT M2 on T1.MISECD_HT= M2.MISECD ");
 		sbSQL.append(" group by M1.MISECD ");
 		sbSQL.append(" order by M1.MISECD ");
 
@@ -234,7 +234,7 @@ public class Report005Dao extends ItemDao {
 		ArrayList<String> prmData = new ArrayList<String>();
 
 		sbSQL = new StringBuffer();
-		sbSQL.append("merge into INAYS.TSTKNR as T");
+		sbSQL.append("merge into SATYS.TSTKNR as T");
 		sbSQL.append(" using (select");
 		sbSQL.append(" cast(T1.MISECD as character(3)) as MISECD");			// 店コード
 		sbSQL.append(",cast(T1.MISECD_HT as character(3)) as MISECD_HT");	// 比較対象店舗
@@ -242,8 +242,8 @@ public class Report005Dao extends ItemDao {
 		sbSQL.append(",cast("+userId+" as integer) as CD_UPDATE");			// 更新者
 		sbSQL.append(",current timestamp as DT_UPDATE");					// 更新日
 		sbSQL.append(" from (values"+values+") as T1(MISECD, MISECD_HT)");
-//		sbSQL.append(" left outer join INAYS.MTNPTT T2 on T1.MISECD = T2.MISECD");
-		sbSQL.append(" left outer join INAMS.TENPO_MST T2 on T1.MISECD = T2.MISECD");	// 20180425 change
+//		sbSQL.append(" left outer join SATYS.MTNPTT T2 on T1.MISECD = T2.MISECD");
+		sbSQL.append(" left outer join SATMS.TENPO_MST T2 on T1.MISECD = T2.MISECD");	// 20180425 change
 		sbSQL.append(" ) as RE on (T.MISECD = RE.MISECD) ");
 		sbSQL.append(" when matched then ");
 		sbSQL.append(" update set");
@@ -302,7 +302,7 @@ public class Report005Dao extends ItemDao {
 		ArrayList<String> prmData = new ArrayList<String>();
 
 		sbSQL = new StringBuffer();
-		sbSQL.append("delete from INAYS.TSTKNR where MISECD in ("+values+")");
+		sbSQL.append("delete from SATYS.TSTKNR where MISECD in ("+values+")");
 
 		int count = super.executeSQL(sbSQL.toString(), prmData);
 		if(StringUtils.isEmpty(getMessage())){

@@ -34,13 +34,13 @@
   url="jdbc:db2://172.16.2.145:50000/INADB:useJDBC4ColumnNameAndLabelSemantics=2;"
   url="jdbc:db2://172.28.1.31:50000/INADB:useJDBC4ColumnNameAndLabelSemantics=2;"
 -->
-    
+
  <Resource
   name="jdbc/bmana"
   auth="Container"
   type="javax.sql.DataSource"
   driverClassName="com.ibm.db2.jcc.DB2Driver"
-  url="jdbc:db2://172.16.2.145:50000/INADB:useJDBC4ColumnNameAndLabelSemantics=2;"
+  url="jdbc:db2://172.31.6.13:50000/SATDB:useJDBC4ColumnNameAndLabelSemantics=2;"
   username="db2admin"
   password="Passw0rd"
   maxActive="150"

@@ -355,7 +355,7 @@
 						var rowData = {
 								IDX: i+1,		// エラーメッセージ用に行番号を追加
 								F1 : rows[i]["F1"],
-								F2 : $("#F7_"+i).val().replace(/,/g, '')
+								F2 : $("#F6_"+i).val().replace(/,/g, '')
 							};
 						targetRows.push(rowData);
 					}
@@ -451,7 +451,7 @@
 			var that = this;
 
 			var canChangeYosanKikan = opts.canChangeYosanKikan;
-			var canChangeTYosanKikan= opts.canChangeTYosanKikan;
+			//var canChangeTYosanKikan= opts.canChangeTYosanKikan;
 			var canChangeKyakuKikan = opts.canChangeKyakuKikan;
 			var canChangeEventKikan = opts.canChangeEventKikan;
 
@@ -480,8 +480,8 @@
 
 			// 入力可フラグ
 			var inputF3 = canChangeEventKikan && that.usableTenpoData();
-			var inputF6 = canChangeTYosanKikan&& that.usableTenpoData();
-			var inputF7 = canChangeYosanKikan && that.usableBumonData();
+			//var inputF6 = canChangeTYosanKikan&& that.usableTenpoData();
+			var inputF6 = canChangeYosanKikan && that.usableBumonData();
 			var inputF14= canChangeKyakuKikan && that.usableTenpoData();
 
 			for(var i=0; i<rows.length; i++){
@@ -506,41 +506,77 @@
 							'</td>'+
 							'<td style="text-align: right;"><span id="F5_'+i+'">'+getFormat(row['F5'], '#,##0')+'</span></td>'+
 							'';
+//				if(inputF6){
+//					view +=	'<td style="text-align: right;" class="yellow"><input type="text" id="F6_'+i+'" style="width: 48px; text-align: right; ime-mode: disabled;" class="TextDisp" tabindex="'+(200+i)+'" value="'+getFormat(row['F6'], '#,##0')+'"></td>'+
+//							'';
+//				}else{
+//					view +=	'<td style="text-align: right;"><input type="text" id="F6_'+i+'" style="width: 48px; text-align: right; ime-mode: disabled;" class="TextDisp" tabindex="-1" readonly="readonly" value="'+getFormat(row['F6'], '#,##0')+'"></td>'+
+//					'';
+//				}
+
 				if(inputF6){
-					view +=	'<td style="text-align: right;" class="yellow"><input type="text" id="F6_'+i+'" style="width: 48px; text-align: right; ime-mode: disabled;" class="TextDisp" tabindex="'+(200+i)+'" value="'+getFormat(row['F6'], '#,##0')+'"></td>'+
+					view +=	'<td style="text-align: right;" class="yellow"><input type="text" id="F6_'+i+'" style="width: 48px; text-align: right; ime-mode: disabled;" class="TextDisp" tabindex="'+(300+i)+'" value="'+getFormat(row['F6'], '#,##0')+'"></td>'+
 							'';
 				}else{
 					view +=	'<td style="text-align: right;"><input type="text" id="F6_'+i+'" style="width: 48px; text-align: right; ime-mode: disabled;" class="TextDisp" tabindex="-1" readonly="readonly" value="'+getFormat(row['F6'], '#,##0')+'"></td>'+
 					'';
 				}
 
-				if(inputF7){
-					view +=	'<td style="text-align: right;" class="yellow"><input type="text" id="F7_'+i+'" style="width: 48px; text-align: right; ime-mode: disabled;" class="TextDisp" tabindex="'+(300+i)+'" value="'+getFormat(row['F7'], '#,##0')+'"></td>'+
+				view +=	'<td style="text-align: right;"><span id="F7_'+i+'" style="width: 55px; overflow: hidden; display: inline-block;">'+row['F7']+'</span></td>'+
+							'<td style="text-align: right;"><span id="F8_'+i+'">'+getFormat(row['F8'], '#,##0')+'</span></td>'+
+							'<td style="text-align: left;padding-left: 3px;"><span id="F9_'+i+'">'+row['F9']+'</span></td>'+
+							'<td style="text-align: left;"><input type="text" id="F10_'+i+'" style="width:163px;" class="TextDisp" tabindex="-1" readonly="readonly" value="'+row['F10']+'"></td>'+
+							'<td style="text-align: right;"><span id="F11_'+i+'">'+getFormat(row['F11'], '#,##0')+'</span></td>'+
+							'<td style="text-align: right;"><span id="F12_'+i+'"style="width: 58px;">'+getFormat(row['F12'], '#,##0')+'</span></td>'+
+              //'<td style="text-align: right;"><input type="text" id="F14_'+i+'" style="width: 48px; text-align: right; ime-mode: disabled;" class="TextDisp" tabindex="-1" readonly="readonly" value="'+getFormat(row['F14'], '#,##0')+'"></td>'+
+              '';
+//				if(inputF14){
+//				//	view +=	'<td style="text-align: right;" class="yellow"><input type="text" id="F14_'+i+'" style="width: 48px; text-align: right; ime-mode: disabled;" class="TextDisp" tabindex="'+(400+i)+'" value="'+getFormat(row['F14'], '#,##0')+'"></td>'+
+//				//			'';
+//				//}else{
+//					view +=	'<td style="text-align: right;"><input type="text" id="F14_'+i+'" style="width: 48px; text-align: right; ime-mode: disabled;" class="TextDisp" tabindex="-1" readonly="readonly" value="'+getFormat(row['F14'], '#,##0')+'"></td>'+
+//					'';
+//				}
+        if($.getWeathernews(row['F13'])==1  ){
+			    view +='<td style="text-align:center;"><span id="F13_'+i+'" style=" color: red;">☀</span></td>'
+        }else if ($.getWeathernews(row['F14'])==2  ){
+			   view +='<td style="text-align:center;"><span id="F13_'+i+'" style=" color: grey;">☁</span></td>'
+        }else if ($.getWeathernews(row['F14'])==3  ){
+			   view +='<td style="text-align:center;"><span id="F13_'+i+'" style=" color: blue;">☂</span></td>'
+        }else if ($.getWeathernews(row['F14'])==4  ){
+			   view +='<td style="text-align:center;"><span id="F13_'+i+'" style=" color: teal;">☃</span></td>'
+        }else{
+			   view +='<td style="text-align:center;"><span id="F13_'+i+'">'+$.getWeathernews(row['F14'])+'</span></td>';
+	    	} ;
+        if(inputF3){
+			  view +=	'<td style="text-align: center;" class="yellow"><input type="text" id="F14_'+i+'" style="width: 25px; text-align: right; ime-mode: disabled;" class="TextDisp" tabindex="'+(300+i)+'" value="'+getFormat(row['F14'], '#0')+'"></td>'+
 							'';
-				}else{
-					view +=	'<td style="text-align: right;"><input type="text" id="F7_'+i+'" style="width: 48px; text-align: right; ime-mode: disabled;" class="TextDisp" tabindex="-1" readonly="readonly" value="'+getFormat(row['F7'], '#,##0')+'"></td>'+
-					'';
-				}
+			  }else{
+				view +=		'<td style="text-align:center;"><span id="F14_'+i+'">'+$.getWeathernews(row['F14'])+'</span></td>';
+        }
+				if($.getWeathernews(row['F16'])==1  ){
+			    view +='<td style="text-align:center;"><span id="F15_'+i+'" style=" color: red;">☀</span></td>'
+        }else if ($.getWeathernews(row['F16'])==2  ){
+			   view +='<td style="text-align:center;"><span id="F15_'+i+'" style=" color: grey;">☁</span></td>'
+        }else if ($.getWeathernews(row['F16'])==3  ){
+			   view +='<td style="text-align:center;"><span id="F15_'+i+'" style=" color: blue;">☂</span></td>'
+        }else if ($.getWeathernews(row['F16'])==4  ){
+			   view +='<td style="text-align:center;"><span id="F15_'+i+'" style=" color: teal;">☃</span></td>'
+        }else{
+			   view +='<td style="text-align:center;"><span id="F15_'+i+'">'+$.getWeathernews(row['F16'])+'</span></td>';
+	    	} ;
 
-				view +=		'<td style="text-align: right;"><span id="F8_'+i+'">'+getFormat(row['F8'], '#,##0')+'</span></td>'+
-							'<td style="text-align: right;"><span id="F9_'+i+'" style="width: 55px; overflow: hidden; display: inline-block;">'+row['F9']+'</span></td>'+
-							'<td style="text-align: right;"><span id="F10_'+i+'">'+getFormat(row['F10'], '#,##0')+'</span></td>'+
-							'<td style="text-align: left;padding-left: 3px;"><span id="F11_'+i+'">'+row['F11']+'</span></td>'+
-							'<td style="text-align: left;"><input type="text" id="F12_'+i+'" style="width:163px;" class="TextDisp" tabindex="-1" readonly="readonly" value="'+row['F12']+'"></td>'+
-							'<td style="text-align: right;"><span id="F13_'+i+'">'+getFormat(row['F13'], '#,##0')+'</span></td>';
-
-				if(inputF14){
-					view +=	'<td style="text-align: right;" class="yellow"><input type="text" id="F14_'+i+'" style="width: 48px; text-align: right; ime-mode: disabled;" class="TextDisp" tabindex="'+(400+i)+'" value="'+getFormat(row['F14'], '#,##0')+'"></td>'+
+         if(inputF3){
+			  view +=	'<td style="text-align: center;" class="yellow"><input type="text" id="F16_'+i+'" style="width: 30px; text-align: right; ime-mode: disabled;" class="TextDisp" tabindex="'+(300+i)+'" value="'+getFormat(row['F16'], '#0')+'"></td>'+
+			  '<td style="text-align: center;" class="yellow"><input type="text" id="F17_'+i+'" style="width: 30px; text-align: right; ime-mode: disabled;" class="TextDisp" tabindex="'+(300+i)+'" value="'+getFormat(row['F17'], '#0')+'"></td>'+
+			  '<td style="text-align: center;" class="yellow"><input type="text" id="F18_'+i+'" style="width: 30px; text-align: right; ime-mode: disabled;" class="TextDisp" tabindex="'+(300+i)+'" value="'+getFormat(row['F18'], '#0')+'"></td>'+
 							'';
-				}else{
-					view +=	'<td style="text-align: right;"><input type="text" id="F14_'+i+'" style="width: 48px; text-align: right; ime-mode: disabled;" class="TextDisp" tabindex="-1" readonly="readonly" value="'+getFormat(row['F14'], '#,##0')+'"></td>'+
-					'';
+			  }else{
+				view +=	'<td style="text-align:center;"><span id="F16_'+i+'">'+$.getWeathernews(row['F16'])+'</span></td>'+
+				      '<td style="text-align: right;"><span id="F17_'+i+'">'+row['F17']+'</span></td>'+
+							'<td style="text-align: right;"><span id="F18_'+i+'">'+row['F18']+'</span></td>';
 				}
-
-				view +=		'<td style="text-align:center;"><span id="F15_'+i+'">'+$.getWeathernews(row['F15'])+'</span></td>'+
-							'<td style="text-align: right;"><span id="F16_'+i+'">'+row['F16']+'</span></td>'+
-							'<td style="text-align: right;"><span id="F17_'+i+'">'+row['F17']+'</span></td>'+
-						'</tr>';
+				view +=	'</tr>';
 
 				$('#emptyRow').before(view);
 			}
@@ -562,14 +598,14 @@
 				view +=		'<td>&nbsp;</td>'+
 							'<td>&nbsp;</td>'+
 							'';
+//				if(inputF6){
+//					view +=	'<td class="yellow">&nbsp;</td>'+
+//							'';
+//				}else{
+//					view +=	'<td>&nbsp;</td>'+
+//							'';
+//				}
 				if(inputF6){
-					view +=	'<td class="yellow">&nbsp;</td>'+
-							'';
-				}else{
-					view +=	'<td>&nbsp;</td>'+
-							'';
-				}
-				if(inputF7){
 					view +=	'<td class="yellow">&nbsp;</td>'+
 							'';
 				}else{
@@ -583,17 +619,29 @@
 							'<td>&nbsp;</td>'+
 							'<td>&nbsp;</td>';
 
-				if(inputF14){
-					view +=	'<td class="yellow">&nbsp;</td>'+
-							'';
-				}else{
-					view +=	'<td>&nbsp;</td>'+
-							'';
-				}
+		//		if(inputF14){
+	//				view +=	'<td class="yellow">&nbsp;</td>'+
+		//					'';
+		//		}else{
+		//			view +=	'<td>&nbsp;</td>'+
+		//					'';
+		//		}
+				if(inputF3){
 				view +=		'<td>&nbsp;</td>'+
+							'<td class="yellow">&nbsp;</td>'+
+							'<td>&nbsp;</td>'+
+							'<td class="yellow">&nbsp;</td>'+
+							'<td class="yellow">&nbsp;</td>'+
+							'<td class="yellow">&nbsp;</td>';
+				}else{
+					view +=		'<td>&nbsp;</td>'+
 							'<td>&nbsp;</td>'+
 							'<td>&nbsp;</td>'+
-						'</tr>';
+							'<td>&nbsp;</td>'+
+							'<td>&nbsp;</td>'+
+							'<td>&nbsp;</td>';
+				}
+				view +=	'</tr>';
 
 				$('#emptyRow').before(view);
 			}
@@ -631,8 +679,8 @@
 			}
 
 			// 修正予算
-			if(inputF7){
-				var input = $('input[id^=F7_]');
+			if(inputF6){
+				var input = $('input[id^=F6_]');
 				input.each(function(){
 					var preVal = $(this).val().replace(/,/g, '');
 					$(this).focus(function(){
@@ -677,48 +725,48 @@
 			}
 
 			// 店長予算案
-			if(inputF6){
-				var input = $('input[id^=F6_]');
-				input.each(function(){
-					var preVal = $(this).val().replace(/,/g, '');
-					$(this).focus(function(e){
-						$(this).val($(this).val().replace(/,/g, ''));
-						$(this).css('color', 'black');
-						$(this).attr('maxlength', '5');
-						$(this).select();
-						//console.log($(this).attr('id') + ".focus"+ " val" + $(this).val());
-
-					}).blur(function(e){
-						var id = $(this).attr('id');
-						var newVal = $(this).val().replace(/,/g, '');
-						// 入力チェック
-						if(newVal!==preVal){
-							var func = function(){$('#'+id).val(preVal).focus();};
-							if((newVal+'').length < 1 || ! that.chkInt(newVal, 5)){
-								$.messager.alert($.message.ID_MESSAGE_TITLE_WARN,"5文字以下の半角数字で入力してください。",'warning',func);
-								return false;
-							}
-							if(newVal*1 < 0){
-								$.messager.alert($.message.ID_MESSAGE_TITLE_WARN,"0以上の値を入力してください。",'warning',func);
-								return false;
-							}
-						}
-
-						$(this).removeAttr('maxlength');
-						$(this).val(getFormat(newVal, '#,##0'));
-
-						if(newVal!==preVal){
-							var changeIdx = that.yosChangePrefix + id.split("_")[1]*1
-							$.setChangeIdx(changeIdx);
-							preVal = newVal;
-							// 合計値計算
-							that.setSum();
-						}
-						//console.log($(this).attr('id') + ".blur"+ " val" + $(this).val());
-					});
-				});
-				setEnterEvent(input);
-			}
+//			if(inputF6){
+//				var input = $('input[id^=F6_]');
+//				input.each(function(){
+//					var preVal = $(this).val().replace(/,/g, '');
+//					$(this).focus(function(e){
+//						$(this).val($(this).val().replace(/,/g, ''));
+//						$(this).css('color', 'black');
+//						$(this).attr('maxlength', '5');
+//						$(this).select();
+//						//console.log($(this).attr('id') + ".focus"+ " val" + $(this).val());
+//
+//					}).blur(function(e){
+//						var id = $(this).attr('id');
+//						var newVal = $(this).val().replace(/,/g, '');
+//						// 入力チェック
+//						if(newVal!==preVal){
+//							var func = function(){$('#'+id).val(preVal).focus();};
+//							if((newVal+'').length < 1 || ! that.chkInt(newVal, 5)){
+//								$.messager.alert($.message.ID_MESSAGE_TITLE_WARN,"5文字以下の半角数字で入力してください。",'warning',func);
+//								return false;
+//							}
+//							if(newVal*1 < 0){
+//								$.messager.alert($.message.ID_MESSAGE_TITLE_WARN,"0以上の値を入力してください。",'warning',func);
+//								return false;
+//							}
+//						}
+//
+//						$(this).removeAttr('maxlength');
+//						$(this).val(getFormat(newVal, '#,##0'));
+//
+//						if(newVal!==preVal){
+//							var changeIdx = that.yosChangePrefix + id.split("_")[1]*1
+//							$.setChangeIdx(changeIdx);
+//							preVal = newVal;
+//							// 合計値計算
+//							that.setSum();
+//						}
+//						//console.log($(this).attr('id') + ".blur"+ " val" + $(this).val());
+//					});
+//				});
+//				setEnterEvent(input);
+//			}
 
 			// 予測客数
 			if(inputF14){
@@ -762,7 +810,49 @@
 				});
 				setEnterEvent(input);
 			}
+			// 昨年天気午前
+      if(inputF14){
+				var input = $('input[id^=F15_]');
+				input.each(function(){
+					var preVal = $(this).val().replace(/,/g, '');
+					$(this).focus(function(){
+						$(this).val($(this).val().replace(/,/g, ''));
+						$(this).css('color', 'black');
+						$(this).attr('maxlength', '1');
+						$(this).select();
 
+					}).blur(function(){
+						var id = $(this).attr('id');
+						var newVal = $(this).val().replace(/,/g, '');
+
+						if(newVal!==preVal){
+							// 入力チェック
+							var func = function(){$('#'+id).val(preVal).focus();};
+							if((newVal+'').length < 1 || ! that.chkInt(newVal, 5)){
+								$.messager.alert($.message.ID_MESSAGE_TITLE_WARN,"5文字以下の半角数字で入力してください。",'warning',func);
+								return false;
+							}
+							if(Number.isInteger(newVal) && newVal >= 1 && newVal <= 5){
+								$.messager.alert($.message.ID_MESSAGE_TITLE_WARN,"1～4の値を入力してください。",'warning',func);
+								return false;
+							}
+
+						}
+
+						$(this).removeAttr('maxlength');
+						$(this).val(getFormat(newVal, '#,##0'));
+
+						if(newVal!==preVal){
+							var changeIdx = that.kykChangePrefix + id.split("_")[1]*1
+							$.setChangeIdx(changeIdx);
+							preVal = newVal;
+							// 合計値計算
+							that.setSum();
+						}
+					});
+				});
+				setEnterEvent(input);
+			}
 			// 合計値計算
 			that.setSum();
 		},
@@ -771,14 +861,12 @@
 			var sumF6_T = 0;
 			var sumF7_T = 0;
 			var sumF8_T = 0;
-			var sumF10_T = 0;
-			var sumF13_T = 0;
-			var sumF14_T = 0;
+			var sumF11_T = 0;
+			var sumF12_T = 0;
 			var sumF5_W = 0;
 			var sumF6_W = 0;
 			var sumF7_W = 0;
 			var sumF8_W = 0;
-			var sumF10_W = 0;
 			var weekF = '999999999';
 			var weekT = '0';
 			var num = 0;
@@ -787,43 +875,36 @@
 			// 部門荒利率が特定できる場合
 			var existsBmnAraRit = $('#'+$.id.TxtBmnAraRit).val() !== "";
 
-			$('input[id^=F7_]').each(function(){
+			$('input[id^=F6_]').each(function(){
 				var index = $(this).attr('id').split('_')[1];
 
 				var valF5 = $('#F5_'+index).text().replace(/,/g, '') * 1;
 				var valF6 = $('#F6_'+index).val().replace(/,/g, '') * 1;
-				var valF7 = $('#F7_'+index).val().replace(/,/g, '') * 1;
-				var valF8 = $('#F8_'+index).text().replace(/,/g, '') * 1;
-				var valF10= $('#F10_'+index).text().replace(/,/g, '') * 1;
-				var valF13= $('#F13_'+index).text().replace(/,/g, '') * 1;
-				var valF14= $('#F14_'+index).val().replace(/,/g, '') * 1;
+				var valF7= $('#F7_'+index).text().replace(/,/g, '') * 1;
+				var valF8= $('#F8_'+index).text().replace(/,/g, '') * 1;
+				var valF11= $('#F11_'+index).text().replace(/,/g, '') * 1;
+				var valF12= $('#F12_'+index).text().replace(/,/g, '') * 1;
 
-				// 荒利予算額
-				if(existsBmnAraRit){
-					valF8 = Math.floor(valF7 * ($('#'+$.id.TxtBmnAraRit).val()/100));
-				}
 
 				// 昨年比
-				var valF9 = 0;
-				if(valF10*1 > 0){
-					valF9 = Math.floor(valF7 / valF10 * 100 * 10) / 10;
+				var valF7 = 0;
+				if(valF8*1 > 0){
+					valF7 = Math.floor(valF6 / valF8 * 100 * 10) / 10;
 				}
 
 				// 週間計をセット
 				if(weekNum != null && weekNum != $('#F2_'+index).val()*1){
 					// 昨年比
-					var sumF9_W = 0;
-					if(sumF10_W*1 > 0){
-						sumF9_W = Math.floor(sumF7_W / sumF10_W * 100 * 10) / 10;
+					var sumF7W = 0;
+					if(sumF8_W*1 > 0){
+						sumF7_W = Math.floor(sumF6_W / sumF8_W * 100 * 10) / 1000;
 					}
 
 					$('#week_'+num).text(weekF.substr(5,2)+'/'+weekF.substr(7,2)+' - '+weekT.substr(5,2)+'/'+weekT.substr(7,2));
 					$('#sumF5_'+num).text(getFormat(sumF5_W, '#,##0'));;
 					$('#sumF6_'+num).text(getFormat(sumF6_W, '#,##0'));
-					$('#sumF7_'+num).text(getFormat(sumF7_W, '#,##0'));
+					$('#sumF7_'+num).text(getFormat(sumF7_W, '#,##0.0%'));
 					$('#sumF8_'+num).text(getFormat(sumF8_W, '#,##0'));
-					$('#sumF9_'+num).text(getFormat(sumF9_W, '#,##0.0'));
-					$('#sumF10_'+num).text(getFormat(sumF10_W, '#,##0'));
 					num++;
 					weekF = '999999999';
 					weekT = '0';
@@ -831,7 +912,6 @@
 					sumF6_W = 0;
 					sumF7_W = 0;
 					sumF8_W = 0;
-					sumF10_W = 0;
 				}
 
 				weekNum = $('#F2_'+index).val()*1;
@@ -842,24 +922,18 @@
 				sumF6_T += valF6;
 				sumF7_T += valF7;
 				sumF8_T += valF8;
-				sumF10_T += valF10;
-				sumF13_T += valF13;
-				sumF14_T += valF14;
+				sumF11_T += valF11;
+				sumF12_T += valF12;
 				sumF5_W += valF5;
 				sumF6_W += valF6;
-				sumF7_W += valF7;
 				sumF8_W += valF8;
-				sumF10_W += valF10;
 
-				// 荒利予算額、昨年比をセット
-				if(existsBmnAraRit){
-					$('#F8_'+index).text(getFormat(valF8, '#,##0'));
-				}
-				$('#F9_'+index).text(getFormat(valF9, '#,##0.0'));
+
+				$('#F7_'+index).text(getFormat(valF7/ 100, '#,##0.0%'));
 
 				// 予算案と修正予算が異なる場合、青字にする
-				if(valF5 != valF7){
-					$('#F7_'+index).css('color', 'blue');
+				if(valF5 != valF6){
+					$('#F6_'+index).css('color', 'blue');
 				}
 
 			});
@@ -867,51 +941,39 @@
 			// 週間計をセット
 			if(weekNum != null){
 				// 昨年比
-				var sumF9_W = 0;
-				if(sumF10_W*1 > 0){
-					sumF9_W = Math.floor(sumF7_W / sumF10_W * 100 * 10) / 10;
+				var sumF7_W = 0;
+				if(sumF8_W*1 > 0){
+					sumF7_W = Math.floor(sumF6_W / sumF8_W * 100 * 10) / 1000;
 				}
 
 				$('#week_'+num).text(weekF.substr(5,2)+'/'+weekF.substr(7,2)+' - '+weekT.substr(5,2)+'/'+weekT.substr(7,2));
 				$('#sumF5_'+num).text(getFormat(sumF5_W, '#,##0'));
 				$('#sumF6_'+num).text(getFormat(sumF6_W, '#,##0'));
-				$('#sumF7_'+num).text(getFormat(sumF7_W, '#,##0'));
+				$('#sumF7_'+num).text(getFormat(sumF7_W, '#,##0.0%'));
 				$('#sumF8_'+num).text(getFormat(sumF8_W, '#,##0'));
-				$('#sumF9_'+num).text(getFormat(sumF9_W, '#,##0.0'));
-				$('#sumF10_'+num).text(getFormat(sumF10_W, '#,##0'));
 				num++;
 			}
 
 			// 昨年比
-			var sumF9_T = 0;
-			if(sumF10_T*1 > 0){
-				sumF9_T = Math.floor(sumF7_T / sumF10_T * 100 * 10) / 10;
+			var sumF7_T = 0;
+			if(sumF8_T*1 > 0){
+				sumF7_T = Math.floor(sumF6_T / sumF8_T * 100 * 10) / 1000;
 			}
 
 			// 合計値をセット
 			$('#sumF5_T2').text(getFormat(sumF5_T, '#,##0'));
-			$('#sumF6_T2').text(getFormat(sumF6_T, '#,##0'));
-			$('#sumF7_T2').text(getFormat(sumF7_T, '#,##0'));
+	  	$('#sumF6_T2').text(getFormat(sumF6_T, '#,##0'));
+			$('#sumF7_T2').text(getFormat(sumF7_T, '#,##0.0%'));
 			$('#sumF8_T2').text(getFormat(sumF8_T, '#,##0'));
-			$('#sumF9_T2').text(getFormat(sumF9_T, '#,##0.0'));
-			$('#sumF10_T2').text(getFormat(sumF10_T, '#,##0'));
 			$('#sumF5_T1').text(getFormat(sumF5_T, '#,##0'));
 			$('#sumF6_T1').text(getFormat(sumF6_T, '#,##0'));
-			$('#sumF7_T1').text(getFormat(sumF7_T, '#,##0'));
+			$('#sumF7_T1').text(getFormat(sumF7_T, '#,##0.0%'));
 			$('#sumF8_T1').text(getFormat(sumF8_T, '#,##0'));
-			$('#sumF9_T1').text(getFormat(sumF9_T, '#,##0.0'));
-			$('#sumF10_T1').text(getFormat(sumF10_T, '#,##0'));
-			$('#sumF13_T1').text(getFormat(sumF13_T, '#,##0'));
-			$('#sumF14_T1').text(getFormat(sumF14_T, '#,##0'));
-			$('#diff1').text(getFormat((sumF6_T*1 - sumF5_T*1), '#,##0'));
-			$('#diff2').text(getFormat((sumF7_T*1 - sumF5_T*1), '#,##0'));
+			$('#sumF11_T1').text(getFormat(sumF11_T, '#,##0'));
+			$('#sumF12_T1').text(getFormat(sumF12_T, '#,##0'));
+			$('#diff2').text(getFormat((sumF6_T*1 - sumF5_T*1), '#,##0'));
 
 			if(sumF6_T*1 - sumF5_T*1 == 0){
-				$('#diff1').css('color', 'black');
-			}else{
-				$('#diff1').css('color', 'red');
-			}
-			if(sumF7_T*1 - sumF5_T*1 == 0){
 				$('#diff2').css('color', 'black');
 			}else{
 				$('#diff2').css('color', 'red');
@@ -924,8 +986,6 @@
 				$('#sumF6_'+num).text('');
 				$('#sumF7_'+num).text('');
 				$('#sumF8_'+num).text('');
-				$('#sumF9_'+num).text('');
-				$('#sumF10_'+num).text('');
 				num++;
 			}
 		},

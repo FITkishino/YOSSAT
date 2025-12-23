@@ -4,7 +4,7 @@
 
 <%
 	String path = request.getContextPath();
-	String logo = "../frame/img/LOGO_AQUA.png";
+	String logo = "../frame/img/logo_sato.gif";
 	User lusr = (User)session.getAttribute(Consts.STR_SES_LOGINUSER);
 	if (lusr != null){
 		if (!"".equals(lusr.getLogo_())){
@@ -16,7 +16,7 @@
 <link rel="icon" type="image/x-icon" href="<%=icon %>">
 
 <div id="top_title">
-<a href="http://www.inageya.co.jp/"><img src="<%=logo %>" alt="ŽÐ–¼ƒƒS"></a>
+<a href="https://www.sato-kyoto.com/"><img src="<%=logo %>" alt="ŽÐ–¼ƒƒS"></a>
 </div>
 
 <%

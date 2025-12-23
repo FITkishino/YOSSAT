@@ -1036,7 +1036,7 @@ public class ItemDao implements ItemInterface {
 
   /**
    * 締め日を取得<br>
-   * INAMS.PIMSKB IKBGPID IKBUQID IBKUQVL IBKVSEQ IBKRMRK<br>
+   * SATMS.PIMSKB IKBGPID IKBUQID IBKUQVL IBKVSEQ IBKRMRK<br>
    * 9 0 22 1 予算入力最終日（３月、９月）
    * 
    * @return
@@ -1045,7 +1045,7 @@ public class ItemDao implements ItemInterface {
     ItemList iL = new ItemList();
     String simeDay = "23";
 
-    ArrayList<List<String>> results = iL.selectArray("SELECT IBKUQVL FROM INAMS.PIMSKB WHERE IKBGPID=9 AND IKBUQID=0", new ArrayList<String>(), Defines.STR_JNDI_DS);
+    ArrayList<List<String>> results = iL.selectArray("SELECT IBKUQVL FROM SATMS.PIMSKB WHERE IKBGPID=9 AND IKBUQID=0", new ArrayList<String>(), Defines.STR_JNDI_DS);
     if (results.size() > 1) {
       simeDay = results.get(1).get(0);// 締め日
     }

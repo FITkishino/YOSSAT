@@ -89,7 +89,7 @@ public class Report006Dao extends ItemDao {
 
 		// 列情報取得
 		ItemList iL = new ItemList();
-		String sqlColCommand = "select BUNBMC as VAL,BUNBMC||' '||rtrim(max(TOUKATU_NM_S)) as \"TXT\" from INATR.MCLSER M3 " + sbWhereB.toString().replaceFirst(" and", " where") + " group by BUNBMC order by VAL";
+		String sqlColCommand = "select BUNBMC as VAL,BUNBMC||' '||rtrim(max(TOUKATU_NM_S)) as \"TXT\" from SATTR.MCLSER M3 " + sbWhereB.toString().replaceFirst(" and", " where") + " group by BUNBMC order by VAL";
 		@SuppressWarnings("static-access")
 		JSONArray colArray = iL.selectJSONArray(sqlColCommand, null, Defines.STR_JNDI_DS);
 		String val = "", key = "", txt = "";
@@ -114,21 +114,21 @@ public class Report006Dao extends ItemDao {
 		sbSQL.append("  ,WEEK_ISO(TO_DATE(T1.COMTOB, 'YYYYMMDD')) as WEEK");
 		sbSQL.append("  ,T2.EVENT,T2.TYOSAN");
 		sbSQL.append("  from  ");
-		sbSQL.append("  (select COMTOB from INAYS.MCALTT where COMTOB"+szWhereK+") T1 ");
+		sbSQL.append("  (select COMTOB from SATYS.MCALTT where COMTOB"+szWhereK+") T1 ");
 		sbSQL.append("  left outer join ");
-		sbSQL.append("  (select DT,EVENT,TYOSAN from INAYS.TTDEVT T1 where DT"+szWhereK+sbWhereT.toString()+") T2 ");
+		sbSQL.append("  (select DT,EVENT,TYOSAN from SATYS.TTDEVT T1 where DT"+szWhereK+sbWhereT.toString()+") T2 ");
 		sbSQL.append("  on T1.COMTOB = T2.DT ");
 		sbSQL.append(") ");
 		sbSQL.append(",BDYS as ( ");
 		sbSQL.append("  select DT"+sbItm1.toString());
-		sbSQL.append("  from INAYS.TTBDYS T1 ");
+		sbSQL.append("  from SATYS.TTBDYS T1 ");
 		sbSQL.append("  where T1.DT"+szWhereK+sbWhereT.toString()+sbWhereB.toString());
 		sbSQL.append("  group by T1.DT ");
 		sbSQL.append(") ");
 		sbSQL.append(",DKYK as ( ");
 		sbSQL.append("  select DT ");
 		sbSQL.append("    ,SUM(T1.KYAKUSU) as KYAKUSU ");
-		sbSQL.append("  from INAYS.TTDKYK T1 ");
+		sbSQL.append("  from SATYS.TTDKYK T1 ");
 		sbSQL.append("  where DT"+szWhereK+sbWhereT.toString());
 		sbSQL.append("  group by DT ");
 		sbSQL.append(") ");

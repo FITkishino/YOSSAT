@@ -127,7 +127,7 @@ public class Report003Dao extends ItemDao {
 		StringBuffer sbSQL = new StringBuffer();
 		sbSQL.append(" with MYS as ( ");
 		sbSQL.append(" select *");
-		sbSQL.append(" from INAMS.TTBMYS T1 ");
+		sbSQL.append(" from SATMS.TTBMYS T1 ");
 		sbSQL.append(" where " + szWhereDate + szWhereBumon + szWhereTenpo);
 		sbSQL.append(" )");
 		if(!StringUtils.isEmpty(szSys)){
@@ -140,9 +140,9 @@ public class Report003Dao extends ItemDao {
 			sbSQL.append(" ,T1.MISECD as F6");
 			sbSQL.append(" ,T1.BUNBMC as F7");
 			sbSQL.append(" from MYS T1 ");
-			sbSQL.append(" left join INAYS.TABKNR T2 on T1.MISECD = T2.MISECD and T1.BUNBMC = T2.BUNBMC and T1.NENTUKI = T2.NENTUKI ");
-			sbSQL.append(" left join INAYS.MTNPTT M1 on T1.MISECD = M1.MISECD  ");
-			sbSQL.append(" left join INAYS.MCLSTT M2 on T1.BUNBMC = M2.BUNBMC ");
+			sbSQL.append(" left join SATYS.TABKNR T2 on T1.MISECD = T2.MISECD and T1.BUNBMC = T2.BUNBMC and T1.NENTUKI = T2.NENTUKI ");
+			sbSQL.append(" left join SATYS.MTNPTT M1 on T1.MISECD = M1.MISECD  ");
+			sbSQL.append(" left join SATYS.MCLSTT M2 on T1.BUNBMC = M2.BUNBMC ");
 			sbSQL.append(" order by T1.MISECD,T1.BUNBMC ");
 		}else{
 			sbSQL.append(" select ");
@@ -159,8 +159,8 @@ public class Report003Dao extends ItemDao {
 			sbSQL.append(" ,T1.MISECD as F6");
 			sbSQL.append(" ,'' as F7");
 			sbSQL.append(" from MYS T1 ");
-			sbSQL.append(" left join INAYS.TABKNR T2 on T1.MISECD = T2.MISECD and T1.BUNBMC = T2.BUNBMC and T1.NENTUKI = T2.NENTUKI ");
-			sbSQL.append(" left join INAYS.MTNPTT M1 on T1.MISECD = M1.MISECD ");
+			sbSQL.append(" left join SATYS.TABKNR T2 on T1.MISECD = T2.MISECD and T1.BUNBMC = T2.BUNBMC and T1.NENTUKI = T2.NENTUKI ");
+			sbSQL.append(" left join SATYS.MTNPTT M1 on T1.MISECD = M1.MISECD ");
 			sbSQL.append(" group by T1.MISECD ");
 			sbSQL.append(" order by T1.MISECD ");
 		}
@@ -271,7 +271,7 @@ public class Report003Dao extends ItemDao {
 		int count1 = 0;
 		if(values.length() > 0){
 			sbSQL = new StringBuffer();
-			sbSQL.append("merge into INAYS.TABKNR as T");
+			sbSQL.append("merge into SATYS.TABKNR as T");
 			sbSQL.append(" using (select");
 			sbSQL.append(" cast('"+szKikanF+"' as character(6)) as NENTUKI");						// 年月
 			sbSQL.append(",cast(T1.MISECD as character(3)) as MISECD");								// 店コード
@@ -285,7 +285,7 @@ public class Report003Dao extends ItemDao {
 			}else{
 				sbSQL.append(",cast(T2.BUNBMC as character(4)) as BUNBMC");							// 部門コード
 				sbSQL.append(" from (values"+values+") as T1(MISECD, BUNBMC, ANBUNZ)");
-				sbSQL.append(" inner join (select distinct MISECD,BUNBMC from INAMS.TTBMYS T1 where " + szWhereDate + szWhereBumon + szWhereTenpo + ") T2 on T1.MISECD = T2.MISECD");
+				sbSQL.append(" inner join (select distinct MISECD,BUNBMC from SATMS.TTBMYS T1 where " + szWhereDate + szWhereBumon + szWhereTenpo + ") T2 on T1.MISECD = T2.MISECD");
 			}
 			sbSQL.append(" ) as RE on (T.NENTUKI = RE.NENTUKI and T.MISECD = RE.MISECD and T.BUNBMC = RE.BUNBMC) ");
 			//sbSQL.append(" when matched and RE.ANBUNZ = '"+ValAnbunSiji.TARGET.getVal()+"' then ");
@@ -318,7 +318,7 @@ public class Report003Dao extends ItemDao {
 
 				// 按分SQL
 				sbSQL = new StringBuffer();
-				sbSQL.append(" MERGE INTO INAYS.TTBDYS G1");
+				sbSQL.append(" MERGE INTO SATYS.TTBDYS G1");
 				sbSQL.append(" USING (");
 				sbSQL.append(" SELECT");
 				sbSQL.append("  MISECD,DT,TO_CHAR(CURRENT_TIMESTAMP,'YYYYMMDD') AS DT_ENTRY,BUNBMC");
@@ -360,27 +360,27 @@ public class Report003Dao extends ItemDao {
 				sbSQL.append("   ,CAL.COMTOB AS DT");
 				sbSQL.append("   ,LEFT(CAL.COMTOB,6) AS NENTUKI");
 				sbSQL.append("   ,MAX(T4.DT_KIJUN) AS DT_KIJUN");
-				sbSQL.append("   FROM INAMS.TTBMYS T1");
-				sbSQL.append("   INNER JOIN INAYS.MCALTT CAL ON T1.NENTUKI = CAL.NENTUKI and " + szWhereDate + szWhereBumon + szWhereTenpo);
-				sbSQL.append("   INNER JOIN INAYS.TABKNK T4 ON CAL.COMTOB=T4.DT");
-				sbSQL.append("   INNER JOIN INAYS.TABKNR T5 ON T1.MISECD=T5.MISECD AND T1.BUNBMC=T5.BUNBMC AND LEFT(CAL.COMTOB,6)=T5.NENTUKI AND T5.ANBUNZ='0'");
-				sbSQL.append("   LEFT OUTER JOIN INAYS.TSTKNR T6 ON T1.MISECD=T6.MISECD");
+				sbSQL.append("   FROM SATMS.TTBMYS T1");
+				sbSQL.append("   INNER JOIN SATYS.MCALTT CAL ON T1.NENTUKI = CAL.NENTUKI and " + szWhereDate + szWhereBumon + szWhereTenpo);
+				sbSQL.append("   INNER JOIN SATYS.TABKNK T4 ON CAL.COMTOB=T4.DT");
+				sbSQL.append("   INNER JOIN SATYS.TABKNR T5 ON T1.MISECD=T5.MISECD AND T1.BUNBMC=T5.BUNBMC AND LEFT(CAL.COMTOB,6)=T5.NENTUKI AND T5.ANBUNZ='0'");
+				sbSQL.append("   LEFT OUTER JOIN SATYS.TSTKNR T6 ON T1.MISECD=T6.MISECD");
 				sbSQL.append("   GROUP BY T1.MISECD,T1.BUNBMC,CAL.COMTOB");
 				sbSQL.append("  ) M1");
 
 				sbSQL.append("  LEFT OUTER JOIN (");
 				sbSQL.append("    SELECT T1.MISECD, T2.TOUKATU_CD_S as BUNBMC, T1.COMTOB, SUM(T1.URIKINGAKU) as URIKINGAKU");
-				sbSQL.append("    FROM INATR.HABMDD T1");
-				sbSQL.append("    INNER JOIN (select distinct BUNBMC, TOUKATU_CD_S from INATR.MCLSHA where 1=1"+szWhereTBumon+") T2 ON T1.BUNBMC=T2.BUNBMC AND T1.URIKINGAKU<>0"+szWhereTenpo);
-				sbSQL.append("    INNER JOIN INAYS.TABKNK T4 ON T4.DT_KIJUN = T1.COMTOB "+szWhereDate2);
+				sbSQL.append("    FROM SATTR.HABMDD T1");
+				sbSQL.append("    INNER JOIN (select distinct BUNBMC, TOUKATU_CD_S from SATTR.MCLSHA where 1=1"+szWhereTBumon+") T2 ON T1.BUNBMC=T2.BUNBMC AND T1.URIKINGAKU<>0"+szWhereTenpo);
+				sbSQL.append("    INNER JOIN SATYS.TABKNK T4 ON T4.DT_KIJUN = T1.COMTOB "+szWhereDate2);
 				sbSQL.append("    GROUP BY T1.MISECD, T2.TOUKATU_CD_S, T1.COMTOB");
 				sbSQL.append("  ) M2 ON M1.MISECD=M2.MISECD AND M1.BUNBMC=M2.BUNBMC AND M1.DT_KIJUN=M2.COMTOB");
-				sbSQL.append("  LEFT OUTER JOIN INAMS.TTBMYS M3 ON M1.MISECD=M3.MISECD AND M1.BUNBMC=M3.BUNBMC AND M1.NENTUKI=M3.NENTUKI");
+				sbSQL.append("  LEFT OUTER JOIN SATMS.TTBMYS M3 ON M1.MISECD=M3.MISECD AND M1.BUNBMC=M3.BUNBMC AND M1.NENTUKI=M3.NENTUKI");
 				sbSQL.append("  LEFT OUTER JOIN (");
 				sbSQL.append("    SELECT T1.MISECD, T2.TOUKATU_CD_S as BUNBMC, T1.COMTOB, SUM(T1.URIKINGAKU) as URIKINGAKU");
-				sbSQL.append("    FROM INATR.HABMDD T1 ");
-				sbSQL.append("    INNER JOIN (select distinct BUNBMC, TOUKATU_CD_S from INATR.MCLSHA where 1=1"+szWhereTBumon+") T2 ON T1.BUNBMC=T2.BUNBMC AND T1.URIKINGAKU<>0");
-				sbSQL.append("    INNER JOIN INAYS.TABKNK T4 ON T4.DT_KIJUN = T1.COMTOB "+szWhereDate2);
+				sbSQL.append("    FROM SATTR.HABMDD T1 ");
+				sbSQL.append("    INNER JOIN (select distinct BUNBMC, TOUKATU_CD_S from SATTR.MCLSHA where 1=1"+szWhereTBumon+") T2 ON T1.BUNBMC=T2.BUNBMC AND T1.URIKINGAKU<>0");
+				sbSQL.append("    INNER JOIN SATYS.TABKNK T4 ON T4.DT_KIJUN = T1.COMTOB "+szWhereDate2);
 				sbSQL.append("    GROUP BY T1.MISECD, T2.TOUKATU_CD_S, T1.COMTOB");
 				sbSQL.append("  ) M4 ON M1.MISECD_HT=M4.MISECD AND M1.BUNBMC=M4.BUNBMC AND M1.DT_KIJUN=M4.COMTOB");
 
@@ -400,15 +400,15 @@ public class Report003Dao extends ItemDao {
 /* 20170905
 				// 店日別情報(TTDEVT)
 				sbSQL = new StringBuffer();
-				sbSQL.append("merge into INAYS.TTDEVT as T");
+				sbSQL.append("merge into SATYS.TTDEVT as T");
 				sbSQL.append(" using (select");
 				sbSQL.append(" MISECD, DT, sum(TYOSAN) as TYOSAN");
 				sbSQL.append(",cast("+userId+" as integer) as CD_UPDATE");			// 更新者
 				sbSQL.append(",current timestamp as DT_UPDATE");					// 更新日
-				sbSQL.append(" from INAYS.TTBDYS T1");
+				sbSQL.append(" from SATYS.TTBDYS T1");
 				sbSQL.append(" where exists(");
-//				sbSQL.append("   select 'X' from INAYS.TTBDYS T2 where CD_UPDATE = "+userId+" and DT_UPDATE = TIMESTAMP('"+updatetime+"') and T1.MISECD = T2.MISECD and T1.DT=T2.DT");
-				sbSQL.append("   select 'X' from INAYS.TABKNR T2");
+//				sbSQL.append("   select 'X' from SATYS.TTBDYS T2 where CD_UPDATE = "+userId+" and DT_UPDATE = TIMESTAMP('"+updatetime+"') and T1.MISECD = T2.MISECD and T1.DT=T2.DT");
+				sbSQL.append("   select 'X' from SATYS.TABKNR T2");
 				sbSQL.append("   where " + szWhereDate.replace("T1", "T2") + szWhereBumon.replace("T1", "T2") + szWhereTenpo.replace("T1", "T2") + " and  T2.ANBUNZ='0' and T1.MISECD = T2.MISECD and LEFT(T1.DT,6)=T2.NENTUKI");
 				sbSQL.append(" )");
 				sbSQL.append(" group by MISECD, DT");
@@ -440,15 +440,15 @@ public class Report003Dao extends ItemDao {
 				kekka = ValAnbunKekka.FAILURE;
 			}
 			sbSQL = new StringBuffer();
-			sbSQL.append("merge into INAYS.TABKNR as T");
+			sbSQL.append("merge into SATYS.TABKNR as T");
 			sbSQL.append(" using (select T1.MISECD, T1.NENTUKI, T1.BUNBMC");
 			sbSQL.append(",cast('"+siji.getVal()+"' as character(1)) as ANBUNZ");		// 按分指示
 			sbSQL.append(",cast('"+kekka.getVal()+"' as character(1)) as ANBUNR");		// 按分結果
-			sbSQL.append(" from INAYS.TABKNR T1 where ANBUNZ = '"+ValAnbunSiji.REDO.getVal()+"'");
+			sbSQL.append(" from SATYS.TABKNR T1 where ANBUNZ = '"+ValAnbunSiji.REDO.getVal()+"'");
 			//sbSQL.append(",case when count(distinct T2.DT) = 0 then '"+ValAnbunSiji.REDO.getVal()+"' else '"+ValAnbunSiji.DONE.getVal()+"' end ANBUNZ");			// 按分指示
 			//sbSQL.append(",case when count(distinct T2.DT) = 0 then '"+ValAnbunKekka.FAILURE.getVal()+"' else '"+ValAnbunKekka.SUCCESS.getVal()+"' end ANBUNR");	// 按分結果
-			//sbSQL.append(" from (select * from INAYS.TABKNR T1 where ANBUNZ = '"+ValAnbunSiji.REDO.getVal()+"') T1");
-			//sbSQL.append(" left outer join INAYS.TTBDYS T2 on T1.MISECD = T2.MISECD and T1.NENTUKI = LEFT(T2.DT,6) and T1.BUNBMC = T2.BUNBMC and T2.CD_UPDATE = "+userId+" and T2.DT_UPDATE = TIMESTAMP('"+updatetime+"')");
+			//sbSQL.append(" from (select * from SATYS.TABKNR T1 where ANBUNZ = '"+ValAnbunSiji.REDO.getVal()+"') T1");
+			//sbSQL.append(" left outer join SATYS.TTBDYS T2 on T1.MISECD = T2.MISECD and T1.NENTUKI = LEFT(T2.DT,6) and T1.BUNBMC = T2.BUNBMC and T2.CD_UPDATE = "+userId+" and T2.DT_UPDATE = TIMESTAMP('"+updatetime+"')");
 			//sbSQL.append(" group by T1.MISECD, T1.NENTUKI, T1.BUNBMC");
 			sbSQL.append(" ) as RE on (T.NENTUKI = RE.NENTUKI and T.MISECD = RE.MISECD and T.BUNBMC = RE.BUNBMC) ");
 			sbSQL.append(" when matched then ");

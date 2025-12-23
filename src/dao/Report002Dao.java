@@ -139,9 +139,9 @@ public class Report002Dao extends ItemDao {
 		sbSQL.append("  ,max(T3.TENKIKBN) as TENKIKBN,max(T3.MAXKION) as MAXKION,max(T3.MINKION) as MINKION ");
 		sbSQL.append("  ,max(CASE T3.TENKIKBN "+super.getWeathernewsSql()+" ELSE T3.TENKIKBN END) AS TENKI");
 		sbSQL.append("  from ");
-		sbSQL.append("  (select COMTOB from INAYS.MCALTT where COMTOB"+szWhereK+") T1 ");
-		sbSQL.append("  left outer join (select DT,EVENT,TYOSAN from INAYS.TTDEVT T1 where DT"+szWhereK+sbWhereT+") T2 on T1.COMTOB = T2.DT ");
-		sbSQL.append("  left outer join (select * from INAMS.CAUSAL_INFO T1 where COMTOB"+szWhereK+sbWhereT+") T3 on T1.COMTOB = T3.COMTOB ");
+		sbSQL.append("  (select COMTOB from SATYS.MCALTT where COMTOB"+szWhereK+") T1 ");
+		sbSQL.append("  left outer join (select DT,EVENT,TYOSAN from SATYS.TTDEVT T1 where DT"+szWhereK+sbWhereT+") T2 on T1.COMTOB = T2.DT ");
+		sbSQL.append("  left outer join (select * from SATMS.CAUSAL_INFO T1 where COMTOB"+szWhereK+sbWhereT+") T3 on T1.COMTOB = T3.COMTOB ");
 		sbSQL.append("  group by T1.COMTOB");
 		sbSQL.append(") ");
 		sbSQL.append(",MCALZ as ( ");
@@ -152,9 +152,9 @@ public class Report002Dao extends ItemDao {
 		sbSQL.append("  ,max(T2.EVENT) as EVENT,max(T2.TYOSAN) as TYOSAN");
 		sbSQL.append("  ,'"+szTENPO+"' as MISECD,max(T4.MISECD_HT) as MISECD_HT ");
 		sbSQL.append("  from ");
-		sbSQL.append("  (select DT, DT_KIJUN from INAYS.TABKNK where DT"+szWhereK+") T1 ");
-		sbSQL.append("  left outer join INAYS.TTDEVT T2 on T1.DT_KIJUN = T2.DT" + sbWhereT.replace("T1", "T2"));
-		sbSQL.append("  left outer join INAYS.TSTKNR T4 on " + sbWhereT.replace("T1", "T4").replace("and", ""));
+		sbSQL.append("  (select DT, DT_KIJUN from SATYS.TABKNK where DT"+szWhereK+") T1 ");
+		sbSQL.append("  left outer join SATYS.TTDEVT T2 on T1.DT_KIJUN = T2.DT" + sbWhereT.replace("T1", "T2"));
+		sbSQL.append("  left outer join SATYS.TSTKNR T4 on " + sbWhereT.replace("T1", "T4").replace("and", ""));
 		sbSQL.append("  group by T1.DT, T1.DT_KIJUN ");
 		sbSQL.append("  order by DT ");
 		sbSQL.append(") ");
@@ -171,12 +171,12 @@ public class Report002Dao extends ItemDao {
 		sbSQL.append("  ,sum(sum(T1.AYOSAN)) over() as AYOSANG ");
 		sbSQL.append("  ,sum(sum(T1.TYOSAN)) over() as TYOSANG ");
 		sbSQL.append("  ,MAX(T4.GENKAKEI) AS GENKA ");	// 原価
-		sbSQL.append("  from INAYS.TTBDYS T1 ");
+		sbSQL.append("  from SATYS.TTBDYS T1 ");
 
 		sbSQL.append("  LEFT OUTER JOIN ( ");
 		sbSQL.append("  select T1.COMTOB as DT");
 		sbSQL.append("  ,sum(T1.GENKAKEI) as GENKAKEI ");
-		sbSQL.append("  from INATR.SIBMDD T1 ");
+		sbSQL.append("  from SATTR.SIBMDD T1 ");
 		sbSQL.append("  where T1.COMTOB"+szWhereK+sbWhereT+sbWhereB);
 		sbSQL.append("  group by T1.COMTOB ");
 		sbSQL.append("  ) T4 ON T1.DT = T4.DT ");
@@ -188,18 +188,18 @@ public class Report002Dao extends ItemDao {
 		sbSQL.append("  select  ");
 		sbSQL.append("   T2.DT, T2.DT_KIJUN, T3.BUNBMC ");
 		sbSQL.append("  ,sum(T1.UYOSAN) as UYOSAN ");
-		sbSQL.append("  from INATR.HIBYDD T1 ");
+		sbSQL.append("  from SATTR.HIBYDD T1 ");
 		sbSQL.append("  inner join MCALZ T2 on T1.COMTOB = T2.DT_KIJUN and T1.MISECD = T2.MISECD");
-		sbSQL.append("  inner join INATR.MCLSHB T3 on T1.CLSSGK = T3.CLSSGK"+sbWhereB.replace("T1", "T3"));
+		sbSQL.append("  inner join SATTR.MCLSHB T3 on T1.CLSSGK = T3.CLSSGK"+sbWhereB.replace("T1", "T3"));
 		sbSQL.append("  group by T2.DT, T2.DT_KIJUN, T3.BUNBMC ");
 		sbSQL.append(") ");
 		sbSQL.append(",HBZ2 as ( ");
 		sbSQL.append("  select  ");
 		sbSQL.append("   T2.DT, T2.DT_KIJUN, T3.BUNBMC ");
 		sbSQL.append("  ,sum(T1.UYOSAN) as UYOSAN ");
-		sbSQL.append("  from INATR.HIBYDD T1 ");
+		sbSQL.append("  from SATTR.HIBYDD T1 ");
 		sbSQL.append("  inner join MCALZ T2 on T1.COMTOB = T2.DT_KIJUN and T1.MISECD = T2.MISECD_HT");
-		sbSQL.append("  inner join INATR.MCLSHB T3 on T1.CLSSGK = T3.CLSSGK"+sbWhereB.replace("T1", "T3"));
+		sbSQL.append("  inner join SATTR.MCLSHB T3 on T1.CLSSGK = T3.CLSSGK"+sbWhereB.replace("T1", "T3"));
 		sbSQL.append("  group by T2.DT, T2.DT_KIJUN, T3.BUNBMC ");
 		sbSQL.append(") ");
 		sbSQL.append(",HBZ as ( ");
@@ -216,11 +216,11 @@ public class Report002Dao extends ItemDao {
 		sbSQL.append("  ) T1 on M1.DT = T1.DT");
 		sbSQL.append(") ");
 		sbSQL.append(",MCLSHA AS (");
-		sbSQL.append("  select distinct BUNBMC, TOUKATU_CD_S from INATR.MCLSHA where TOUKATU_CD_S in (select distinct TOUKATU_CD_S from INAYS.MCLSTT)" + sbWhereTB);
+		sbSQL.append("  select distinct BUNBMC, TOUKATU_CD_S from SATTR.MCLSHA where TOUKATU_CD_S in (select distinct TOUKATU_CD_S from SATYS.MCLSTT)" + sbWhereTB);
 
 		if (sbWhereTB.length()==0){
 			// 部門「すべて」の場合、統括部門'28'を集計に含める
-			sbSQL.append(" UNION ALL SELECT BUNBMC,TOUKATU_CD_S FROM INAMS.BUMON_KANRI_MST WHERE TOUKATU_CD_S='28' ");
+			sbSQL.append(" UNION ALL SELECT BUNBMC,TOUKATU_CD_S FROM SATMS.BUMON_KANRI_MST WHERE TOUKATU_CD_S='28' ");
 		}
 
 		sbSQL.append(") ");
@@ -234,7 +234,7 @@ public class Report002Dao extends ItemDao {
 		sbSQL.append("  from MCAL M1 ");
 		sbSQL.append("  left outer join (");
 		sbSQL.append("    select T1.COMTOB,T1.URIKINGAKU,T1.URISURYO,T1.ARKINGAKU");
-		sbSQL.append("    from INATR.HABMDD T1");
+		sbSQL.append("    from SATTR.HABMDD T1");
 		sbSQL.append("    inner join MCLSHA T3 on T1.BUNBMC = T3.BUNBMC "+sbWhereT);
 		sbSQL.append("  ) T1 on M1.DT = T1.COMTOB");
 		sbSQL.append("  group by M1.DT ");
@@ -244,7 +244,7 @@ public class Report002Dao extends ItemDao {
 		sbSQL.append("  ,sum(T1.URIKINGAKU) as URIKINGAKU ");
 		sbSQL.append("  ,sum(T1.URISURYO) AS URISURYO ");
 		sbSQL.append("  ,sum(T1.ARKINGAKU ) as ARKINGAKU ");
-		sbSQL.append("  from INATR.HABMDD T1 ");
+		sbSQL.append("  from SATTR.HABMDD T1 ");
 		sbSQL.append("  inner join MCALZ T2 on T1.COMTOB = T2.DT_KIJUN and T1.MISECD = T2.MISECD");
 		sbSQL.append("  inner join MCLSHA T3 on T1.BUNBMC = T3.BUNBMC");
 		sbSQL.append("  where T1.URIKINGAKU <> 0 ");
@@ -255,7 +255,7 @@ public class Report002Dao extends ItemDao {
 		sbSQL.append("  ,sum(T1.URIKINGAKU) as URIKINGAKU ");
 		sbSQL.append("  ,sum(T1.URISURYO) AS URISURYO ");
 		sbSQL.append("  ,sum(T1.ARKINGAKU ) as ARKINGAKU ");
-		sbSQL.append("  from INATR.HABMDD T1 ");
+		sbSQL.append("  from SATTR.HABMDD T1 ");
 		sbSQL.append("  inner join MCALZ T2 on T1.COMTOB = T2.DT_KIJUN and T1.MISECD = T2.MISECD_HT");
 		sbSQL.append("  inner join MCLSHA T3 on T1.BUNBMC = T3.BUNBMC");
 		sbSQL.append("  where T1.URIKINGAKU <> 0 ");
@@ -282,14 +282,14 @@ public class Report002Dao extends ItemDao {
 //		sbSQL.append(",SI as ( ");
 //		sbSQL.append("  select T1.COMTOB as DT");
 //		sbSQL.append("  ,sum(T1.GENKAKEI) as GENKAKEI ");
-//		sbSQL.append("  from INATR.SIBMDD T1 ");
+//		sbSQL.append("  from SATTR.SIBMDD T1 ");
 //		sbSQL.append("  where T1.COMTOB"+szWhereK+sbWhereT+sbWhereB);
 //		sbSQL.append("  group by T1.COMTOB ");
 //		sbSQL.append(") ");
 		sbSQL.append(",KYK as ( ");
 		sbSQL.append("  select T1.COMTOB as DT");
 		sbSQL.append("  ,sum(T1.KYAKUSU_1F) as KYAKUSU ");
-		sbSQL.append("  from INATR.TNKYDD T1 ");
+		sbSQL.append("  from SATTR.TNKYDD T1 ");
 		sbSQL.append("  inner join MCAL T2 on T1.COMTOB = T2.DT "+sbWhereT);
 		sbSQL.append("  group by T1.COMTOB ");
 		sbSQL.append(") ");
@@ -300,7 +300,7 @@ public class Report002Dao extends ItemDao {
 		sbSQL.append("  T2.DT AS DT ");
 		sbSQL.append("  , SUM(T1.KYAKUSU_1F) AS KYAKUSU ");
 		sbSQL.append("FROM ");
-		sbSQL.append("  INATR.TNKYDD T1 ");
+		sbSQL.append("  SATTR.TNKYDD T1 ");
 		sbSQL.append("  INNER JOIN MCALZ T2 ");
 		sbSQL.append("    ON T1.COMTOB = T2.DT_KIJUN ");
 		sbSQL.append("    AND T1.MISECD = T2.MISECD ");
@@ -313,7 +313,7 @@ public class Report002Dao extends ItemDao {
 		sbSQL.append("  T2.DT AS DT ");
 		sbSQL.append("  , SUM(T1.KYAKUSU_1F) AS KYAKUSU ");
 		sbSQL.append("FROM ");
-		sbSQL.append("  INATR.TNKYDD T1 ");
+		sbSQL.append("  SATTR.TNKYDD T1 ");
 		sbSQL.append("  INNER JOIN MCALZ T2 ");
 		sbSQL.append("    ON T1.COMTOB = T2.DT_KIJUN ");
 		sbSQL.append("    AND T1.MISECD = T2.MISECD_HT ");
@@ -385,13 +385,13 @@ public class Report002Dao extends ItemDao {
 		sbSQL2.append("  ,nvl(T2.NM_FAMILY||'　'||T2.NM_NAME, case when T1.CD_UPDATE = 0 then '自動按分' else T1.CD_UPDATE||'' end) || '　更新日時：' || TO_CHAR(T1.DT_UPDATE,'YYYY/MM/DD HH24:MI:SS') as NAME");
 		sbSQL2.append(" from (");
 		if(isBumon){
-			sbSQL2.append("   select * from (select CD_UPDATE, DT_UPDATE from INAYS.TTBDYS T1 where T1.DT"+szWhereK+sbWhereT+sbWhereB+" order by DT_UPDATE desc fetch first 1 rows only) T");
+			sbSQL2.append("   select * from (select CD_UPDATE, DT_UPDATE from SATYS.TTBDYS T1 where T1.DT"+szWhereK+sbWhereT+sbWhereB+" order by DT_UPDATE desc fetch first 1 rows only) T");
 		}else {
-			sbSQL2.append("   select * from (select CD_UPDATE, DT_UPDATE from INAYS.TTDEVT T1 where T1.DT"+szWhereK+sbWhereT+" order by DT_UPDATE desc fetch first 1 rows only) T");
+			sbSQL2.append("   select * from (select CD_UPDATE, DT_UPDATE from SATYS.TTDEVT T1 where T1.DT"+szWhereK+sbWhereT+" order by DT_UPDATE desc fetch first 1 rows only) T");
 			sbSQL2.append("   union");
-			sbSQL2.append("   select * from (select CD_UPDATE, DT_UPDATE from INAYS.TTDKYK T1 where T1.DT"+szWhereK+sbWhereT+" order by DT_UPDATE desc fetch first 1 rows only) T");
+			sbSQL2.append("   select * from (select CD_UPDATE, DT_UPDATE from SATYS.TTDKYK T1 where T1.DT"+szWhereK+sbWhereT+" order by DT_UPDATE desc fetch first 1 rows only) T");
 			sbSQL2.append("   union");
-			sbSQL2.append("   select * from (select CD_UPDATE, DT_UPDATE from INAYS.TTMEVT T1 where T1.NENTUKI = '"+szKikanF+"'"+sbWhereT+" order by DT_UPDATE desc fetch first 1 rows only) T");
+			sbSQL2.append("   select * from (select CD_UPDATE, DT_UPDATE from SATYS.TTMEVT T1 where T1.NENTUKI = '"+szKikanF+"'"+sbWhereT+" order by DT_UPDATE desc fetch first 1 rows only) T");
 		}
 		sbSQL2.append(" ) T1");
 		sbSQL2.append(" left outer join KEYSYS.SYS_USERS T2 on T1.CD_UPDATE = T2.CD_USER");
@@ -430,7 +430,7 @@ public class Report002Dao extends ItemDao {
 		sbSQL.append("  select T1.COMTOB as DT");
 		sbSQL.append("  ,WEEK_ISO(TO_DATE(T1.COMTOB, 'YYYYMMDD')) as WEEK");
 		sbSQL.append("  ,TO_CHAR(TO_DATE(MIN(T1.COMTOB) over (partition by WEEK_ISO(TO_DATE(T1.COMTOB, 'YYYYMMDD'))), 'yyyymmdd'), 'mm/dd') || '-' || TO_CHAR(TO_DATE(MAX(T1.COMTOB) over (partition by WEEK_ISO(TO_DATE(T1.COMTOB, 'YYYYMMDD'))), 'yyyymmdd'), 'mm/dd') as TXT");
-		sbSQL.append("  from INAYS.MCALTT T1");
+		sbSQL.append("  from SATYS.MCALTT T1");
 		sbSQL.append("  where COMTOB"+szWhereK);
 		sbSQL.append(") ");
 		sbSQL.append(",MCAL2 as ( ");
@@ -444,8 +444,8 @@ public class Report002Dao extends ItemDao {
 		sbSQL.append("  ,WEEK_ISO(TO_DATE(T1.DT, 'YYYYMMDD')) as WEEK");
 		sbSQL.append("  ,'"+szTENPO+"' as MISECD,T4.MISECD_HT");
 		sbSQL.append("  from ");
-		sbSQL.append("  (select DT, DT_KIJUN from INAYS.TABKNK where DT"+szWhereK+") T1 ");
-		sbSQL.append("  left outer join INAYS.TSTKNR T4 on T1.DT_KIJUN > T4.NENTUKI_OP||'00'" + sbWhereT.replace("T1", "T4"));
+		sbSQL.append("  (select DT, DT_KIJUN from SATYS.TABKNK where DT"+szWhereK+") T1 ");
+		sbSQL.append("  left outer join SATYS.TSTKNR T4 on T1.DT_KIJUN > T4.NENTUKI_OP||'00'" + sbWhereT.replace("T1", "T4"));
 		sbSQL.append("  order by DT ");
 		sbSQL.append(") ");
 		sbSQL.append(",MCALZ2 as ( ");
@@ -458,24 +458,24 @@ public class Report002Dao extends ItemDao {
 		sbSQL.append("  ,sum(T1.UYOSAN) as UYOSAN ");
 		sbSQL.append("  ,sum(T1.AYOSAN) as AYOSAN ");
 		sbSQL.append("  ,sum(T1.TYOSAN) as TYOSAN ");
-		sbSQL.append("  from INAYS.TTBDYS T1 ");
+		sbSQL.append("  from SATYS.TTBDYS T1 ");
 		sbSQL.append("  inner join MCAL T2 on T1.DT = T2.DT "+sbWhereT+sbWhereB);
 		sbSQL.append("  group by grouping sets(T2.WEEK, ()) ");
 		sbSQL.append(") ");
 //		sbSQL.append(",HBZ1 as ( ");
 //		sbSQL.append("  select  T2.WEEK,T2.DT, T3.BUNBMC ");
 //		sbSQL.append("  ,decimal(sum(T1.UYOSAN))/1000 as UYOSAN ");
-//		sbSQL.append("  from INATR.HIBYDD T1 ");
+//		sbSQL.append("  from SATTR.HIBYDD T1 ");
 //		sbSQL.append("  inner join MCALZ T2 on T1.COMTOB = T2.DT_KIJUN and T1.MISECD = T2.MISECD");
-//		sbSQL.append("  inner join INATR.MCLSHB T3 on T1.CLSSGK = T3.CLSSGK"+sbWhereB.replace("T1", "T3"));
+//		sbSQL.append("  inner join SATTR.MCLSHB T3 on T1.CLSSGK = T3.CLSSGK"+sbWhereB.replace("T1", "T3"));
 //		sbSQL.append("  group by T2.WEEK,T2.DT, T3.BUNBMC");
 //		sbSQL.append(") ");
 //		sbSQL.append(",HBZ2 as ( ");
 //		sbSQL.append("  select  T2.WEEK,T2.DT, T3.BUNBMC ");
 //		sbSQL.append("  ,decimal(sum(T1.UYOSAN))/1000 as UYOSAN ");
-//		sbSQL.append("  from INATR.HIBYDD T1 ");
+//		sbSQL.append("  from SATTR.HIBYDD T1 ");
 //		sbSQL.append("  inner join MCALZ T2 on T1.COMTOB = T2.DT_KIJUN and T1.MISECD = T2.MISECD_HT");
-//		sbSQL.append("  inner join INATR.MCLSHB T3 on T1.CLSSGK = T3.CLSSGK"+sbWhereB.replace("T1", "T3"));
+//		sbSQL.append("  inner join SATTR.MCLSHB T3 on T1.CLSSGK = T3.CLSSGK"+sbWhereB.replace("T1", "T3"));
 //		sbSQL.append("  group by T2.WEEK,T2.DT, T3.BUNBMC");
 //		sbSQL.append(") ");
 //		sbSQL.append(",HBZ as ( ");
@@ -485,10 +485,10 @@ public class Report002Dao extends ItemDao {
 //		sbSQL.append("  group by grouping sets(nvl(T1.WEEK, T2.WEEK), ())");
 //		sbSQL.append(") ");
 		sbSQL.append(",MCLSHA AS (");
-		sbSQL.append("  select distinct BUNBMC, TOUKATU_CD_S from INATR.MCLSHA where TOUKATU_CD_S in (select distinct TOUKATU_CD_S from INAYS.MCLSTT)" + sbWhereTB);
+		sbSQL.append("  select distinct BUNBMC, TOUKATU_CD_S from SATTR.MCLSHA where TOUKATU_CD_S in (select distinct TOUKATU_CD_S from SATYS.MCLSTT)" + sbWhereTB);
 		if (sbWhereTB.length()==0){
 			// 部門「すべて」の場合、統括部門'28'を集計に含める
-			sbSQL.append(" UNION ALL SELECT BUNBMC,TOUKATU_CD_S FROM INAMS.BUMON_KANRI_MST WHERE TOUKATU_CD_S='28' ");
+			sbSQL.append(" UNION ALL SELECT BUNBMC,TOUKATU_CD_S FROM SATMS.BUMON_KANRI_MST WHERE TOUKATU_CD_S='28' ");
 		}
 		sbSQL.append(") ");
 		sbSQL.append(",HA as ( ");
@@ -496,7 +496,7 @@ public class Report002Dao extends ItemDao {
 		sbSQL.append("   nvl(T2.WEEK, 999) as WEEK");
 		sbSQL.append("  ,sum(T1.URIKINGAKU) as URIKINGAKU ");
 		sbSQL.append("  ,sum(T1.ARKINGAKU ) as ARKINGAKU ");
-		sbSQL.append("  from INATR.HABMDD T1 ");
+		sbSQL.append("  from SATTR.HABMDD T1 ");
 		sbSQL.append("  inner join MCAL T2 on T1.COMTOB = T2.DT "+sbWhereT);
 		sbSQL.append("  inner join MCLSHA T3 on T1.BUNBMC = T3.BUNBMC");
 		sbSQL.append("  group by grouping sets(T2.WEEK, ()) ");
@@ -505,7 +505,7 @@ public class Report002Dao extends ItemDao {
 		sbSQL.append("  select T2.WEEK,T2.DT, T3.TOUKATU_CD_S");
 		sbSQL.append("  ,sum(T1.URIKINGAKU) as URIKINGAKU ");
 		sbSQL.append("  ,sum(T1.ARKINGAKU ) as ARKINGAKU ");
-		sbSQL.append("  from INATR.HABMDD T1 ");
+		sbSQL.append("  from SATTR.HABMDD T1 ");
 		sbSQL.append("  inner join MCALZ T2 on T1.COMTOB = T2.DT_KIJUN and T1.MISECD = T2.MISECD");
 		sbSQL.append("  inner join MCLSHA T3 on T1.BUNBMC = T3.BUNBMC");
 		sbSQL.append("  where T1.URIKINGAKU <> 0");
@@ -515,7 +515,7 @@ public class Report002Dao extends ItemDao {
 		sbSQL.append("  select T2.WEEK,T2.DT, T3.TOUKATU_CD_S");
 		sbSQL.append("  ,sum(T1.URIKINGAKU) as URIKINGAKU ");
 		sbSQL.append("  ,sum(T1.ARKINGAKU ) as ARKINGAKU ");
-		sbSQL.append("  from INATR.HABMDD T1 ");
+		sbSQL.append("  from SATTR.HABMDD T1 ");
 		sbSQL.append("  inner join MCALZ T2 on T1.COMTOB = T2.DT_KIJUN and T1.MISECD = T2.MISECD_HT");
 		sbSQL.append("  inner join MCLSHA T3 on T1.BUNBMC = T3.BUNBMC");
 		sbSQL.append("  where T1.URIKINGAKU <> 0");
@@ -531,7 +531,7 @@ public class Report002Dao extends ItemDao {
 		sbSQL.append(",SI as ( ");
 		sbSQL.append("  select nvl(T2.WEEK, 999) as WEEK");
 		sbSQL.append("  ,sum(T1.GENKAKEI) as GENKAKEI ");
-		sbSQL.append("  from INATR.SIBMDD T1 ");
+		sbSQL.append("  from SATTR.SIBMDD T1 ");
 		sbSQL.append("  inner join MCAL T2 on T1.COMTOB = T2.DT "+sbWhereT+sbWhereB);
 		sbSQL.append("  group by grouping sets(T2.WEEK, ()) ");
 		sbSQL.append(") ");
@@ -539,21 +539,21 @@ public class Report002Dao extends ItemDao {
 		sbSQL.append("  select  ");
 		sbSQL.append("   nvl(T2.WEEK, 999) as WEEK");
 		sbSQL.append("  ,sum(T1.KYAKUSU_1F) as KYAKUSU ");
-		sbSQL.append("  from INATR.TNKYDD T1 ");
+		sbSQL.append("  from SATTR.TNKYDD T1 ");
 		sbSQL.append("  inner join MCAL T2 on T1.COMTOB = T2.DT "+sbWhereT);
 		sbSQL.append("  group by grouping sets(T2.WEEK, ()) ");
 		sbSQL.append(") ");
 		sbSQL.append(",KYKZ1 as ( ");
 		sbSQL.append("  select nvl(T2.WEEK, 999) as WEEK");
 		sbSQL.append("  ,sum(T1.KYAKUSU_1F) as KYAKUSU ");
-		sbSQL.append("  from INATR.TNKYDD T1 ");
+		sbSQL.append("  from SATTR.TNKYDD T1 ");
 		sbSQL.append("  inner join MCALZ T2 on T1.COMTOB = T2.DT_KIJUN and T1.MISECD = T2.MISECD");
 		sbSQL.append("  group by grouping sets(T2.WEEK, ()) ");
 		sbSQL.append(") ");
 		sbSQL.append(",KYKZ2 as ( ");
 		sbSQL.append("  select nvl(T2.WEEK, 999) as WEEK");
 		sbSQL.append("  ,sum(T1.KYAKUSU_1F) as KYAKUSU ");
-		sbSQL.append("  from INATR.TNKYDD T1 ");
+		sbSQL.append("  from SATTR.TNKYDD T1 ");
 		sbSQL.append("  inner join MCALZ T2 on T1.COMTOB = T2.DT_KIJUN and T1.MISECD = T2.MISECD_HT");
 		sbSQL.append("  group by grouping sets(T2.WEEK, ()) ");
 		sbSQL.append(") ");
@@ -654,7 +654,7 @@ public class Report002Dao extends ItemDao {
 		// 基本INSERT/UPDATE文
 		StringBuffer sbSQL;
 		sbSQL = new StringBuffer();
-		sbSQL.append("merge into INAYS.TTDEVT as T");
+		sbSQL.append("merge into SATYS.TTDEVT as T");
 		sbSQL.append(" using (select");
 		sbSQL.append(" cast(T1.MISECD as character(3)) as MISECD");			// 店コード
 		sbSQL.append(",cast(T1.DT as character(8)) as DT");					// 予算年月日
