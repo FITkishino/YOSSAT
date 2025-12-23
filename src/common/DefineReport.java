@@ -3145,16 +3145,15 @@ public class DefineReport {
   public final static String ID_SQL_BMN_BUMONS_WHERE = " and BUNBMC in (@) ";
 
   // SQL：部門
-  public final static String ID_SQL_BUMON_HEAD = "select VALUE, TEXT ,'D000'as BUNBMG_S  ,''as BMGM_S  from (values ('" + Values.NONE.getVal() + "', '店合計')) as X(value, TEXT)  union all ";
+  public final static String ID_SQL_BUMON_HEAD = "select VALUE, TEXT ,'-1' as VALUE2,'D000'as BUNBMG_S   from (values ('" + Values.NONE.getVal() + "', '店合計')) as X(value, TEXT)  union all ";
   public final static String ID_SQL_BUMON_HEAD2 =
       "select VALUE, TEXT, VALUE2 from (values ('" + Values.NONE.getVal() + "', '店合計','" + Values.NONE.getVal() + "')) as X(value, TEXT, value2) union all ";
   public final static String ID_SQL_BUMON_HEAD3 =
-      " select -1 - ROW_NUMBER() OVER (ORDER BY BUNBMG_S) as VALUE , '--' ||BUNBMG_S|| ' ' ||BMGM_S||'--'as TEXT , T1.BUNBMG_S , T1.BMGM_S from  SATYS.MCLSTT  T1 ";
-  public final static String ID_SQL_BUMON_FOOTER = " group by T1.BUNBMG_S   , T1.BUNBMC order by BUNBMG_S , VALUE";
+      " select T1.BUNBMG_S as VALUE , '--' ||BUNBMG_S|| ' ' ||BMGM_S||'--'as TEXT ,- 1 - ROW_NUMBER() OVER (ORDER BY BUNBMG_S) as VALUE2, T1.BUNBMG_S  from  SATYS.MCLSTT  T1 ";
+  public final static String ID_SQL_BUMON_FOOTER = " group by T1.BUNBMG_S   , T1.BUNBMC order by BUNBMG_S , VALUE2";
 
   /** 共通（SATYS.MCLSTT） */
-  public final static String ID_SQL_BUMON =
-      "select T1.BUNBMC as VALUE, T1.BUNBMC || ' ' || rtrim(max(T1.TOUKATU_NM_S)) as TEXT , T1.BUNBMG_S as BUNBMG_S , MAX(BMGM_S) as BMGM_S  from SATYS.MCLSTT T1";
+  public final static String ID_SQL_BUMON = "select T1.BUNBMC as VALUE, T1.BUNBMC || ' ' || rtrim(max(T1.TOUKATU_NM_S)) as TEXT ,T1.BUNBMC as VALUE2, T1.BUNBMG_S as BUNBMG_S   from SATYS.MCLSTT T1";
 
   // SQL：部門荒利率
   public final static String ID_SQL_BMN_ARA_RIT = "select case when max(BUNARP) = min(BUNARP) then max(BUNARP) end as VALUE from SATMS.TTBMYS where MISECD = ? and NENTUKI = ? ";

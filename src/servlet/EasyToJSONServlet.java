@@ -388,7 +388,9 @@ public class EasyToJSONServlet extends HttpServlet {
         if (outobj.equals(DefineReport.Select.BUMON.getObj())) {
           JSONObject obj = (JSONObject) map.get(0);
           String sqlWhere = "";
-          if (obj.containsKey("TENPO")) {
+          if (obj.optString("TENPO").equals("-1")) {
+            sqlWhere += "";
+          } else if (obj.containsKey("TENPO")) {
             sqlWhere += " and MISECD in ('" + StringUtils
                 .removeEnd(StringUtils.join(StringUtils.split(StringUtils.replaceEach(obj.optString("TENPO"), new String[] {"[", "]", "\""}, new String[] {"", "", ""}), ","), "','"), ",'") + "')";
           }

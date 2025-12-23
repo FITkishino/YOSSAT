@@ -138,6 +138,8 @@ public class Report001Dao extends ItemDao {
     // 一覧表情報
     // TODO:天気・気温情報今適当
     StringBuffer sbSQL = new StringBuffer();
+    System.out.print("bumon_map;" + getMap().get("BUMON") + "\n");
+    System.out.print("bumon_;" + szBUMON + "\n");
     sbSQL.append("with MCAL as ( ");
     sbSQL.append("  select T1.COMTOB as DT");
     sbSQL.append(
