@@ -174,6 +174,8 @@ public class Report001Dao extends ItemDao {
     sbSQL.append("  ,max(T2.TENKIKBN_AM) as TENKI_AM");
     sbSQL.append("  ,max(T2.TENKIKBN_PM) as TENKI_PM");
     sbSQL.append("  ,'" + szTENPO + "' as MISECD,max(T4.MISECD_HT) as MISECD_HT ");
+    sbSQL.append("  , sum(T2.CUSTOMER_NUM) as CUSTOMER_NUM ");
+    sbSQL.append("  , sum(T2.FLOOR_CUSTOMER_NUM) as FLOOR_CUSTOMER_NUM ");
     sbSQL.append("  from ");
     sbSQL.append("  (select CALYMD as  DT,CALZDY as  DT_KIJUN from SATYS.TABKNK where CALYMD" + szWhereK + ") T1 ");
     sbSQL.append("  left outer join SATYS.TTDEVT T2 on T1.DT_KIJUN = T2.DT");
@@ -295,13 +297,7 @@ public class Report001Dao extends ItemDao {
     }
     sbSQL.append("  , M1.TXT ");
     sbSQL.append("  , truncate(T1.UYOSAN,0) "); // F5
-    // if (isBumon) {
-    // sbSQL.append(" , truncate(T1.TYOSAN,0) ");
-    // } else {
-    // sbSQL.append(" , truncate(nvl(M1.TYOSAN,T1.TYOSAN),0) ");
-    // }
     sbSQL.append("  , truncate(T1.AYOSAN,0) ");
-    // sbSQL.append(" , truncate(T1.ARAYOS,0) ");
     sbSQL.append(
         "  , case when truncate(decimal(nvl(T3.URIKINGAKU,0)) / 1000, 0) = 0 then 0 else truncate(decimal(truncate (T1.AYOSAN, 0)) / decimal(truncate(decimal(T3.URIKINGAKU) / 1000, 0)) * 100, 1) end  "); // F7.修正予算÷F10.前年売上×100
     sbSQL.append("  , round(decimal(T3.URIKINGAKU)/1000,0) "); // F10
@@ -311,8 +307,8 @@ public class Report001Dao extends ItemDao {
     } else {
       sbSQL.append("  , M2.EVENT ");
     }
-    sbSQL.append("  , T5.KYAKUSU ");
-    sbSQL.append("  , T4.KYAKUSU ");
+    sbSQL.append("  , M2.CUSTOMER_NUM ");
+    sbSQL.append("  , M2.FLOOR_CUSTOMER_NUM ");
 
     if (szTENPO.equals("-1")) {
       sbSQL.append("  , null "); // F15
