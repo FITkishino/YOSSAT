@@ -48,18 +48,20 @@ public class ItemDao implements ItemInterface {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see dao.ItemInterface#getMap()
    */
+  @Override
   public HashMap<String, String> getMap() {
     return map;
   }
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see dao.ItemInterface#setMap(java.util.HashMap)
    */
+  @Override
   public void setMap(HashMap<String, String> map) {
     this.map = map;
   }
@@ -69,18 +71,20 @@ public class ItemDao implements ItemInterface {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see dao.ItemInterface#getJson()
    */
+  @Override
   public String getJson() {
     return json;
   }
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see dao.ItemInterface#setJson(java.lang.String)
    */
+  @Override
   public void setJson(String json) {
     this.json = json;
   }
@@ -90,18 +94,20 @@ public class ItemDao implements ItemInterface {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see dao.ItemInterface#getWhere()
    */
+  @Override
   public ArrayList<List<String>> getWhere() {
     return where;
   }
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see dao.ItemInterface#setWhere(java.util.ArrayList)
    */
+  @Override
   public void setWhere(ArrayList<List<String>> where) {
     this.where = where;
   }
@@ -111,18 +117,20 @@ public class ItemDao implements ItemInterface {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see dao.ItemInterface#getMeta()
    */
+  @Override
   public ArrayList<Integer> getMeta() {
     return meta;
   }
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see dao.ItemInterface#setMeta(java.util.ArrayList)
    */
+  @Override
   public void setMeta(ArrayList<Integer> meta) {
     this.meta = meta;
   }
@@ -132,18 +140,20 @@ public class ItemDao implements ItemInterface {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see dao.ItemInterface#getStart()
    */
+  @Override
   public int getStart() {
     return start;
   }
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see dao.ItemInterface#setStart(int)
    */
+  @Override
   public void setStart(int start) {
     this.start = start;
   }
@@ -153,18 +163,20 @@ public class ItemDao implements ItemInterface {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see dao.ItemInterface#getLimit()
    */
+  @Override
   public int getLimit() {
     return limit;
   }
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see dao.ItemInterface#setLimit(int)
    */
+  @Override
   public void setLimit(int limit) {
     this.limit = limit;
   }
@@ -174,18 +186,20 @@ public class ItemDao implements ItemInterface {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see dao.ItemInterface#getParamData()
    */
+  @Override
   public ArrayList<String> getParamData() {
     return paramData;
   }
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see dao.ItemInterface#setParamData(java.util.ArrayList)
    */
+  @Override
   public void setParamData(ArrayList<String> paramData) {
     this.paramData = paramData;
   }
@@ -195,25 +209,27 @@ public class ItemDao implements ItemInterface {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see dao.ItemInterface#getTable()
    */
+  @Override
   public ArrayList<byte[]> getTable() {
     return table;
   }
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see dao.ItemInterface#setTable(java.util.ArrayList)
    */
+  @Override
   public void setTable(ArrayList<byte[]> table) {
     this.table = table;
   }
 
   /**
    * 新しいjdbcItemDaoのインスタンスを生成します。
-   * 
+   *
    * @param source
    */
   public ItemDao(String JNDIname) {
@@ -221,29 +237,31 @@ public class ItemDao implements ItemInterface {
     this.JNDIname = JNDIname;
 
     // 保存用 List (レコード情報)作成
-    table = new ArrayList<byte[]>();
+    table = new ArrayList<>();
 
     // 配列準備
-    paramData = new ArrayList<String>();
+    paramData = new ArrayList<>();
 
     // メタ情報
-    meta = new ArrayList<Integer>();
+    meta = new ArrayList<>();
   }
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see dao.ItemInterface#selectBy()
    */
+  @Override
   public boolean selectBy() {
     return selectBySQL("");
   }
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see dao.ItemInterface#selectBySQL(java.lang.String)
    */
+  @Override
   public boolean selectBySQL(String command) {
 
     // コネクションの取得
@@ -276,7 +294,7 @@ public class ItemDao implements ItemInterface {
       // パラメータ判断
       setParamData(new ArrayList<String>());
       for (int i = 0; i < getParamData().size(); i++) {
-        statement.setString((i + 1), (String) getParamData().get(i));
+        statement.setString((i + 1), getParamData().get(i));
       }
 
       startTime = System.currentTimeMillis();
@@ -301,7 +319,7 @@ public class ItemDao implements ItemInterface {
       int sizeColumn = rsmd.getColumnCount();
 
       // タイトル名称取得
-      List<String> titles = new ArrayList<String>();
+      List<String> titles = new ArrayList<>();
       for (int i = 1; i <= sizeColumn; i++) {
         titles.add(rsmd.getColumnName(i));
       }
@@ -320,7 +338,7 @@ public class ItemDao implements ItemInterface {
       while (rs.next()) {
 
         // 情報保存
-        List<String> cols = new ArrayList<String>();
+        List<String> cols = new ArrayList<>();
 
         for (int i = 1; i <= sizeColumn; i++) {
 
@@ -359,7 +377,8 @@ public class ItemDao implements ItemInterface {
     } catch (SQLException e) {
       rollback(con);
       e.printStackTrace();
-      if (DefineReport.ID_SQLSTATE_COLUMN_GREATER.equals(e.getSQLState()) || DefineReport.ID_SQLSTATE_APPLICATION_HEPE.equals(e.getSQLState()) || DefineReport.ID_SQLSTATE_BUFFER_GREATER.equals(e.getSQLState()) || DefineReport.ID_SQLSTATE_COLUMN_OVER.equals(e.getSQLState())) {
+      if (DefineReport.ID_SQLSTATE_COLUMN_GREATER.equals(e.getSQLState()) || DefineReport.ID_SQLSTATE_APPLICATION_HEPE.equals(e.getSQLState())
+          || DefineReport.ID_SQLSTATE_BUFFER_GREATER.equals(e.getSQLState()) || DefineReport.ID_SQLSTATE_COLUMN_OVER.equals(e.getSQLState())) {
         // 横軸（列）が多すぎる場合
         setMessage(DefineReport.ID_MSG_COLUMN_GREATER + "(" + e.getSQLState() + ")");
       } else if (DefineReport.ID_SQLSTATE_CONNECTION_RESET.equals(e.getSQLState())) {
@@ -383,7 +402,7 @@ public class ItemDao implements ItemInterface {
 
   /**
    * 更新処理
-   * 
+   *
    * @param sqlCommand
    * @param paramData
    * @param jdbcName
@@ -418,7 +437,7 @@ public class ItemDao implements ItemInterface {
 
       // パラメータ設定
       for (int i = 0; i < paramData.size(); i++) {
-        statement.setString((i + 1), (String) paramData.get(i));
+        statement.setString((i + 1), paramData.get(i));
       }
       startTime = System.currentTimeMillis();
 
@@ -459,7 +478,7 @@ public class ItemDao implements ItemInterface {
 
   /**
    * 更新処理
-   * 
+   *
    * @param sqlCommands
    * @param paramDatas
    * @param jdbcName
@@ -467,7 +486,7 @@ public class ItemDao implements ItemInterface {
    * @throws Exception
    */
   public ArrayList<Integer> executeSQLs(ArrayList<String> commands, ArrayList<ArrayList<String>> paramDatas) throws Exception {
-    ArrayList<Integer> countList = new ArrayList<Integer>();
+    ArrayList<Integer> countList = new ArrayList<>();
 
     // コネクションの取得
     Connection con = null;
@@ -493,7 +512,7 @@ public class ItemDao implements ItemInterface {
 
         // パラメータ設定
         for (int i = 0; i < paramData.size(); i++) {
-          statement.setString((i + 1), (String) paramData.get(i));
+          statement.setString((i + 1), paramData.get(i));
         }
         startTime = System.currentTimeMillis();
 
@@ -511,7 +530,7 @@ public class ItemDao implements ItemInterface {
 
       con.commit();
     } catch (SQLException e) {
-      countList = new ArrayList<Integer>();
+      countList = new ArrayList<>();
       rollback(con);
       e.printStackTrace();
       if (DefineReport.ID_SQLSTATE_CONNECTION_RESET.equals(e.getSQLState())) {
@@ -523,7 +542,7 @@ public class ItemDao implements ItemInterface {
       }
 
     } catch (Exception e) {
-      countList = new ArrayList<Integer>();
+      countList = new ArrayList<>();
       e.printStackTrace();
 
     } finally {
@@ -535,7 +554,7 @@ public class ItemDao implements ItemInterface {
 
   /**
    * コミットします。
-   * 
+   *
    * @param conn
    */
   protected void commit(Connection conn) {
@@ -550,7 +569,7 @@ public class ItemDao implements ItemInterface {
 
   /**
    * ロールバックします。
-   * 
+   *
    * @param conn
    */
   protected void rollback(Connection conn) {
@@ -565,7 +584,7 @@ public class ItemDao implements ItemInterface {
 
   /**
    * コネクションをクローズします。
-   * 
+   *
    * @param conn
    */
   protected void close(Connection conn) {
@@ -580,7 +599,7 @@ public class ItemDao implements ItemInterface {
 
   /**
    * ステートメントをクローズします。
-   * 
+   *
    * @param statement
    */
   protected void close(PreparedStatement statement) {
@@ -595,7 +614,7 @@ public class ItemDao implements ItemInterface {
 
   /**
    * 結果セットをクローズします。
-   * 
+   *
    * @param rs
    */
   protected void close(ResultSet rs) {
@@ -608,15 +627,17 @@ public class ItemDao implements ItemInterface {
     }
   }
 
+  @Override
   public String getSelectCommand() {
     return null;
   }
 
   /**
    * 検索結果情報から指定列の情報を文字列（カンマ区切り）として取得
-   * 
+   *
    * @Override
    */
+  @Override
   public String getReader(int columnNumber) {
 
     StringBuffer sb = new StringBuffer();
@@ -688,18 +709,20 @@ public class ItemDao implements ItemInterface {
 
   /**
    * ログインユーザー情報を取得します。
-   * 
+   *
    * @return ログインユーザー情報
    */
+  @Override
   public User getUserInfo() {
     return userInfo;
   }
 
   /**
    * ログインユーザー情報を設定します。
-   * 
+   *
    * @param userInfo ログインユーザー情報
    */
+  @Override
   public void setUserInfo(User userInfo) {
     this.userInfo = userInfo;
   }
@@ -710,15 +733,17 @@ public class ItemDao implements ItemInterface {
   /**
    * オプション情報を取得します。
    */
+  @Override
   public JSONObject getOption() {
     return option;
   }
 
   /**
    * オプション情報を設定します。
-   * 
+   *
    * @param option
    */
+  @Override
   public void setOption(JSONObject option) {
     this.option = option;
   }
@@ -739,7 +764,7 @@ public class ItemDao implements ItemInterface {
    */
   protected String getConditionLog() {
     Object[] items = null;
-    Map<String, String> m = new TreeMap<String, String>(getMap());
+    Map<String, String> m = new TreeMap<>(getMap());
     for (String key : m.keySet()) {
       items = ArrayUtils.add(items, key + ":" + m.get(key));
     }
@@ -758,8 +783,8 @@ public class ItemDao implements ItemInterface {
     }
     JSONArray dataArray = JSONArray.fromObject(StringUtils.split(text, ','));
     String convData = "";
-    for (int i = 0; i < dataArray.size(); i++) {
-      convData += "'" + dataArray.get(i).toString() + "',";
+    for (Object element : dataArray) {
+      convData += "'" + element.toString() + "',";
     }
     return StringUtils.removeEnd(convData, ",");
   }
@@ -784,17 +809,17 @@ public class ItemDao implements ItemInterface {
    */
   protected void createCmnOutput(JsonArrayData jad) {
     // タイトル名称
-    List<String> cells = new ArrayList<String>();
+    List<String> cells = new ArrayList<>();
     cells.add(jad.getJSONText(DefineReport.ID_HIDDEN_REPORT_NAME));
     getWhere().add(0, cells);
 
     // 空白行
-    cells = new ArrayList<String>();
+    cells = new ArrayList<>();
     cells.add("");
     getWhere().add(1, cells);
 
     // 空白行
-    cells = new ArrayList<String>();
+    cells = new ArrayList<>();
     cells.add("");
     getWhere().add(cells);
   }
@@ -802,7 +827,7 @@ public class ItemDao implements ItemInterface {
   /**
    * 必須分類条件時の条件有効無効判断<br>
    * 集計単位と分類の選択値によって、条件が有効か無効かを返す。<br>
-   * 
+   *
    * @param type 判断する条件値(=集計単位の各要素の値)
    * @param szSyukei 集計単位選択値
    * @param szBunrui 分類条件選択値
@@ -810,10 +835,7 @@ public class ItemDao implements ItemInterface {
    */
   protected boolean isUsefulBunrui(DefineReport.Option type, String szSyukei, String szBunrui) {
     // 選択値が空の場合は条件無効
-    if (StringUtils.isEmpty(szBunrui)) {
-      return false;
-    }
-    if (DefineReport.Values.NONE.getVal().equals(szBunrui)) {
+    if (StringUtils.isEmpty(szBunrui) || DefineReport.Values.NONE.getVal().equals(szBunrui)) {
       return false;
     }
     return this.isUsefulBunrui(type, szSyukei);
@@ -822,7 +844,7 @@ public class ItemDao implements ItemInterface {
   /**
    * 必須分類条件時の条件有効無効判断<br>
    * 集計単位と分類の選択値によって、条件が有効か無効かを返す。<br>
-   * 
+   *
    * @param type 判断する条件値(=集計単位の各要素の値)
    * @param szSyukei 集計単位選択値
    * @return true:有効/false:無効
@@ -834,7 +856,7 @@ public class ItemDao implements ItemInterface {
   /**
    * 同一項目の＝条件句を返却する<br>
    * <br>
-   * 
+   *
    * @param collection 列名リスト
    * @param prefix1 テーブル別名1
    * @param prefix2 テーブル別名2
@@ -851,7 +873,7 @@ public class ItemDao implements ItemInterface {
   /**
    * 同一項目の＝条件句を返却する<br>
    * <br>
-   * 
+   *
    * @param collection 列名リスト
    * @param prefix1 テーブル別名1
    * @param prefix2 テーブル別名2
@@ -868,7 +890,7 @@ public class ItemDao implements ItemInterface {
   /**
    * 同一項目のnvl句を返却する<br>
    * <br>
-   * 
+   *
    * @param collection 列名リスト
    * @param prefix1 テーブル別名1
    * @param prefix2 テーブル別名2
@@ -885,7 +907,7 @@ public class ItemDao implements ItemInterface {
   /**
    * 同一項目のnvl句を返却する<br>
    * <br>
-   * 
+   *
    * @param collection 列名リスト
    * @param prefix1 テーブル別名1
    * @param prefix2 テーブル別名2
@@ -902,7 +924,7 @@ public class ItemDao implements ItemInterface {
   /**
    * feche条件句を返却する<br>
    * <br>
-   * 
+   *
    * @param rowNum 最大行数
    * @return =条件句
    */
@@ -913,7 +935,7 @@ public class ItemDao implements ItemInterface {
   /**
    * feche条件句を返却する<br>
    * <br>
-   * 
+   *
    * @param rowNum 最大行数
    * @return =条件句
    */
@@ -934,7 +956,7 @@ public class ItemDao implements ItemInterface {
 
   /**
    * メッセージの設定
-   * 
+   *
    * @param message メッセージ文字列
    */
   @Override
@@ -945,7 +967,7 @@ public class ItemDao implements ItemInterface {
   /**
    * 登録可能店舗判断<br>
    * 選択店舗が自店舗か否かを返す。<br>
-   * 
+   *
    * @param type 判断する条件値(=集計単位の各要素の値)
    * @param szSyukei 集計単位選択値
    * @param szBunrui 分類条件選択値
@@ -964,7 +986,7 @@ public class ItemDao implements ItemInterface {
   /**
    * 予算登録可能期間判断<br>
    * 予算を変更可能な期間か否か判断する<br>
-   * 
+   *
    * @param map2 検索条件
    * @param userInfo2 ユーザー情報
    * @return true:有効/false:無効
@@ -975,7 +997,7 @@ public class ItemDao implements ItemInterface {
     // String szBumon = map2.get("BUMON"); // 部門
 
     // 権限ユーザーの場合は、全店舗、常に変更可能
-    if (userInfo2.isAdminUser()) {
+    if (userInfo2.isAdminUser() && !szTenpo.equals("-1")) {
       return true;
 
       // 店舗ユーザーの場合は、自店舗に限り、権限によって変更可能な期間が異なる
@@ -1038,7 +1060,7 @@ public class ItemDao implements ItemInterface {
    * 締め日を取得<br>
    * SATMS.PIMSKB IKBGPID IKBUQID IBKUQVL IBKVSEQ IBKRMRK<br>
    * 9 0 22 1 予算入力最終日（３月、９月）
-   * 
+   *
    * @return
    */
   private String getSimeDay() {
@@ -1056,7 +1078,7 @@ public class ItemDao implements ItemInterface {
   /**
    * 店長予算案登録可能期間判断<br>
    * 店長予算案を変更可能な期間か否か判断する<br>
-   * 
+   *
    * @param map2 検索条件
    * @param userInfo2 ユーザー情報
    * @return true:有効/false:無効
@@ -1065,9 +1087,8 @@ public class ItemDao implements ItemInterface {
     String szKikanF = map2.get("KIKAN_F"); // 期間FROM
     String szTenpo = map2.get("TENPO"); // 店舗
     // String szBumon = map2.get("BUMON"); // 部門
-
     // 権限ユーザーの場合は、全店舗、常に変更可能
-    if (userInfo2.isAdminUser()) {
+    if (userInfo2.isAdminUser() && !szTenpo.equals("-1")) {
       return true;
 
       // 店舗ユーザーの場合は、自店舗に限り、権限によって変更可能な期間が異なる
@@ -1077,7 +1098,6 @@ public class ItemDao implements ItemInterface {
 
       String today = CmnDate.dateFormat(inputdt, DATE_FORMAT.DEFAULT_DATETIME);
       String year = CmnDate.dateFormat(inputdt, DATE_FORMAT.DEFAULT_YEAR);
-
       // 過去の店長予算案は一律変更不可
       if (yosandt.getTime() < inputdt.getTime()) {
         return false;
@@ -1109,7 +1129,7 @@ public class ItemDao implements ItemInterface {
   /**
    * 客数登録可能期間判断<br>
    * 客数を変更可能な期間か否か判断する<br>
-   * 
+   *
    * @param map2 検索条件
    * @param userInfo2 ユーザー情報
    * @return true:有効/false:無効
@@ -1153,7 +1173,7 @@ public class ItemDao implements ItemInterface {
   /**
    * イベント情報登録可能期間判断<br>
    * イベント情報を変更可能な期間か否か判断する<br>
-   * 
+   *
    * @param map2 検索条件
    * @param userInfo2 ユーザー情報
    * @return true:有効/false:無効
@@ -1176,17 +1196,56 @@ public class ItemDao implements ItemInterface {
   }
 
   /**
+   * イベント情報登録可能期間判断<br>
+   * イベント情報を変更可能な期間か否か判断する<br>
+   *
+   * @param map2 検索条件
+   * @param userInfo2 ユーザー情報
+   * @return true:有効/false:無効
+   */
+  public boolean canChangeWeatherKikan(HashMap<String, String> map2, User userInfo2) {
+    String szTenpo = map2.get("TENPO"); // 店舗
+
+    // 権限ユーザーの場合は、全店舗の場合を除き、常に変更可能
+    if (userInfo2.isAdminUser() && !szTenpo.equals("-1")) {
+      return true;
+
+      // 店舗ユーザーの場合は、自店舗に限り、権限によって変更可能
+    } else if (userInfo2.isTenpoUser() && StringUtils.equals(szTenpo, userInfo2.getTenpo())) {
+      // 店長・主任権限の場合、常に変更可能
+      if (userInfo2.isTentyo()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
    * 天気情報のWHEN文を作成<br>
-   * 
+   *
    * @return WHEN文
    */
   public String getWeathernewsSql() {
-    return " when '100' then '晴'" + " when '101' then '晴時々曇'" + " when '102' then '晴一時雨'" + " when '103' then '晴時々雨'" + " when '104' then '晴一時雪'" + " when '105' then '晴時々雪'" + " when '106' then '晴一時雨か雪'" + " when '107' then '晴時々雨か雪'" + " when '108' then '晴一時雨か雷雨'" + " when '110' then '晴後時々曇'" + " when '111' then '晴後曇'" + " when '112' then '晴後一時雨'" + " when '113' then '晴後時々雨'" + " when '114' then '晴後雨'" + " when '115' then '晴後一時雪'" + " when '116' then '晴後時々雪'" + " when '117' then '晴後雪'" + " when '118' then '晴後雨か雪'" + " when '119' then '晴後雨か雷雨'"
-        + " when '120' then '晴朝夕一時雨'" + " when '121' then '晴朝のうち一時雨'" + " when '122' then '晴夕方一時雨'" + " when '123' then '晴山沿い雷雨'" + " when '124' then '晴山沿い雪'" + " when '125' then '晴午後は雷雨'" + " when '126' then '晴昼頃から雨'" + " when '127' then '晴夕方から雨'" + " when '128' then '晴夜は雨'" + " when '129' then '晴夜半から雨'" + " when '130' then '朝のうち霧後晴'" + " when '131' then '晴明け方霧'" + " when '132' then '晴朝夕曇'" + " when '140' then '晴時々雨で雷を伴う'" + " when '160' then '晴一時雪か雨'" + " when '170' then '晴時々雪か雨'" + " when '181' then '晴後雪か雨'" + " when '200' then '曇'"
-        + " when '201' then '曇時々晴'" + " when '202' then '曇一時雨'" + " when '203' then '曇時々雨'" + " when '204' then '曇一時雪'" + " when '205' then '曇時々雪'" + " when '206' then '曇一時雨か雪'" + " when '207' then '曇時々雨か雪'" + " when '208' then '曇一時雨か雷雨'" + " when '209' then '霧'" + " when '210' then '曇後時々晴'" + " when '211' then '曇後晴'" + " when '212' then '曇後一時雨'" + " when '213' then '曇後時々雨'" + " when '214' then '曇後雨'" + " when '215' then '曇後一時雪'" + " when '216' then '曇後時々雪'" + " when '217' then '曇後雪'" + " when '218' then '曇後雨か雪'" + " when '219' then '曇後雨か雷雨'"
-        + " when '220' then '曇朝夕一時雨'" + " when '221' then '曇朝のうち一時雨'" + " when '222' then '曇夕方一時雨'" + " when '223' then '曇日中時々晴'" + " when '224' then '曇昼頃から雨'" + " when '225' then '曇夕方から雨'" + " when '226' then '曇夜は雨'" + " when '227' then '曇夜半から雨'" + " when '228' then '曇昼頃から雪'" + " when '229' then '曇夕方から雪'" + " when '230' then '曇夜は雪'" + " when '231' then '曇海上海岸は霧か霧雨'" + " when '240' then '曇時々雨で雷を伴う'" + " when '250' then '曇時々雪で雷を伴う'" + " when '260' then '曇一時雪か雨'" + " when '270' then '曇時々雪か雨'" + " when '281' then '曇後雪か雨'" + " when '300' then '雨'"
-        + " when '301' then '雨時々晴'" + " when '302' then '雨時々止む'" + " when '303' then '雨時々雪'" + " when '304' then '雨か雪'" + " when '306' then '大雨'" + " when '308' then '雨で暴風を伴う'" + " when '309' then '雨一時雪'" + " when '311' then '雨後晴'" + " when '313' then '雨後曇'" + " when '314' then '雨後時々雪'" + " when '315' then '雨後雪'" + " when '316' then '雨か雪後晴'" + " when '317' then '雨か雪後曇'" + " when '320' then '朝のうち雨後晴'" + " when '321' then '朝のうち雨後曇'" + " when '322' then '雨朝晩一時雪'" + " when '323' then '雨昼頃から晴'" + " when '324' then '雨夕方から晴'"
-        + " when '325' then '雨夜は晴'" + " when '326' then '雨夕方から雪'" + " when '327' then '雨夜は雪'" + " when '328' then '雨一時強く降る'" + " when '329' then '雨一時みぞれ'" + " when '340' then '雪か雨'" + " when '350' then '雨で雷を伴う'" + " when '361' then '雪か雨後晴'" + " when '371' then '雪か雨後曇'" + " when '391' then '391'" + " when '392' then '392'" + " when '393' then '393'" + " when '394' then '394'" + " when '395' then '395'" + " when '396' then '396'" + " when '400' then '雪'" + " when '401' then '雪時々晴'" + " when '402' then '雪時々止む'" + " when '403' then '雪時々雨'"
-        + " when '405' then '大雪'" + " when '406' then '風雪強い'" + " when '407' then '暴風雪'" + " when '409' then '雪一時雨'" + " when '411' then '雪後晴'" + " when '413' then '雪後曇'" + " when '414' then '雪後雨'" + " when '420' then '朝のうち雪後晴'" + " when '421' then '朝のうち雪後曇'" + " when '422' then '雪昼頃から雨'" + " when '423' then '雪夕方から雨'" + " when '424' then '雪夜半から雨'" + " when '425' then '雪一時強く降る'" + " when '426' then '雪後みぞれ'" + " when '427' then '雪一時みぞれ'" + " when '450' then '雪で雷を伴う'" + " when '999' then '欠測'";
+    return " when '100' then '晴'" + " when '101' then '晴時々曇'" + " when '102' then '晴一時雨'" + " when '103' then '晴時々雨'" + " when '104' then '晴一時雪'" + " when '105' then '晴時々雪'"
+        + " when '106' then '晴一時雨か雪'" + " when '107' then '晴時々雨か雪'" + " when '108' then '晴一時雨か雷雨'" + " when '110' then '晴後時々曇'" + " when '111' then '晴後曇'" + " when '112' then '晴後一時雨'"
+        + " when '113' then '晴後時々雨'" + " when '114' then '晴後雨'" + " when '115' then '晴後一時雪'" + " when '116' then '晴後時々雪'" + " when '117' then '晴後雪'" + " when '118' then '晴後雨か雪'"
+        + " when '119' then '晴後雨か雷雨'" + " when '120' then '晴朝夕一時雨'" + " when '121' then '晴朝のうち一時雨'" + " when '122' then '晴夕方一時雨'" + " when '123' then '晴山沿い雷雨'" + " when '124' then '晴山沿い雪'"
+        + " when '125' then '晴午後は雷雨'" + " when '126' then '晴昼頃から雨'" + " when '127' then '晴夕方から雨'" + " when '128' then '晴夜は雨'" + " when '129' then '晴夜半から雨'" + " when '130' then '朝のうち霧後晴'"
+        + " when '131' then '晴明け方霧'" + " when '132' then '晴朝夕曇'" + " when '140' then '晴時々雨で雷を伴う'" + " when '160' then '晴一時雪か雨'" + " when '170' then '晴時々雪か雨'" + " when '181' then '晴後雪か雨'"
+        + " when '200' then '曇'" + " when '201' then '曇時々晴'" + " when '202' then '曇一時雨'" + " when '203' then '曇時々雨'" + " when '204' then '曇一時雪'" + " when '205' then '曇時々雪'"
+        + " when '206' then '曇一時雨か雪'" + " when '207' then '曇時々雨か雪'" + " when '208' then '曇一時雨か雷雨'" + " when '209' then '霧'" + " when '210' then '曇後時々晴'" + " when '211' then '曇後晴'"
+        + " when '212' then '曇後一時雨'" + " when '213' then '曇後時々雨'" + " when '214' then '曇後雨'" + " when '215' then '曇後一時雪'" + " when '216' then '曇後時々雪'" + " when '217' then '曇後雪'"
+        + " when '218' then '曇後雨か雪'" + " when '219' then '曇後雨か雷雨'" + " when '220' then '曇朝夕一時雨'" + " when '221' then '曇朝のうち一時雨'" + " when '222' then '曇夕方一時雨'" + " when '223' then '曇日中時々晴'"
+        + " when '224' then '曇昼頃から雨'" + " when '225' then '曇夕方から雨'" + " when '226' then '曇夜は雨'" + " when '227' then '曇夜半から雨'" + " when '228' then '曇昼頃から雪'" + " when '229' then '曇夕方から雪'"
+        + " when '230' then '曇夜は雪'" + " when '231' then '曇海上海岸は霧か霧雨'" + " when '240' then '曇時々雨で雷を伴う'" + " when '250' then '曇時々雪で雷を伴う'" + " when '260' then '曇一時雪か雨'" + " when '270' then '曇時々雪か雨'"
+        + " when '281' then '曇後雪か雨'" + " when '300' then '雨'" + " when '301' then '雨時々晴'" + " when '302' then '雨時々止む'" + " when '303' then '雨時々雪'" + " when '304' then '雨か雪'" + " when '306' then '大雨'"
+        + " when '308' then '雨で暴風を伴う'" + " when '309' then '雨一時雪'" + " when '311' then '雨後晴'" + " when '313' then '雨後曇'" + " when '314' then '雨後時々雪'" + " when '315' then '雨後雪'"
+        + " when '316' then '雨か雪後晴'" + " when '317' then '雨か雪後曇'" + " when '320' then '朝のうち雨後晴'" + " when '321' then '朝のうち雨後曇'" + " when '322' then '雨朝晩一時雪'" + " when '323' then '雨昼頃から晴'"
+        + " when '324' then '雨夕方から晴'" + " when '325' then '雨夜は晴'" + " when '326' then '雨夕方から雪'" + " when '327' then '雨夜は雪'" + " when '328' then '雨一時強く降る'" + " when '329' then '雨一時みぞれ'"
+        + " when '340' then '雪か雨'" + " when '350' then '雨で雷を伴う'" + " when '361' then '雪か雨後晴'" + " when '371' then '雪か雨後曇'" + " when '391' then '391'" + " when '392' then '392'"
+        + " when '393' then '393'" + " when '394' then '394'" + " when '395' then '395'" + " when '396' then '396'" + " when '400' then '雪'" + " when '401' then '雪時々晴'" + " when '402' then '雪時々止む'"
+        + " when '403' then '雪時々雨'" + " when '405' then '大雪'" + " when '406' then '風雪強い'" + " when '407' then '暴風雪'" + " when '409' then '雪一時雨'" + " when '411' then '雪後晴'" + " when '413' then '雪後曇'"
+        + " when '414' then '雪後雨'" + " when '420' then '朝のうち雪後晴'" + " when '421' then '朝のうち雪後曇'" + " when '422' then '雪昼頃から雨'" + " when '423' then '雪夕方から雨'" + " when '424' then '雪夜半から雨'"
+        + " when '425' then '雪一時強く降る'" + " when '426' then '雪後みぞれ'" + " when '427' then '雪一時みぞれ'" + " when '450' then '雪で雷を伴う'" + " when '999' then '欠測'";
   }
 }
