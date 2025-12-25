@@ -215,7 +215,7 @@ tr.ctrlRow td {
 	<td style="text-align: center;" class="header">昨年実績</td>
 	<td style="text-align: center;" class="header" colspan="7">予算組ポイント</td>
 </tr>
-<%for(int i = 0; i < 4; i++){ %>
+<%for(int i = 0; i < 5; i++){ %>
 <tr id="info_sum_r<%=i+1 %>">
 	<td style="text-align: center;" colspan="2"><span id="week_<%=i %>">&nbsp;</span></td>
 	<td style="text-align: right;"><span id="sumF5_<%=i %>" format="#,##0"></span></td>

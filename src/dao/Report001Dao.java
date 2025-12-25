@@ -124,16 +124,18 @@ public class Report001Dao extends ItemDao {
     // 帳票単位
     boolean isBumon = StringUtils.isNotEmpty(szBUMON) && !DefineReport.Values.NONE.getVal().equals(szBUMON);
 
-    String szDtF = szKikanF + "01";
+    String szDtF = CmnDate.dateFormat(CmnDate.getFirstDateOfMonth21(szKikanF + "01"));
     String szDtT = CmnDate.dateFormat(CmnDate.getLastDateOfMonth(szKikanF + "01"));
     String szWhereK = " between '" + szDtF + "' and '" + szDtT + "'"; // 期間条件
     String sbWhereT = " and T1.MISECD = '" + szTENPO + "'"; // 店舗条件
     String sbWhereB = ""; // 部門条件
+    String sbWhereGTB = ""; // 部門条件
     String sbWhereTB = ""; // 部門条件
     String sbWhereGB = ""; // 部門条件
     if (isBumon) {
       sbWhereB = " and T1.BUNBMC = '" + szBUMON + "'";
       sbWhereTB = " and TOUKATU_CD_S = '" + szBUMON + "'";
+      sbWhereGTB = " and TOUKATU_CD_S in (select   F1.BUNBMC FROM  SATYS.MCLSTT F1 where F1.BUNBMG_S =  '" + szBUMON + "')";
       sbWhereGB = " and T1.BUNBMC in (select   F1.BUNBMC FROM  SATYS.MCLSTT F1 where F1.BUNBMG_S =  '" + szBUMON + "')";
     }
 
@@ -173,7 +175,7 @@ public class Report001Dao extends ItemDao {
     sbSQL.append("  ,max(T2.TENKIKBN_PM) as TENKI_PM");
     sbSQL.append("  ,'" + szTENPO + "' as MISECD,max(T4.MISECD_HT) as MISECD_HT ");
     sbSQL.append("  from ");
-    sbSQL.append("  (select DT, DT_KIJUN from SATYS.TABKNK where DT" + szWhereK + ") T1 ");
+    sbSQL.append("  (select CALYMD as  DT,CALZDY as  DT_KIJUN from SATYS.TABKNK where CALYMD" + szWhereK + ") T1 ");
     sbSQL.append("  left outer join SATYS.TTDEVT T2 on T1.DT_KIJUN = T2.DT");
     if (szTENPO.equals("-1")) {
       sbSQL.append("  ");
@@ -209,13 +211,23 @@ public class Report001Dao extends ItemDao {
     sbSQL.append("  group by T1.DT ");
     sbSQL.append(") ");
     sbSQL.append(",MCLSHA AS (");
-    sbSQL.append("  select distinct BUNBMC, TOUKATU_CD_S from SATTR.MCLSHA where TOUKATU_CD_S in (select distinct TOUKATU_CD_S from SATYS.MCLSTT)" + sbWhereTB);
+    sbSQL.append("  select distinct BUNBMC, TOUKATU_CD_S from SATTR.MCLSHA where TOUKATU_CD_S in (select distinct TOUKATU_CD_S from SATYS.MCLSTT)");
+    if (NumberUtils.isNumber(szBUMON.replaceAll(" ", ""))) {
+      sbSQL.append(" " + sbWhereTB + " ");
+    } else {
+      sbSQL.append(" " + sbWhereGTB + " ");
+    }
     sbSQL.append(") ");
     sbSQL.append(",HAZ1 as ( ");
     sbSQL.append("  select T2.DT, T2.DT_KIJUN, T3.TOUKATU_CD_S");
     sbSQL.append("  ,sum(T1.URIKINGAKU) as URIKINGAKU ");
     sbSQL.append("  from SATTR.HABMDD T1 ");
-    sbSQL.append("  inner join MCALZ T2 on T1.COMTOB = T2.DT_KIJUN and T1.MISECD = T2.MISECD");
+    sbSQL.append("  inner join MCALZ T2 on T1.COMTOB = T2.DT_KIJUN ");
+    if (szTENPO.equals("-1")) {
+      sbSQL.append("  ");
+    } else {
+      sbSQL.append(" and T1.MISECD = T2.MISECD ");
+    }
     sbSQL.append("  inner join MCLSHA T3 on T1.BUNBMC = T3.BUNBMC");
     sbSQL.append("  where T1.URIKINGAKU <> 0 ");
     sbSQL.append("  group by T2.DT, T2.DT_KIJUN, T3.TOUKATU_CD_S");
@@ -236,24 +248,29 @@ public class Report001Dao extends ItemDao {
     sbSQL.append("  group by nvl(T1.DT,T2.DT)");
     sbSQL.append(") ");
     sbSQL.append(",DKYK as ( ");
-    sbSQL.append("  select T2.DT");
+    sbSQL.append("  select T2.CALYMD AS DT");
     sbSQL.append("   ,sum(T1.KYAKUSU) as KYAKUSU");
     sbSQL.append("  from SATYS.TABKNK T2");
     sbSQL.append("  left outer join SATYS.TTDKYK T1 on ");
-    sbSQL.append("  T2.DT_KIJUN = T1.DT");
-    sbSQL.append("  where T2.DT" + szWhereK + " ");
+    sbSQL.append("  T2.CALZDY = T1.DT");
+    sbSQL.append("  where T2.CALYMD" + szWhereK + " ");
     if (szTENPO.equals("-1")) {
       sbSQL.append("  ");
     } else {
       sbSQL.append(" " + sbWhereT + " ");
     }
-    sbSQL.append("  group by T2.DT ");
+    sbSQL.append("  group by T2.CALYMD ");
     sbSQL.append(") ");
     sbSQL.append(",KYKZ1 as ( ");
     sbSQL.append("  select T2.DT, T2.DT_KIJUN");
     sbSQL.append("  ,sum(T1.KYAKUSU_SUM) as KYAKUSU");
     sbSQL.append("  from SATTR.TNKYDD T1");
-    sbSQL.append("  inner join MCALZ T2 on T1.COMTOB = T2.DT_KIJUN and T1.MISECD = T2.MISECD");
+    sbSQL.append("  inner join MCALZ T2 on T1.COMTOB = T2.DT_KIJUN ");
+    if (szTENPO.equals("-1")) {
+      sbSQL.append("  ");
+    } else {
+      sbSQL.append(" and T1.MISECD = T2.MISECD ");
+    }
     sbSQL.append("  group by T2.DT, T2.DT_KIJUN ");
     sbSQL.append(") ");
     sbSQL.append(",KYKZ2 as ( ");
@@ -287,7 +304,7 @@ public class Report001Dao extends ItemDao {
     // sbSQL.append(" , truncate(T1.ARAYOS,0) ");
     sbSQL.append(
         "  , case when truncate(decimal(nvl(T3.URIKINGAKU,0)) / 1000, 0) = 0 then 0 else truncate(decimal(truncate (T1.AYOSAN, 0)) / decimal(truncate(decimal(T3.URIKINGAKU) / 1000, 0)) * 100, 1) end  "); // F7.修正予算÷F10.前年売上×100
-    sbSQL.append("  , truncate(decimal(T3.URIKINGAKU)/1000,0) "); // F10
+    sbSQL.append("  , round(decimal(T3.URIKINGAKU)/1000,0) "); // F10
     sbSQL.append("  , M2.TXT ");
     if (szTENPO.equals("-1")) {
       sbSQL.append("  , M2.global_EVENT_Z ");
@@ -296,12 +313,22 @@ public class Report001Dao extends ItemDao {
     }
     sbSQL.append("  , T5.KYAKUSU ");
     sbSQL.append("  , T4.KYAKUSU ");
-    sbSQL.append("  , M2.TENKI_AM "); // F15
-    sbSQL.append("  , M2.TENKI_AM "); // F15
-    sbSQL.append("  , M2.TENKI_PM ");
-    sbSQL.append("  , M2.TENKI_PM ");
-    sbSQL.append("  , M2.MAXKION ");
-    sbSQL.append("  , M2.MINKION ");
+
+    if (szTENPO.equals("-1")) {
+      sbSQL.append("  , null "); // F15
+      sbSQL.append("  , null "); // F15
+      sbSQL.append("  , null ");
+      sbSQL.append("  , null  ");
+      sbSQL.append("  , null  ");
+      sbSQL.append("  , null ");
+    } else {
+      sbSQL.append("  , M2.TENKI_AM "); // F15
+      sbSQL.append("  , M2.TENKI_AM "); // F15
+      sbSQL.append("  , M2.TENKI_PM ");
+      sbSQL.append("  , M2.TENKI_PM ");
+      sbSQL.append("  , M2.MAXKION ");
+      sbSQL.append("  , M2.MINKION ");
+    }
     sbSQL.append(" from ");
     sbSQL.append("  MCAL M1  ");
     sbSQL.append("  left outer join MCALZ M2 on M1.DT = M2.DT ");
