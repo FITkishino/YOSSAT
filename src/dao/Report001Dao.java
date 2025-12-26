@@ -375,6 +375,7 @@ public class Report001Dao extends ItemDao {
     boolean canChangeTYosanKikan = super.canChangeTYosanKikan(getMap(), userInfo);
     boolean canChangeKyakuKikan = super.canChangeKyakuKikan(getMap(), userInfo);
     boolean canChangeEventKikan = super.canChangeEventKikan(getMap(), userInfo);
+    boolean canChangeWeatherKikan = super.canChangeWeatherKikan(getMap(), userInfo);
 
     // オプション情報（タイトル）設定
     JSONObject option = new JSONObject();
@@ -385,6 +386,7 @@ public class Report001Dao extends ItemDao {
     option.put("canChangeTYosanKikan", canChangeTYosanKikan);
     option.put("canChangeKyakuKikan", canChangeKyakuKikan);
     option.put("canChangeEventKikan", canChangeEventKikan);
+    option.put("canChangeWeatherKikan", canChangeWeatherKikan);
     setOption(option);
 
     System.out.println(getClass().getSimpleName() + "[sql]" + sbSQL.toString());

@@ -994,10 +994,10 @@ public class ItemDao implements ItemInterface {
   public boolean canChangeYosanKikan(HashMap<String, String> map2, User userInfo2) {
     String szKikanF = map2.get("KIKAN_F"); // 期間FROM
     String szTenpo = map2.get("TENPO"); // 店舗
-    // String szBumon = map2.get("BUMON"); // 部門
+    String szBumon = map2.get("BUMON"); // 部門
 
-    // 権限ユーザーの場合は、全店舗、常に変更可能
-    if (userInfo2.isAdminUser() && !szTenpo.equals("-1")) {
+    // 権限ユーザーの場合は、店舗選択かつ特定部門選択時は、常に変更可能
+    if (userInfo2.isAdminUser() && !szTenpo.equals("-1") && NumberUtils.isNumber(szBumon.replaceAll(" ", ""))) {
       return true;
 
       // 店舗ユーザーの場合は、自店舗に限り、権限によって変更可能な期間が異なる
