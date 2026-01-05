@@ -1001,7 +1001,7 @@ public class ItemDao implements ItemInterface {
       return true;
 
       // 店舗ユーザーの場合は、自店舗に限り、権限によって変更可能な期間が異なる
-    } else if (userInfo2.isTenpoUser() && StringUtils.equals(szTenpo, userInfo2.getTenpo())) {
+    } else if (userInfo2.isTenpoUser() && StringUtils.equals(szTenpo, userInfo2.getTenpo()) && NumberUtils.isNumber(szBumon.replaceAll(" ", ""))) {
       Date inputdt = new Date();
       Date yosandt = CmnDate.getLastDateOfMonth(szKikanF + "01");
 

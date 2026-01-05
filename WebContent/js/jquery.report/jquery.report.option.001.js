@@ -768,7 +768,7 @@
 //				setEnterEvent(input);
 //			}
 
-			// 予測客数
+			// 昨年天気午前
 			if(inputF14){
 				var input = $('input[id^=F14_]');
 				input.each(function(){
@@ -776,7 +776,7 @@
 					$(this).focus(function(){
 						$(this).val($(this).val().replace(/,/g, ''));
 						$(this).css('color', 'black');
-						$(this).attr('maxlength', '5');
+						$(this).attr('maxlength', '1');
 						$(this).select();
 
 					}).blur(function(){
@@ -786,12 +786,12 @@
 						if(newVal!==preVal){
 							// 入力チェック
 							var func = function(){$('#'+id).val(preVal).focus();};
-							if((newVal+'').length < 1 || ! that.chkInt(newVal, 5)){
-								$.messager.alert($.message.ID_MESSAGE_TITLE_WARN,"5文字以下の半角数字で入力してください。",'warning',func);
+							if((newVal+'').length < 1 || ! that.chkInt(newVal, 1)){
+								$.messager.alert($.message.ID_MESSAGE_TITLE_WARN,"1～4の値を半角で入力してください。",'warning',func);
 								return false;
 							}
-							if(newVal*1 < 0){
-								$.messager.alert($.message.ID_MESSAGE_TITLE_WARN,"0以上の値を入力してください。",'warning',func);
+							if(newVal>= 5 ||newVal ==0 ){
+								$.messager.alert($.message.ID_MESSAGE_TITLE_WARN,"1～4の値を入力してください。",'warning',func);
 								return false;
 							}
 						}
@@ -810,9 +810,9 @@
 				});
 				setEnterEvent(input);
 			}
-			// 昨年天気午前
+			// 昨年天気午後
       if(inputF14){
-				var input = $('input[id^=F15_]');
+				var input = $('input[id^=F16_]');
 				input.each(function(){
 					var preVal = $(this).val().replace(/,/g, '');
 					$(this).focus(function(){
@@ -828,11 +828,11 @@
 						if(newVal!==preVal){
 							// 入力チェック
 							var func = function(){$('#'+id).val(preVal).focus();};
-							if((newVal+'').length < 1 || ! that.chkInt(newVal, 5)){
-								$.messager.alert($.message.ID_MESSAGE_TITLE_WARN,"5文字以下の半角数字で入力してください。",'warning',func);
+							if((newVal+'').length < 1 || ! that.chkInt(newVal, 1)){
+								$.messager.alert($.message.ID_MESSAGE_TITLE_WARN,"1～4の値を半角で入力してください。",'warning',func);
 								return false;
 							}
-							if(Number.isInteger(newVal) && newVal >= 1 && newVal <= 5){
+							if(newVal>= 5 ||newVal ==0 ){
 								$.messager.alert($.message.ID_MESSAGE_TITLE_WARN,"1～4の値を入力してください。",'warning',func);
 								return false;
 							}

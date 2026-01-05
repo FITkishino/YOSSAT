@@ -3098,7 +3098,7 @@ public class DefineReport {
   /** 共通（SATYS.MCALTT） */
   // SQL：期間(月)共通部
   private final static String ID_SQL_KIKAN_YM_2 =
-      ", TEXT from (select MIN(NENTUKI) as MINDT, MAX(NENTUKI) as MAXDT, left(NENTUKI,4) || '年' || substr(NENTUKI,5) || '月' as TEXT from SATYS.MCALTT group by NENTUKI)where  MINDT <= TO_CHAR(current_date,'YYYYMM') order by VALUE desc";
+      ", TEXT from (select MIN(NENTUKI) as MINDT, MAX(NENTUKI) as MAXDT, left(NENTUKI,4) || '年' || substr(NENTUKI,5) || '月' as TEXT from SATYS.MCALTT where COMTOB <= TO_CHAR(ADD_MONTHS(current_date,1), 'YYYYMMDD') group by NENTUKI) order by VALUE desc";
   // SQL：期間(月)FROM
   public final static String ID_SQL_KIKAN_YM_FROM = "select MINDT as VALUE" + ID_SQL_KIKAN_YM_2;
   // SQL：期間(月)TO
