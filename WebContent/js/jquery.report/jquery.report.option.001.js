@@ -52,7 +52,7 @@
 		gridTitle:[],						// 検索結果
 		commentChangeIdx:999,				// コメントは行単位データではないため、変更時、変更配列に行番号の代わりに特殊な数値を設定し、変更したか否かを判断する
 		yosChangePrefix:1000,				// 予算系と予測客数は異なるテーブルへの更新のため、変更情報は別途保持。どちらを変更したかを判断するための数値
-		kykChangePrefix:2000,				// 予算系と予測客数は異なるテーブルへの更新のため、変更情報は別途保持。どちらを変更したかを判断するための数値
+		//kykChangePrefix:2000,				// 予算系と予測客数は異なるテーブルへの更新のため、変更情報は別途保持。どちらを変更したかを判断するための数値
 		initializes : true,
 		initialize: function (reportno){	// （必須）初期化
 			var that = this;
@@ -243,54 +243,54 @@
 		 * 按分(DB更新)ボタンイベント
 		 * @param {Object} e
 		 */
-		pushAnbun:function(e){
-			if ($(this).linkbutton('options').disabled)	return false;
-
-			// レポート番号取得
-			var reportno=$($.id.hidden_reportno).val();
-			// レポート定義位置
-			var reportNumber = $.getReportNumber(reportno);
-			if (typeof(reportNumber) !== 'number') { alert("レポート定義が見つかりません。"); return false;}
-
-			// JS情報取得
-			var that = $.report[reportNumber];
-			var id = $(this).attr('id');
-
-			var rtn = false;
-			if($.isFunction(that.updValidation)) { rtn = that.updValidation(id);}
-			if(rtn){
-				var func = function(r){
-					if (r) {
-						// マスク追加
-						$.appendMask();
-
-						// セッションタイムアウト、利用時間外の確認
-						if ($.checkIsTimeout()) return false;
-
-						// ログ情報の格納
-						$.post(
-							$.reg.easy ,
-							{
-								"page"	: reportno ,
-								"obj"	: id,
-								"sel"	: new Date().getTime(),
-								"userid": $($.id.hidden_userid).val(),
-								"user"	: $($.id.hiddenUser).val(),
-								"report": $($.id.hiddenReport).val(),
-								"json"	: ""
-							},
-							function(json){}
-						);
-						that.updSuccess(id);
-
-						return true;
-					} else {
-						return false;
-					}
-				};
-				$.messager.confirm($.message.ID_MESSAGE_TITLE_CONF,'店長予算案の按分を実行します。よろしいでしょうか？', func);
-			}
-		},
+//		pushAnbun:function(e){
+//			if ($(this).linkbutton('options').disabled)	return false;
+//
+//			// レポート番号取得
+//			var reportno=$($.id.hidden_reportno).val();
+//			// レポート定義位置
+//			var reportNumber = $.getReportNumber(reportno);
+//			if (typeof(reportNumber) !== 'number') { alert("レポート定義が見つかりません。"); return false;}
+//
+//			// JS情報取得
+//			var that = $.report[reportNumber];
+//			var id = $(this).attr('id');
+//
+//			var rtn = false;
+//			if($.isFunction(that.updValidation)) { rtn = that.updValidation(id);}
+//			if(rtn){
+//				var func = function(r){
+//					if (r) {
+//						// マスク追加
+//						$.appendMask();
+//
+//						// セッションタイムアウト、利用時間外の確認
+//						if ($.checkIsTimeout()) return false;
+//
+//						// ログ情報の格納
+//						$.post(
+//							$.reg.easy ,
+//							{
+//								"page"	: reportno ,
+//								"obj"	: id,
+//								"sel"	: new Date().getTime(),
+//								"userid": $($.id.hidden_userid).val(),
+//								"user"	: $($.id.hiddenUser).val(),
+//								"report": $($.id.hiddenReport).val(),
+//								"json"	: ""
+//							},
+//							function(json){}
+//						);
+//						that.updSuccess(id);
+//
+//						return true;
+//					} else {
+//						return false;
+//					}
+//				};
+//				$.messager.confirm($.message.ID_MESSAGE_TITLE_CONF,'店長予算案の按分を実行します。よろしいでしょうか？', func);
+//			}
+//		},
 		updValidation: function(id){	// （必須）批准
 			var that = this;
 			// EasyUI のフォームメソッド 'validate' 実施
@@ -331,19 +331,23 @@
 								IDX: i+1,		// エラーメッセージ用に行番号を追加
 								F1 : rows[i]["F1"],
 								F2 : $("#F3_"+i).val(),
-								F3 : $("#F6_"+i).val().replace(/,/g, '')
+								F3 : $("#F6_"+i).val().replace(/,/g, ''),
+								F4 : $("#F14_"+i).val(),
+								F5 : $("#F16_"+i).val(),
+								F6 : $("#F17_"+i).val(),
+								F7 : $("#F18_"+i).val()
 							};
 						targetRows.push(rowData);
 					}
-					var kykIdx = that.kykChangePrefix + i;
-					if($.inArray(kykIdx+'', changedIndex) !== -1){
-						var rowData = {
-								IDX: i+1,		// エラーメッセージ用に行番号を追加
-								F1 : rows[i]["F1"],
-								F2 : $("#F14_"+i).val().replace(/,/g, '')
-							};
-						targetRows2.push(rowData);
-					}
+//					var kykIdx = that.kykChangePrefix + i;
+//					if($.inArray(kykIdx+'', changedIndex) !== -1){
+//						var rowData = {
+//								IDX: i+1,		// エラーメッセージ用に行番号を追加
+//								F1 : rows[i]["F1"],
+//								F2 : $("#F14_"+i).val().replace(/,/g, '')
+//							};
+//						targetRows2.push(rowData);
+//					}
 				}
 				if($.inArray(that.commentChangeIdx, changedIndex)){
 					txtComment = $('#TxtComment').val();
@@ -755,7 +759,7 @@
 						$(this).val(getFormat(newVal, '#,##0'));
 
 						if(newVal!==preVal){
-							var changeIdx = that.kykChangePrefix + id.split("_")[1]*1
+							var changeIdx = that.yosChangePrefix + id.split("_")[1]*1
 							$.setChangeIdx(changeIdx);
 							preVal = newVal;
               //天気マークの更新
@@ -800,7 +804,7 @@
 						$(this).val(getFormat(newVal, '#,##0'));
 
 						if(newVal!==preVal){
-							var changeIdx = that.kykChangePrefix + id.split("_")[1]*1
+							var changeIdx = that.yosChangePrefix + id.split("_")[1]*1
 							$.setChangeIdx(changeIdx);
 							preVal = newVal;
 							// 合計値計算
@@ -842,7 +846,7 @@
 						$(this).val(getFormat(newVal, '#,##0'));
 
 						if(newVal!==preVal){
-							var changeIdx = that.kykChangePrefix + id.split("_")[1]*1
+							var changeIdx = that.yosChangePrefix + id.split("_")[1]*1
 							$.setChangeIdx(changeIdx);
 							preVal = newVal;
 							// 合計値計算
@@ -881,7 +885,7 @@
 						$(this).val(getFormat(newVal, '#,##0'));
 
 						if(newVal!==preVal){
-							var changeIdx = that.kykChangePrefix + id.split("_")[1]*1
+							var changeIdx = that.yosChangePrefix + id.split("_")[1]*1
 							$.setChangeIdx(changeIdx);
 							preVal = newVal;
 							// 合計値計算

@@ -2,17 +2,10 @@ package dao;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.ArrayUtils;
@@ -460,15 +453,21 @@ public class Report001Dao extends ItemDao {
     // 店舗単位情報更新
     if (StringUtils.equals(DefineReport.Values.ALL.getVal(), szBumon)) {
       // 更新情報
-      String values1 = "", values2 = "", values3 = "", values4 = "";
-      ArrayList<String> params1 = new ArrayList<>(), params2 = new ArrayList<>(), params3 = new ArrayList<>();
+      String values1 = "", values3 = "", values4 = "";// , values2 = ""
+      ArrayList<String> params1 = new ArrayList<>();
+      new ArrayList<>();
+      ArrayList<String> params3 = new ArrayList<>();
       for (int i = 0; i < dataArray.size(); i++) {
         JSONObject data = dataArray.getJSONObject(i);
         if (data.isEmpty()) {
           continue;
         }
-        Integer yosan = NumberUtils.toInt(data.optString("F3"));
-        values1 += ",('" + szTenpo + "','" + data.optString("F1") + "', ? ," + yosan + ")"; // 店日別情報(TTDEVT)
+        String DT_KIJUN = "( select  CALZDY as DT_KIJUN  from SATYS.TABKNK  where CALYMD = " + data.optString("F1") + " )";
+        Integer tenki_am = NumberUtils.toInt(data.optString("F4"));
+        Integer tenki_pm = NumberUtils.toInt(data.optString("F5"));
+        Integer kion_am = NumberUtils.toInt(data.optString("F6"));
+        Integer kion_pm = NumberUtils.toInt(data.optString("F7"));
+        values1 += ",('" + szTenpo + "'," + DT_KIJUN + ", ? ,'" + tenki_am + "','" + tenki_pm + "','" + kion_am + "','" + kion_pm + "')"; // 店日別情報(TTDEVT)
         params1.add(data.optString("F2"));
       }
       values1 = StringUtils.removeStart(values1, ",");
@@ -477,17 +476,17 @@ public class Report001Dao extends ItemDao {
         if (data.isEmpty()) {
           continue;
         }
-        Integer kyaku = NumberUtils.toInt(data.optString("F2"));
-        values2 += ",('" + szTenpo + "','" + data.optString("F1") + "'," + kyaku + ")"; // 店日別予想客数(TTDKYK)
+        // Integer kyaku = NumberUtils.toInt(data.optString("F2"));
+        // values2 += ",('" + szTenpo + "','" + data.optString("F1") + "'," + kyaku + ")"; // 店日別予想客数(TTDKYK)
       }
-      values2 = StringUtils.removeStart(values2, ",");
+      // values2 = StringUtils.removeStart(values2, ",");
       if (ArrayUtils.contains(dataIdxs, CommentChangeIdx)) {
         values3 = "('" + szTenpo + "','" + szKikanF + "',?)"; // 店月別情報(TTMEVT)
         params3.add(comment);
       }
       values4 = StringUtils.removeStart(values4, ",");
 
-      if (!outobj.equals(DefineReport.Button.ANBUN.getObj()) && values1.length() == 0 && values2.length() == 0 && values3.length() == 0) {
+      if (!outobj.equals(DefineReport.Button.ANBUN.getObj()) && values1.length() == 0 && values3.length() == 0) {// , values2.length() == 0
         msgObj.put(MsgKey.E.getKey(), MessageUtility.getMessage(Msg.E00001.getVal()));
         return msgObj;
       }
@@ -506,74 +505,57 @@ public class Report001Dao extends ItemDao {
         sbSQL.append(" cast(T1.MISECD as character(3)) as MISECD"); // 店コード
         sbSQL.append(",cast(T1.DT as character(8)) as DT"); // 予算年月日
         sbSQL.append(",cast(T1.EVENT as varchar(1000)) as EVENT"); // イベント
-        sbSQL.append(",cast(T1.TYOSAN as decimal(9, 0)) as TYOSAN"); // 店長予算案
+        sbSQL.append(",cast(T1.TENKI_AM as CHARACTER(3)) as TENKI_AM "); //
+        sbSQL.append(",cast(T1.TENKI_PM as CHARACTER(3)) as TENKI_PM"); //
+        sbSQL.append(",cast(T1.KION_AM as DECIMAL(3, 0)) as KION_AM"); //
+        sbSQL.append(",cast(T1.KION_PM as DECIMAL(3, 0)) as KION_PM"); //
+        sbSQL.append(",0 as TYOSAN"); // 店長予算案
         sbSQL.append(",cast(" + userId + " as integer) as CD_UPDATE"); // 更新者
         sbSQL.append(",current timestamp as DT_UPDATE"); // 更新日
-        sbSQL.append(" from (values" + values1 + ") as T1(MISECD, DT, EVENT, TYOSAN)");
+        sbSQL.append(" from (values" + values1 + ") as T1(MISECD, DT, EVENT,TENKI_AM,TENKI_PM,KION_AM,KION_PM)");
         sbSQL.append(" ) as RE on (T.MISECD = RE.MISECD and T.DT = RE.DT) ");
         sbSQL.append(" when matched then ");
         sbSQL.append(" update set");
-        sbSQL.append("  EVENT    =RE.EVENT");
-        sbSQL.append(" ,TYOSAN   =RE.TYOSAN");
+        sbSQL.append("  EVENT=RE.EVENT");
+        sbSQL.append(" ,TENKIKBN_AM=RE.TENKI_AM");
+        sbSQL.append(" ,TENKIKBN_PM=RE.TENKI_PM");
+        sbSQL.append(" ,MAXKION=RE.KION_AM");
+        sbSQL.append(" ,MINKION=RE.KION_PM");
         sbSQL.append(" ,CD_UPDATE=RE.CD_UPDATE");
         sbSQL.append(" ,DT_UPDATE=RE.DT_UPDATE");
-        sbSQL.append(" when not matched then ");
-        sbSQL.append(" insert");
-        sbSQL.append(" values(RE.MISECD,RE.DT,RE.EVENT,RE.TYOSAN,RE.CD_UPDATE,RE.DT_UPDATE,RE.CD_UPDATE,RE.DT_UPDATE)");
+        // sbSQL.append(" when not matched then ");
+        // sbSQL.append(" insert");
+        // sbSQL.append(" values(RE.MISECD,RE.DT,RE.EVENT,RE.TENKI_AM,RE.TENKI_PM,RE.KION_AM,RE.KION_PM,RE.TYOSAN,RE.CD_UPDATE,RE.DT_UPDATE,RE.CD_UPDATE,RE.DT_UPDATE)");
         sqlList.add(sbSQL.toString());
         prmList.add(params1);
         lblList.add("店日別情報");
       }
-      if (values2.length() > 0) {
-        // 店日別予想客数(TTDKYK)
-        sbSQL = new StringBuffer();
-        sbSQL.append("merge into SATYS.TTDKYK as T");
-        sbSQL.append(" using (select");
-        sbSQL.append(" cast(T1.MISECD as character(3)) as MISECD"); // 店コード
-        sbSQL.append(",cast(T1.DT as character(8)) as DT"); // 予算年月日
-        sbSQL.append(",cast(T1.KYAKUSU as decimal(7, 0)) as KYAKUSU"); // 予想客数
-        sbSQL.append(",cast(" + userId + " as integer) as CD_UPDATE"); // 更新者
-        sbSQL.append(",current timestamp as DT_UPDATE"); // 更新日
-        sbSQL.append(" from (values" + values2 + ") as T1(MISECD, DT, KYAKUSU)");
-        sbSQL.append(" ) as RE on (T.MISECD = RE.MISECD and T.DT = RE.DT) ");
-        sbSQL.append(" when matched then ");
-        sbSQL.append(" update set");
-        sbSQL.append("  KYAKUSU   =RE.KYAKUSU");
-        sbSQL.append(" ,CD_UPDATE=RE.CD_UPDATE");
-        sbSQL.append(" ,DT_UPDATE=RE.DT_UPDATE");
-        sbSQL.append(" when not matched then ");
-        sbSQL.append(" insert");
-        sbSQL.append(" values(RE.MISECD,RE.DT,RE.KYAKUSU,RE.CD_UPDATE,RE.DT_UPDATE,RE.CD_UPDATE,RE.DT_UPDATE)");
-        sqlList.add(sbSQL.toString());
-        prmList.add(params2);
-        lblList.add("店日別予想客数");
-      }
+      // if (values2.length() > 0) {
+      // // 店日別予想客数(TTDKYK)
+      // sbSQL = new StringBuffer();
+      // sbSQL.append("merge into SATYS.TTDKYK as T");
+      // sbSQL.append(" using (select");
+      // sbSQL.append(" cast(T1.MISECD as character(3)) as MISECD"); // 店コード
+      // sbSQL.append(",cast(T1.DT as character(8)) as DT"); // 予算年月日
+      // sbSQL.append(",cast(T1.KYAKUSU as decimal(7, 0)) as KYAKUSU"); // 予想客数
+      // sbSQL.append(",cast(" + userId + " as integer) as CD_UPDATE"); // 更新者
+      // sbSQL.append(",current timestamp as DT_UPDATE"); // 更新日
+      // sbSQL.append(" from (values" + values2 + ") as T1(MISECD, DT, KYAKUSU)");
+      // sbSQL.append(" ) as RE on (T.MISECD = RE.MISECD and T.DT = RE.DT) ");
+      // sbSQL.append(" when matched then ");
+      // sbSQL.append(" update set");
+      // sbSQL.append(" KYAKUSU =RE.KYAKUSU");
+      // sbSQL.append(" ,CD_UPDATE=RE.CD_UPDATE");
+      // sbSQL.append(" ,DT_UPDATE=RE.DT_UPDATE");
+      // sbSQL.append(" when not matched then ");
+      // sbSQL.append(" insert");
+      // sbSQL.append(" values(RE.MISECD,RE.DT,RE.KYAKUSU,RE.CD_UPDATE,RE.DT_UPDATE,RE.CD_UPDATE,RE.DT_UPDATE)");
+      // sqlList.add(sbSQL.toString());
+      // prmList.add(params2);
+      // lblList.add("店日別予想客数");
+      // }
       if (values3.length() > 0) {
         // 店月別情報(TTMEVT)
-        sbSQL = new StringBuffer();
-        sbSQL.append("merge into SATYS.TTMEVT as T");
-        sbSQL.append(" using (select");
-        sbSQL.append(" cast(T1.MISECD as character(3)) as MISECD"); // 店コード
-        sbSQL.append(",cast(T1.NENTUKI as decimal(6, 0)) as NENTUKI"); // 年月
-        sbSQL.append(",cast(T1.EVENT as varchar(1000)) as EVENT"); // イベント
-        sbSQL.append(",cast(" + userId + " as integer) as CD_UPDATE"); // 更新者
-        sbSQL.append(",current timestamp as DT_UPDATE"); // 更新日
-        sbSQL.append(" from (values" + values3 + ") as T1(MISECD, NENTUKI, EVENT)");
-        sbSQL.append(" ) as RE on (T.MISECD = RE.MISECD and T.NENTUKI = RE.NENTUKI) ");
-        sbSQL.append(" when matched then ");
-        sbSQL.append(" update set");
-        sbSQL.append("  EVENT    =RE.EVENT");
-        sbSQL.append(" ,CD_UPDATE=RE.CD_UPDATE");
-        sbSQL.append(" ,DT_UPDATE=RE.DT_UPDATE");
-        sbSQL.append(" when not matched then ");
-        sbSQL.append(" insert");
-        sbSQL.append(" values(RE.MISECD,RE.NENTUKI,RE.EVENT,RE.CD_UPDATE,RE.DT_UPDATE,RE.CD_UPDATE,RE.DT_UPDATE)");
-        sqlList.add(sbSQL.toString());
-        prmList.add(params3);
-        lblList.add("店月別情報");
-      }
-      if (values4.length() > 0) {
-        // 昨年天気午前_午後
         sbSQL = new StringBuffer();
         sbSQL.append("merge into SATYS.TTMEVT as T");
         sbSQL.append(" using (select");
@@ -599,7 +581,7 @@ public class Report001Dao extends ItemDao {
       // 按分処理実行
       if (outobj.equals(DefineReport.Button.ANBUN.getObj())) {
         lblList.add("店部門別日別予算");
-        countList = this.executeAnbun(sqlList, prmList, map, userInfo);
+        // countList = this.executeAnbun(sqlList, prmList, map, userInfo);
       } else {
         countList = super.executeSQLs(sqlList, prmList);
       }
@@ -768,295 +750,295 @@ public class Report001Dao extends ItemDao {
    * @return 実行件数
    * @throws Exception
    */
-  public ArrayList<Integer> executeAnbun(ArrayList<String> commands, ArrayList<ArrayList<String>> paramDatas, HashMap<String, String> map, User userInfo) throws Exception {
-    ArrayList<Integer> countList = new ArrayList<>();
-
-    // コネクションの取得
-    Connection con = null;
-    try {
-      con = DBConnection.getConnection(this.JNDIname);
-    } catch (Exception e1) {
-      e1.printStackTrace();
-      return countList;
-    }
-
-    PreparedStatement statement = null;
-    ResultSet rs = null;
-    ResultSetMetaData rsmd = null;
-    long startTime, stop, diff;
-
-    try {
-      con.setAutoCommit(false);
-
-      for (int index = 0; index < commands.size(); index++) {
-        String command = commands.get(index);
-        ArrayList<String> paramData = paramDatas.get(index);
-
-        // 実行SQL設定
-        statement = con.prepareStatement(command);
-
-        // パラメータ設定
-        for (int i = 0; i < paramData.size(); i++) {
-          statement.setString((i + 1), paramData.get(i));
-        }
-        startTime = System.currentTimeMillis();
-
-        // SQL実行
-        if (DefineReport.ID_DEBUG_MODE)
-          System.out.println("[sql]" + command + "[prm]" + (paramData == null ? "" : StringUtils.join(paramData.toArray(), ",")));
-        // SQL実行
-        int count = statement.executeUpdate();
-        countList.add(count);
-
-        stop = System.currentTimeMillis();
-        diff = stop - startTime;
-        if (DefineReport.ID_DEBUG_MODE)
-          System.out.println("TIME:" + diff + " ms" + " COUNT:" + count);
-      }
-
-      // 更新が終わったところで按分処理
-      String szKikanF = map.get("KIKAN_F"); // 期間FROM
-      String szTenpo = map.get("TENPO"); // 店舗
-
-      String szDtF = szKikanF + "01";
-      String szDtT = CmnDate.dateFormat(CmnDate.getLastDateOfMonth(szKikanF + "01"));
-      String szWhereK = " between '" + szDtF + "' and '" + szDtT + "'"; // 期間条件
-      String sbWhereT = " and T1.MISECD = '" + szTenpo + "'"; // 店舗条件
-
-
-      StringBuffer sbSQL = new StringBuffer();
-      sbSQL.append(" select");
-      sbSQL.append("    T1.MISECD");
-      sbSQL.append("  , T1.DT");
-      sbSQL.append("  , T1.BUNBMC");
-      sbSQL.append("  , T2.TYOSAN_MM");
-      sbSQL.append("  , T2.TYOSAN");
-      sbSQL.append("  , truncate(sum(truncate(decimal(T2.TYOSAN)*T1.BYOSAN_KOSEHI)) over(),0) as TYOSAN_MM_N");
-      sbSQL.append("  , truncate(sum(truncate(decimal(T2.TYOSAN)*T1.BYOSAN_KOSEHI)) over(partition by T1.DT),0) as TYOSAN_N");
-      sbSQL.append("  , truncate(decimal(T2.TYOSAN)*T1.BYOSAN_KOSEHI) as YOSAN");
-      sbSQL.append("  , T1.BYOSAN_RANK");
-      sbSQL.append("  , T2.TYOSAN_RANK");
-      sbSQL.append(" from (");
-      sbSQL.append("  select ");
-      sbSQL.append("      T1.MISECD");
-      sbSQL.append("    , T1.DT");
-      sbSQL.append("    , T1.BUNBMC");
-      sbSQL.append("    , T1.UYOSAN_MM");
-      sbSQL.append("    , T1.BYOSAN");
-      sbSQL.append("    , T1.UYOSAN");
-      sbSQL.append("    , T1.BYOSAN_KOSEHI");
-      sbSQL.append("    , dense_rank() over(order by T1.BYOSAN_KOSEHI desc, T1.BUNBMC) as BYOSAN_RANK ");
-      sbSQL.append("  from (");
-      sbSQL.append("    select");
-      sbSQL.append("      T1.MISECD");
-      sbSQL.append("    , T1.DT");
-      sbSQL.append("    , T1.BUNBMC");
-      sbSQL.append("    , sum(T1.UYOSAN) over () as UYOSAN_MM");
-      sbSQL.append("    , sum(T1.UYOSAN) over (partition by T1.BUNBMC) as BYOSAN");
-      sbSQL.append("    , T1.UYOSAN");
-      sbSQL.append("    , case when sum(T1.UYOSAN) over () = 0 then 0 ");
-      sbSQL.append("      else decimal (sum(T1.UYOSAN) over (partition by T1.BUNBMC)) / sum(T1.UYOSAN) over ()");
-      sbSQL.append("      end as BYOSAN_KOSEHI");
-      sbSQL.append("    from");
-      sbSQL.append("      SATYS.TTBDYS T1 ");
-      sbSQL.append("    where T1.DT " + szWhereK + sbWhereT);
-      sbSQL.append("  ) T1");
-      sbSQL.append("  order by BUNBMC");
-      sbSQL.append(" ) T1");
-      sbSQL.append(" inner join (");
-      sbSQL.append("  select ");
-      sbSQL.append("    T1.MISECD");
-      sbSQL.append("  , T1.DT");
-      sbSQL.append("  , T1.TYOSAN_MM");
-      sbSQL.append("  , T1.TYOSAN");
-      sbSQL.append("  , T1.TYOSAN_KOSEHI");
-      sbSQL.append("  , ROW_NUMBER() OVER(ORDER BY T1.TYOSAN_KOSEHI desc, T1.DT) as TYOSAN_RANK");
-      sbSQL.append("  from (");
-      sbSQL.append("    select");
-      sbSQL.append("      T1.MISECD");
-      sbSQL.append("    , T1.DT");
-      sbSQL.append("    , sum(T1.TYOSAN) over () as TYOSAN_MM");
-      sbSQL.append("    , T1.TYOSAN");
-      sbSQL.append("    , case when sum(T1.TYOSAN) over () = 0 then 0 ");
-      sbSQL.append("      else decimal (T1.TYOSAN) / sum(T1.TYOSAN) over ()");
-      sbSQL.append("      end as TYOSAN_KOSEHI");
-      sbSQL.append("    from");
-      sbSQL.append("      SATYS.TTDEVT T1 ");
-      sbSQL.append("    where T1.DT " + szWhereK + sbWhereT);
-      sbSQL.append("  ) T1");
-      sbSQL.append(" ) T2 on T1.MISECD = T2.MISECD and T1.DT = T2.DT");
-      sbSQL.append(" order by BYOSAN_RANK, TYOSAN_RANK");
-
-      String command = sbSQL.toString();
-      // 実行SQL設定
-      statement = con.prepareStatement(command);
-      startTime = System.currentTimeMillis();
-      // SQL実行
-      if (DefineReport.ID_DEBUG_MODE)
-        System.out.println("[sql]" + command);
-      rs = statement.executeQuery();
-      stop = System.currentTimeMillis();
-      diff = stop - startTime;
-      if (DefineReport.ID_DEBUG_MODE)
-        System.out.println("TIME:" + diff + " ms");
-
-      // 結果の取得
-      long inpSumTyosan = 0l, calSumTyosan = 0l;
-      Map<String, JSONObject> uYosan = new LinkedHashMap<>();
-      Map<String, JSONObject> bYosan = new LinkedHashMap<>();
-      Map<String, JSONObject> tYosan = new LinkedHashMap<>();
-      rsmd = rs.getMetaData();
-      int sizeColumn = rsmd.getColumnCount(); // カラム数
-      int index = 0;
-      while (rs.next()) {
-        JSONObject obj = new JSONObject();
-        for (int i = 1; i <= sizeColumn; i++) {
-          obj.put(rsmd.getColumnName(i), rs.getString(i));
-        }
-        if (index == 0) {
-          inpSumTyosan = obj.optLong("TYOSAN_MM", 0);
-          calSumTyosan = obj.optLong("TYOSAN_MM_N", 0);
-        }
-        String bmn = StringUtils.trim(obj.optString("BUNBMC"));
-        if (!bYosan.containsKey(bmn)) {
-          JSONObject bObj = new JSONObject();
-          bObj.put("BYOSAN_RANK", obj.optString("BYOSAN_RANK"));
-          bYosan.put(bmn, bObj);
-        }
-        String dt = obj.optString("DT");
-        if (!tYosan.containsKey(dt)) {
-          JSONObject tObj = new JSONObject();
-          tObj.put("TYOSAN_RANK", obj.optString("TYOSAN_RANK"));
-          tObj.put("TYOSAN", obj.optString("TYOSAN"));
-          tObj.put("TYOSAN_N", obj.optString("TYOSAN_N"));
-          tYosan.put(dt, tObj);
-        }
-        // 行データ格納
-        uYosan.put(dt + bmn, obj);
-        index++;
-      }
-
-
-      // 差分調整処理：入力店長予算案合計＝按分店長予算合計にする
-      // ※以前は店長予算案＝部門予算にする必要があったため、部門予算構成比の大きい順に、部門予算いっぱいまで足りない予算額を店長予算構成比の大きい順に足していき次の部門に移ったが、
-      // 今回の修正で店長予算案≠部門予算になったため、部門構成比の大きい順で足りない予算額を店長予算構成比の大きい順に足していき、一巡したら次の部門に移る。
-      boolean loopErr = false;
-      int loopCnt = 0;
-      // 入力店長予算案合計が、按分計算店長予算案の合計より大きい場合ループ
-      while (inpSumTyosan > calSumTyosan) {
-        for (String bkey : bYosan.keySet()) {
-          for (String tkey : tYosan.keySet()) {
-            // System.out.println(bkey + " / " + tkey + " 画面入力合計:"+inpSumTyosan + " 按分計算合計:"+calSumTyosan
-            // +" TYOSAN:"+tYosan.get(tkey).getLong("TYOSAN")+" TYOSAN_N:"+tYosan.get(tkey).getLong("TYOSAN_N")
-            // +" YOSAN:"+uYosan.get(tkey+bkey).getLong("YOSAN"));
-            // 無限エラー対策
-            loopCnt++;
-            if (loopCnt > 1000000) {
-              loopErr = true;
-              break;
-            }
-            // 入力店長予算案が、按分計算店長予算案と一致する場合、端数調整は行わない
-            if (tYosan.get(tkey).getLong("TYOSAN") == tYosan.get(tkey).getLong("TYOSAN_N")) {
-              continue;
-            }
-            calSumTyosan += 1;
-            tYosan.get(tkey).put("TYOSAN_N", tYosan.get(tkey).getLong("TYOSAN_N") + 1);
-            uYosan.get(tkey + bkey).put("YOSAN", uYosan.get(tkey + bkey).getLong("YOSAN") + 1);
-            // 合計値が一致した場合終了
-            if (inpSumTyosan == calSumTyosan) {
-              break;
-            }
-          }
-          // 合計値が一致した場合終了
-          if ((inpSumTyosan == calSumTyosan) || loopErr) {
-            break;
-          }
-        }
-        if (loopErr) {
-          break;
-        }
-      }
-      if (loopErr) {
-        setMessage(DefineReport.ID_MSG_APP_EXCEPTION);
-        throw new Exception();
-      }
-
-      // ログインユーザー情報取得
-      int userId = userInfo.getCD_user(); // ログインユーザー
-
-      // 更新情報
-      String values = "";
-      for (Map.Entry<String, JSONObject> e : uYosan.entrySet()) {
-        JSONObject data = e.getValue();
-        Long yosan = data.optLong("YOSAN", 0);
-        values += ",('" + data.optString("MISECD") + "','" + data.optString("DT") + "','" + data.optString("BUNBMC") + "'," + yosan + ")";
-      }
-      values = StringUtils.removeStart(values, ",");
-
-      sbSQL = new StringBuffer();
-      sbSQL.append("merge into SATYS.TTBDYS as T");
-      sbSQL.append(" using (select");
-      sbSQL.append("  cast(T1.MISECD as character(3)) as MISECD"); // 店コード
-      sbSQL.append(" ,cast(T1.DT as character(8)) as DT"); // 予算年月日
-      sbSQL.append(" ,cast(to_char(current date, 'YYYYMMDD') as character(8)) as DT_ENTRY"); // エントリー年月日
-      sbSQL.append(" ,cast(T1.BUNBMC as character (4)) as BUNBMC"); // 部門コード
-      sbSQL.append(" ,cast(T1.TYOSAN as decimal(9, 0)) as TYOSAN"); // 店長予算案
-      sbSQL.append(" ,cast(" + userId + " as integer) as CD_UPDATE"); // 更新者
-      sbSQL.append(" ,current timestamp as DT_UPDATE"); // 更新日
-      sbSQL.append(" from (values" + values + ") as T1(MISECD, DT, BUNBMC, TYOSAN)");
-      sbSQL.append(") as RE on (T.MISECD = RE.MISECD and T.DT = RE.DT and T.BUNBMC = RE.BUNBMC) ");
-      sbSQL.append(" when matched then ");
-      sbSQL.append(" update set");
-      sbSQL.append("  TYOSAN   =RE.TYOSAN");
-      sbSQL.append(" ,DT_ENTRY =RE.DT_ENTRY");
-      sbSQL.append(" ,CD_UPDATE=RE.CD_UPDATE");
-      sbSQL.append(" ,DT_UPDATE=RE.DT_UPDATE");
-
-      command = sbSQL.toString();
-
-      // 実行SQL設定
-      statement.close();
-      statement = con.prepareStatement(command);
-
-      // パラメータ設定
-      startTime = System.currentTimeMillis();
-
-      // SQL実行
-      if (DefineReport.ID_DEBUG_MODE)
-        System.out.println("[sql]" + command);
-      // SQL実行
-      int count = statement.executeUpdate();
-      countList.add(count);
-
-      stop = System.currentTimeMillis();
-      diff = stop - startTime;
-      if (DefineReport.ID_DEBUG_MODE)
-        System.out.println("TIME:" + diff + " ms" + " COUNT:" + count);
-
-      con.commit();
-
-    } catch (SQLException e) {
-      countList = new ArrayList<>();
-      rollback(con);
-      e.printStackTrace();
-      if (DefineReport.ID_SQLSTATE_CONNECTION_RESET.equals(e.getSQLState())) {
-        // 通信切断
-        setMessage(DefineReport.ID_MSG_CONNECTION_REST + "(" + e.getSQLState() + ")");
-      } else {
-        // その他SQLエラー
-        setMessage(DefineReport.ID_MSG_SQL_EXCEPTION + e.getMessage());
-      }
-
-    } catch (Exception e) {
-      countList = new ArrayList<>();
-      rollback(con);
-      e.printStackTrace();
-
-    } finally {
-      close(rs);
-      close(statement);
-      close(con);
-    }
-    return countList;
-  }
+  // public ArrayList<Integer> executeAnbun(ArrayList<String> commands, ArrayList<ArrayList<String>> paramDatas, HashMap<String, String> map, User userInfo) throws Exception {
+  // ArrayList<Integer> countList = new ArrayList<>();
+  //
+  // // コネクションの取得
+  // Connection con = null;
+  // try {
+  // con = DBConnection.getConnection(this.JNDIname);
+  // } catch (Exception e1) {
+  // e1.printStackTrace();
+  // return countList;
+  // }
+  //
+  // PreparedStatement statement = null;
+  // ResultSet rs = null;
+  // ResultSetMetaData rsmd = null;
+  // long startTime, stop, diff;
+  //
+  // try {
+  // con.setAutoCommit(false);
+  //
+  // for (int index = 0; index < commands.size(); index++) {
+  // String command = commands.get(index);
+  // ArrayList<String> paramData = paramDatas.get(index);
+  //
+  // // 実行SQL設定
+  // statement = con.prepareStatement(command);
+  //
+  // // パラメータ設定
+  // for (int i = 0; i < paramData.size(); i++) {
+  // statement.setString((i + 1), paramData.get(i));
+  // }
+  // startTime = System.currentTimeMillis();
+  //
+  // // SQL実行
+  // if (DefineReport.ID_DEBUG_MODE)
+  // System.out.println("[sql]" + command + "[prm]" + (paramData == null ? "" : StringUtils.join(paramData.toArray(), ",")));
+  // // SQL実行
+  // int count = statement.executeUpdate();
+  // countList.add(count);
+  //
+  // stop = System.currentTimeMillis();
+  // diff = stop - startTime;
+  // if (DefineReport.ID_DEBUG_MODE)
+  // System.out.println("TIME:" + diff + " ms" + " COUNT:" + count);
+  // }
+  //
+  // // 更新が終わったところで按分処理
+  // String szKikanF = map.get("KIKAN_F"); // 期間FROM
+  // String szTenpo = map.get("TENPO"); // 店舗
+  //
+  // String szDtF = szKikanF + "01";
+  // String szDtT = CmnDate.dateFormat(CmnDate.getLastDateOfMonth(szKikanF + "01"));
+  // String szWhereK = " between '" + szDtF + "' and '" + szDtT + "'"; // 期間条件
+  // String sbWhereT = " and T1.MISECD = '" + szTenpo + "'"; // 店舗条件
+  //
+  //
+  // StringBuffer sbSQL = new StringBuffer();
+  // sbSQL.append(" select");
+  // sbSQL.append(" T1.MISECD");
+  // sbSQL.append(" , T1.DT");
+  // sbSQL.append(" , T1.BUNBMC");
+  // sbSQL.append(" , T2.TYOSAN_MM");
+  // sbSQL.append(" , T2.TYOSAN");
+  // sbSQL.append(" , truncate(sum(truncate(decimal(T2.TYOSAN)*T1.BYOSAN_KOSEHI)) over(),0) as TYOSAN_MM_N");
+  // sbSQL.append(" , truncate(sum(truncate(decimal(T2.TYOSAN)*T1.BYOSAN_KOSEHI)) over(partition by T1.DT),0) as TYOSAN_N");
+  // sbSQL.append(" , truncate(decimal(T2.TYOSAN)*T1.BYOSAN_KOSEHI) as YOSAN");
+  // sbSQL.append(" , T1.BYOSAN_RANK");
+  // sbSQL.append(" , T2.TYOSAN_RANK");
+  // sbSQL.append(" from (");
+  // sbSQL.append(" select ");
+  // sbSQL.append(" T1.MISECD");
+  // sbSQL.append(" , T1.DT");
+  // sbSQL.append(" , T1.BUNBMC");
+  // sbSQL.append(" , T1.UYOSAN_MM");
+  // sbSQL.append(" , T1.BYOSAN");
+  // sbSQL.append(" , T1.UYOSAN");
+  // sbSQL.append(" , T1.BYOSAN_KOSEHI");
+  // sbSQL.append(" , dense_rank() over(order by T1.BYOSAN_KOSEHI desc, T1.BUNBMC) as BYOSAN_RANK ");
+  // sbSQL.append(" from (");
+  // sbSQL.append(" select");
+  // sbSQL.append(" T1.MISECD");
+  // sbSQL.append(" , T1.DT");
+  // sbSQL.append(" , T1.BUNBMC");
+  // sbSQL.append(" , sum(T1.UYOSAN) over () as UYOSAN_MM");
+  // sbSQL.append(" , sum(T1.UYOSAN) over (partition by T1.BUNBMC) as BYOSAN");
+  // sbSQL.append(" , T1.UYOSAN");
+  // sbSQL.append(" , case when sum(T1.UYOSAN) over () = 0 then 0 ");
+  // sbSQL.append(" else decimal (sum(T1.UYOSAN) over (partition by T1.BUNBMC)) / sum(T1.UYOSAN) over ()");
+  // sbSQL.append(" end as BYOSAN_KOSEHI");
+  // sbSQL.append(" from");
+  // sbSQL.append(" SATYS.TTBDYS T1 ");
+  // sbSQL.append(" where T1.DT " + szWhereK + sbWhereT);
+  // sbSQL.append(" ) T1");
+  // sbSQL.append(" order by BUNBMC");
+  // sbSQL.append(" ) T1");
+  // sbSQL.append(" inner join (");
+  // sbSQL.append(" select ");
+  // sbSQL.append(" T1.MISECD");
+  // sbSQL.append(" , T1.DT");
+  // sbSQL.append(" , T1.TYOSAN_MM");
+  // sbSQL.append(" , T1.TYOSAN");
+  // sbSQL.append(" , T1.TYOSAN_KOSEHI");
+  // sbSQL.append(" , ROW_NUMBER() OVER(ORDER BY T1.TYOSAN_KOSEHI desc, T1.DT) as TYOSAN_RANK");
+  // sbSQL.append(" from (");
+  // sbSQL.append(" select");
+  // sbSQL.append(" T1.MISECD");
+  // sbSQL.append(" , T1.DT");
+  // sbSQL.append(" , sum(T1.TYOSAN) over () as TYOSAN_MM");
+  // sbSQL.append(" , T1.TYOSAN");
+  // sbSQL.append(" , case when sum(T1.TYOSAN) over () = 0 then 0 ");
+  // sbSQL.append(" else decimal (T1.TYOSAN) / sum(T1.TYOSAN) over ()");
+  // sbSQL.append(" end as TYOSAN_KOSEHI");
+  // sbSQL.append(" from");
+  // sbSQL.append(" SATYS.TTDEVT T1 ");
+  // sbSQL.append(" where T1.DT " + szWhereK + sbWhereT);
+  // sbSQL.append(" ) T1");
+  // sbSQL.append(" ) T2 on T1.MISECD = T2.MISECD and T1.DT = T2.DT");
+  // sbSQL.append(" order by BYOSAN_RANK, TYOSAN_RANK");
+  //
+  // String command = sbSQL.toString();
+  // // 実行SQL設定
+  // statement = con.prepareStatement(command);
+  // startTime = System.currentTimeMillis();
+  // // SQL実行
+  // if (DefineReport.ID_DEBUG_MODE)
+  // System.out.println("[sql]" + command);
+  // rs = statement.executeQuery();
+  // stop = System.currentTimeMillis();
+  // diff = stop - startTime;
+  // if (DefineReport.ID_DEBUG_MODE)
+  // System.out.println("TIME:" + diff + " ms");
+  //
+  // // 結果の取得
+  // long inpSumTyosan = 0l, calSumTyosan = 0l;
+  // Map<String, JSONObject> uYosan = new LinkedHashMap<>();
+  // Map<String, JSONObject> bYosan = new LinkedHashMap<>();
+  // Map<String, JSONObject> tYosan = new LinkedHashMap<>();
+  // rsmd = rs.getMetaData();
+  // int sizeColumn = rsmd.getColumnCount(); // カラム数
+  // int index = 0;
+  // while (rs.next()) {
+  // JSONObject obj = new JSONObject();
+  // for (int i = 1; i <= sizeColumn; i++) {
+  // obj.put(rsmd.getColumnName(i), rs.getString(i));
+  // }
+  // if (index == 0) {
+  // inpSumTyosan = obj.optLong("TYOSAN_MM", 0);
+  // calSumTyosan = obj.optLong("TYOSAN_MM_N", 0);
+  // }
+  // String bmn = StringUtils.trim(obj.optString("BUNBMC"));
+  // if (!bYosan.containsKey(bmn)) {
+  // JSONObject bObj = new JSONObject();
+  // bObj.put("BYOSAN_RANK", obj.optString("BYOSAN_RANK"));
+  // bYosan.put(bmn, bObj);
+  // }
+  // String dt = obj.optString("DT");
+  // if (!tYosan.containsKey(dt)) {
+  // JSONObject tObj = new JSONObject();
+  // tObj.put("TYOSAN_RANK", obj.optString("TYOSAN_RANK"));
+  // tObj.put("TYOSAN", obj.optString("TYOSAN"));
+  // tObj.put("TYOSAN_N", obj.optString("TYOSAN_N"));
+  // tYosan.put(dt, tObj);
+  // }
+  // // 行データ格納
+  // uYosan.put(dt + bmn, obj);
+  // index++;
+  // }
+  //
+  //
+  // // 差分調整処理：入力店長予算案合計＝按分店長予算合計にする
+  // // ※以前は店長予算案＝部門予算にする必要があったため、部門予算構成比の大きい順に、部門予算いっぱいまで足りない予算額を店長予算構成比の大きい順に足していき次の部門に移ったが、
+  // // 今回の修正で店長予算案≠部門予算になったため、部門構成比の大きい順で足りない予算額を店長予算構成比の大きい順に足していき、一巡したら次の部門に移る。
+  //// boolean loopErr = false;
+  //// int loopCnt = 0;
+  //// // 入力店長予算案合計が、按分計算店長予算案の合計より大きい場合ループ
+  //// while (inpSumTyosan > calSumTyosan) {
+  //// for (String bkey : bYosan.keySet()) {
+  //// for (String tkey : tYosan.keySet()) {
+  //// // System.out.println(bkey + " / " + tkey + " 画面入力合計:"+inpSumTyosan + " 按分計算合計:"+calSumTyosan
+  //// // +" TYOSAN:"+tYosan.get(tkey).getLong("TYOSAN")+" TYOSAN_N:"+tYosan.get(tkey).getLong("TYOSAN_N")
+  //// // +" YOSAN:"+uYosan.get(tkey+bkey).getLong("YOSAN"));
+  //// // 無限エラー対策
+  //// loopCnt++;
+  //// if (loopCnt > 1000000) {
+  //// loopErr = true;
+  //// break;
+  //// }
+  //// // 入力店長予算案が、按分計算店長予算案と一致する場合、端数調整は行わない
+  //// if (tYosan.get(tkey).getLong("TYOSAN") == tYosan.get(tkey).getLong("TYOSAN_N")) {
+  //// continue;
+  //// }
+  //// calSumTyosan += 1;
+  //// tYosan.get(tkey).put("TYOSAN_N", tYosan.get(tkey).getLong("TYOSAN_N") + 1);
+  //// uYosan.get(tkey + bkey).put("YOSAN", uYosan.get(tkey + bkey).getLong("YOSAN") + 1);
+  //// // 合計値が一致した場合終了
+  //// if (inpSumTyosan == calSumTyosan) {
+  //// break;
+  //// }
+  //// }
+  //// // 合計値が一致した場合終了
+  //// if ((inpSumTyosan == calSumTyosan) || loopErr) {
+  //// break;
+  //// }
+  //// }
+  //// if (loopErr) {
+  //// break;
+  //// }
+  //// }
+  //// if (loopErr) {
+  //// setMessage(DefineReport.ID_MSG_APP_EXCEPTION);
+  //// throw new Exception();
+  //// }
+  //
+  // // ログインユーザー情報取得
+  // int userId = userInfo.getCD_user(); // ログインユーザー
+  //
+  // // 更新情報
+  // String values = "";
+  // for (Map.Entry<String, JSONObject> e : uYosan.entrySet()) {
+  // JSONObject data = e.getValue();
+  // Long yosan = data.optLong("YOSAN", 0);
+  // values += ",('" + data.optString("MISECD") + "','" + data.optString("DT") + "','" + data.optString("BUNBMC") + "'," + yosan + ")";
+  // }
+  // values = StringUtils.removeStart(values, ",");
+  //
+  // sbSQL = new StringBuffer();
+  // sbSQL.append("merge into SATYS.TTBDYS as T");
+  // sbSQL.append(" using (select");
+  // sbSQL.append(" cast(T1.MISECD as character(3)) as MISECD"); // 店コード
+  // sbSQL.append(" ,cast(T1.DT as character(8)) as DT"); // 予算年月日
+  // sbSQL.append(" ,cast(to_char(current date, 'YYYYMMDD') as character(8)) as DT_ENTRY"); // エントリー年月日
+  // sbSQL.append(" ,cast(T1.BUNBMC as character (4)) as BUNBMC"); // 部門コード
+  // sbSQL.append(" ,cast(T1.TYOSAN as decimal(9, 0)) as TYOSAN"); // 店長予算案
+  // sbSQL.append(" ,cast(" + userId + " as integer) as CD_UPDATE"); // 更新者
+  // sbSQL.append(" ,current timestamp as DT_UPDATE"); // 更新日
+  // sbSQL.append(" from (values" + values + ") as T1(MISECD, DT, BUNBMC, TYOSAN)");
+  // sbSQL.append(") as RE on (T.MISECD = RE.MISECD and T.DT = RE.DT and T.BUNBMC = RE.BUNBMC) ");
+  // sbSQL.append(" when matched then ");
+  // sbSQL.append(" update set");
+  // sbSQL.append(" TYOSAN =RE.TYOSAN");
+  // sbSQL.append(" ,DT_ENTRY =RE.DT_ENTRY");
+  // sbSQL.append(" ,CD_UPDATE=RE.CD_UPDATE");
+  // sbSQL.append(" ,DT_UPDATE=RE.DT_UPDATE");
+  //
+  // command = sbSQL.toString();
+  //
+  // // 実行SQL設定
+  // statement.close();
+  // statement = con.prepareStatement(command);
+  //
+  // // パラメータ設定
+  // startTime = System.currentTimeMillis();
+  //
+  // // SQL実行
+  // if (DefineReport.ID_DEBUG_MODE)
+  // System.out.println("[sql]" + command);
+  // // SQL実行
+  // int count = statement.executeUpdate();
+  // countList.add(count);
+  //
+  // stop = System.currentTimeMillis();
+  // diff = stop - startTime;
+  // if (DefineReport.ID_DEBUG_MODE)
+  // System.out.println("TIME:" + diff + " ms" + " COUNT:" + count);
+  //
+  // con.commit();
+  //
+  // } catch (SQLException e) {
+  // countList = new ArrayList<>();
+  // rollback(con);
+  // e.printStackTrace();
+  // if (DefineReport.ID_SQLSTATE_CONNECTION_RESET.equals(e.getSQLState())) {
+  // // 通信切断
+  // setMessage(DefineReport.ID_MSG_CONNECTION_REST + "(" + e.getSQLState() + ")");
+  // } else {
+  // // その他SQLエラー
+  // setMessage(DefineReport.ID_MSG_SQL_EXCEPTION + e.getMessage());
+  // }
+  //
+  // } catch (Exception e) {
+  // countList = new ArrayList<>();
+  // rollback(con);
+  // e.printStackTrace();
+  //
+  // } finally {
+  // close(rs);
+  // close(statement);
+  // close(con);
+  // }
+  // return countList;
+  // }
 }
