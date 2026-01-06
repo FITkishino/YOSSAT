@@ -537,7 +537,7 @@
 //					view +=	'<td style="text-align: right;"><input type="text" id="F14_'+i+'" style="width: 48px; text-align: right; ime-mode: disabled;" class="TextDisp" tabindex="-1" readonly="readonly" value="'+getFormat(row['F14'], '#,##0')+'"></td>'+
 //					'';
 //				}
-        if($.getWeathernews(row['F13'])==1  ){
+        if($.getWeathernews(row['F14'])==1  ){
 			    view +='<td style="text-align:center;"><span id="F13_'+i+'" style=" color: red;">☀</span></td>'
         }else if ($.getWeathernews(row['F14'])==2  ){
 			   view +='<td style="text-align:center;"><span id="F13_'+i+'" style=" color: grey;">☁</span></td>'
@@ -723,51 +723,6 @@
 				});
 				setEnterEvent(input);
 			}
-
-			// 店長予算案
-//			if(inputF6){
-//				var input = $('input[id^=F6_]');
-//				input.each(function(){
-//					var preVal = $(this).val().replace(/,/g, '');
-//					$(this).focus(function(e){
-//						$(this).val($(this).val().replace(/,/g, ''));
-//						$(this).css('color', 'black');
-//						$(this).attr('maxlength', '5');
-//						$(this).select();
-//						//console.log($(this).attr('id') + ".focus"+ " val" + $(this).val());
-//
-//					}).blur(function(e){
-//						var id = $(this).attr('id');
-//						var newVal = $(this).val().replace(/,/g, '');
-//						// 入力チェック
-//						if(newVal!==preVal){
-//							var func = function(){$('#'+id).val(preVal).focus();};
-//							if((newVal+'').length < 1 || ! that.chkInt(newVal, 5)){
-//								$.messager.alert($.message.ID_MESSAGE_TITLE_WARN,"5文字以下の半角数字で入力してください。",'warning',func);
-//								return false;
-//							}
-//							if(newVal*1 < 0){
-//								$.messager.alert($.message.ID_MESSAGE_TITLE_WARN,"0以上の値を入力してください。",'warning',func);
-//								return false;
-//							}
-//						}
-//
-//						$(this).removeAttr('maxlength');
-//						$(this).val(getFormat(newVal, '#,##0'));
-//
-//						if(newVal!==preVal){
-//							var changeIdx = that.yosChangePrefix + id.split("_")[1]*1
-//							$.setChangeIdx(changeIdx);
-//							preVal = newVal;
-//							// 合計値計算
-//							that.setSum();
-//						}
-//						//console.log($(this).attr('id') + ".blur"+ " val" + $(this).val());
-//					});
-//				});
-//				setEnterEvent(input);
-//			}
-
 			// 昨年天気午前
 			if(inputF14){
 				var input = $('input[id^=F14_]');
@@ -803,6 +758,8 @@
 							var changeIdx = that.kykChangePrefix + id.split("_")[1]*1
 							$.setChangeIdx(changeIdx);
 							preVal = newVal;
+              //天気マークの更新
+							that.setWeatherMark('F13_'+id.split("_")[1]*1,newVal);
 							// 合計値計算
 							that.setSum();
 						}
@@ -848,6 +805,87 @@
 							preVal = newVal;
 							// 合計値計算
 							that.setSum();
+							//天気マークの更新
+							that.setWeatherMark('F15_'+id.split("_")[1]*1,newVal);
+						}
+					});
+				});
+				setEnterEvent(input);
+			}
+			// 昨年気温午前
+      if(inputF14){
+				var input = $('input[id^=F17_]');
+				input.each(function(){
+					var preVal = $(this).val().replace(/,/g, '');
+					$(this).focus(function(){
+						$(this).val($(this).val().replace(/,/g, ''));
+						$(this).css('color', 'black');
+						$(this).attr('maxlength', '3');
+						$(this).select();
+
+					}).blur(function(){
+						var id = $(this).attr('id');
+						var newVal = $(this).val().replace(/,/g, '');
+
+						if(newVal!==preVal){
+							// 入力チェック
+							var func = function(){$('#'+id).val(preVal).focus();};
+							if(Number.isInteger(newVal)){
+								$.messager.alert($.message.ID_MESSAGE_TITLE_WARN,"半角整数の値を入力してください。",'warning',func);
+								return false;
+							}
+
+
+						}
+
+						$(this).removeAttr('maxlength');
+						$(this).val(getFormat(newVal, '#,##0'));
+
+						if(newVal!==preVal){
+							var changeIdx = that.kykChangePrefix + id.split("_")[1]*1
+							$.setChangeIdx(changeIdx);
+							preVal = newVal;
+							// 合計値計算
+							that.setSum();
+						}
+					});
+				});
+				setEnterEvent(input);
+			}
+			// 昨年気温午後
+      if(inputF14){
+				var input = $('input[id^=F18_]');
+				input.each(function(){
+					var preVal = $(this).val().replace(/,/g, '');
+					$(this).focus(function(){
+						$(this).val($(this).val().replace(/,/g, ''));
+						$(this).css('color', 'black');
+						$(this).attr('maxlength', '3');
+						$(this).select();
+
+					}).blur(function(){
+						var id = $(this).attr('id');
+						var newVal = $(this).val().replace(/,/g, '');
+
+						if(newVal!==preVal){
+							// 入力チェック
+							var func = function(){$('#'+id).val(preVal).focus();};
+							if(Number.isInteger(newVal)){
+								$.messager.alert($.message.ID_MESSAGE_TITLE_WARN,"半角整数の値を半角で入力してください。",'warning',func);
+								return false;
+							}
+
+						}
+
+						$(this).removeAttr('maxlength');
+						$(this).val(getFormat(newVal, '#,##0'));
+
+						if(newVal!==preVal){
+							var changeIdx = that.kykChangePrefix + id.split("_")[1]*1
+							$.setChangeIdx(changeIdx);
+							preVal = newVal;
+							// 合計値計算
+							that.setSum();
 						}
 					});
 				});
@@ -856,6 +894,25 @@
 			// 合計値計算
 			that.setSum();
 		},
+		setWeatherMark: function(id,newVal){ //天気マークの更新
+			        var mark = document.getElementById(id);
+		          if(newVal==1){
+			        mark.textContent='☀' ;
+			        mark.style.color = 'red';
+              }else if(newVal==2){
+				      mark.textContent='☁' ;
+				      mark.style.color= 'grey';
+			        }else if(newVal==3){
+				      mark.textContent='☂' ;
+				      mark.style.color= 'blue';
+			        }else if(newVal==4){
+						  mark.textContent='☃' ;
+						  mark.style.color= 'teal';
+				      }else{
+						  mark.textContent='' ;
+					    };
+		},
+
 		setSum: function(){		// 合計値計算
 			var sumF5_T = 0;
 			var sumF6_T = 0;

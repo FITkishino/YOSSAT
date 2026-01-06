@@ -140,7 +140,7 @@ public class Report001Dao extends ItemDao {
     }
 
     // 一覧表情報
-    // TODO:天気・気温情報今適当
+    // TODO:天気・気温情報
     StringBuffer sbSQL = new StringBuffer();
     System.out.print("bumon_map;" + getMap().get("BUMON") + "\n");
     System.out.print("bumon_;" + szBUMON + "\n");
@@ -318,9 +318,9 @@ public class Report001Dao extends ItemDao {
       sbSQL.append("  , null  ");
       sbSQL.append("  , null ");
     } else {
+      sbSQL.append("  , null "); // F15
       sbSQL.append("  , M2.TENKI_AM "); // F15
-      sbSQL.append("  , M2.TENKI_AM "); // F15
-      sbSQL.append("  , M2.TENKI_PM ");
+      sbSQL.append("  , null ");
       sbSQL.append("  , M2.TENKI_PM ");
       sbSQL.append("  , M2.MAXKION ");
       sbSQL.append("  , M2.MINKION ");
