@@ -111,7 +111,7 @@ public class Report001Dao extends ItemDao {
 
     // タイトル情報(任意)設定
     List<String> titleList = new ArrayList<>();
-    titleList.addAll(Arrays.asList("日付", "週", "今年の要因", "日付", "予算案", "店長予算案", "修正予算", "荒利予算額", "前年比", "前年売上", "前年日付", "前年の要因", "前年客数", "予測客数", "前年天気", "前年最高気温", "前年最低気温"));
+    titleList.addAll(Arrays.asList("日付", "週", "今年の要因", "今年日付", "予算案", "修正予算", "昨年比", "昨年実績", "昨年日付", "昨年の要因", "昨年客数", "昨年のフロア客数", "昨年天気午前", "昨年天気午後", "昨年最高気温", "昨年最低気温"));
 
 
     // 帳票単位
@@ -701,22 +701,16 @@ public class Report001Dao extends ItemDao {
         if (!InputChecker.isTextLessThanMaxByteLength(data.optString("F2"), DefineReport.InpText.EVENT_DD.getLen())) {
           msg.add(MessageUtility.getCheckMaxLengthMessage(DefineReport.InpText.EVENT_DD, fieldType, new String[] {rowIndex}));
         }
-        // 店長予算案
-        if (!InputChecker.isTextLessThanMaxByteLength(data.optString("F3"), DefineReport.InpText.TYOSAN.getLen())) {
-          msg.add(MessageUtility.getCheckMaxLengthMessage(DefineReport.InpText.TYOSAN, fieldType, new String[] {rowIndex}));
-        } else if (!InputChecker.isZeroOrPlusInteger(data.optString("F3"))) {
-          msg.add(MessageUtility.getCheckZeroOrPlusIntegerMessage(DefineReport.InpText.TYOSAN, fieldType, new String[] {rowIndex}));
-        }
+        // // 店長予算案
+        // if (!InputChecker.isTextLessThanMaxByteLength(data.optString("F3"), DefineReport.InpText.TYOSAN.getLen())) {
+        // msg.add(MessageUtility.getCheckMaxLengthMessage(DefineReport.InpText.TYOSAN, fieldType, new String[] {rowIndex}));
+        // } else if (!InputChecker.isZeroOrPlusInteger(data.optString("F3"))) {
+        // msg.add(MessageUtility.getCheckZeroOrPlusIntegerMessage(DefineReport.InpText.TYOSAN, fieldType, new String[] {rowIndex}));
+        // }
       }
       for (int i = 0; i < dataArray2.size(); i++) {
         JSONObject data = dataArray2.getJSONObject(i);
-        String rowIndex = data.optString("IDX");
-        // 予測客数
-        if (!InputChecker.isTextLessThanMaxByteLength(data.optString("F2"), DefineReport.InpText.KYAKUSU.getLen())) {
-          msg.add(MessageUtility.getCheckMaxLengthMessage(DefineReport.InpText.KYAKUSU, fieldType, new String[] {rowIndex}));
-        } else if (!InputChecker.isZeroOrPlusInteger(data.optString("F2"))) {
-          msg.add(MessageUtility.getCheckZeroOrPlusIntegerMessage(DefineReport.InpText.KYAKUSU, fieldType, new String[] {rowIndex}));
-        }
+        data.optString("IDX");
       }
       String[] dataIdxs = StringUtils.split(dataIdx, ","); // 対象情報Index
       if (ArrayUtils.contains(dataIdxs, CommentChangeIdx)) {
