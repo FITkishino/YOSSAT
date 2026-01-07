@@ -453,9 +453,11 @@ public class Report001Dao extends ItemDao {
     // 店舗単位情報更新
     if (StringUtils.equals(DefineReport.Values.ALL.getVal(), szBumon)) {
       // 更新情報
-      String values1 = "", values3 = "", values4 = "";// , values2 = ""
-      ArrayList<String> params1 = new ArrayList<>();
+      String values1 = "", values2 = "", values3 = "", values4 = "";
+      // ArrayList<String> params1 = new ArrayList<>();
       new ArrayList<>();
+      ArrayList<String> params1 = new ArrayList<>();
+      ArrayList<String> params2 = new ArrayList<>();
       ArrayList<String> params3 = new ArrayList<>();
       for (int i = 0; i < dataArray.size(); i++) {
         JSONObject data = dataArray.getJSONObject(i);
@@ -463,12 +465,12 @@ public class Report001Dao extends ItemDao {
           continue;
         }
         String DT_KIJUN = "( select  CALZDY as DT_KIJUN  from SATYS.TABKNK  where CALYMD = " + data.optString("F1") + " )";
-        Integer tenki_am = NumberUtils.toInt(data.optString("F4"));
-        Integer tenki_pm = NumberUtils.toInt(data.optString("F5"));
-        Integer kion_am = NumberUtils.toInt(data.optString("F6"));
-        Integer kion_pm = NumberUtils.toInt(data.optString("F7"));
-        values1 += ",('" + szTenpo + "'," + DT_KIJUN + ", ? ,'" + tenki_am + "','" + tenki_pm + "','" + kion_am + "','" + kion_pm + "')"; // 店日別情報(TTDEVT)
-        params1.add(data.optString("F2"));
+
+        values1 += ",('" + szTenpo + "'," + DT_KIJUN + " ,?,?,?,?)"; // 店日別情報(TTDEVT)
+        params1.add(data.optString("F4"));
+        params1.add(data.optString("F5"));
+        params1.add(data.optString("F6"));
+        params1.add(data.optString("F7"));
       }
       values1 = StringUtils.removeStart(values1, ",");
       for (int i = 0; i < dataArray2.size(); i++) {
@@ -477,16 +479,18 @@ public class Report001Dao extends ItemDao {
           continue;
         }
         // Integer kyaku = NumberUtils.toInt(data.optString("F2"));
-        // values2 += ",('" + szTenpo + "','" + data.optString("F1") + "'," + kyaku + ")"; // 店日別予想客数(TTDKYK)
+        values2 += ",('" + szTenpo + "','" + data.optString("F1") + "',?)"; // 店日別情報(TTDEVT) 今年の要因
+        params2.add(data.optString("F2"));
       }
-      // values2 = StringUtils.removeStart(values2, ",");
+      values2 = StringUtils.removeStart(values2, ",");
+
       if (ArrayUtils.contains(dataIdxs, CommentChangeIdx)) {
         values3 = "('" + szTenpo + "','" + szKikanF + "',?)"; // 店月別情報(TTMEVT)
         params3.add(comment);
       }
       values4 = StringUtils.removeStart(values4, ",");
 
-      if (!outobj.equals(DefineReport.Button.ANBUN.getObj()) && values1.length() == 0 && values3.length() == 0) {// , values2.length() == 0
+      if (!outobj.equals(DefineReport.Button.ANBUN.getObj()) && values1.length() == 0 && values2.length() == 0 && values3.length() == 0) {// , values2.length() == 0
         msgObj.put(MsgKey.E.getKey(), MessageUtility.getMessage(Msg.E00001.getVal()));
         return msgObj;
       }
@@ -504,7 +508,6 @@ public class Report001Dao extends ItemDao {
         sbSQL.append(" using (select");
         sbSQL.append(" cast(T1.MISECD as character(3)) as MISECD"); // 店コード
         sbSQL.append(",cast(T1.DT as character(8)) as DT"); // 予算年月日
-        sbSQL.append(",cast(T1.EVENT as varchar(1000)) as EVENT"); // イベント
         sbSQL.append(",cast(T1.TENKI_AM as CHARACTER(3)) as TENKI_AM "); //
         sbSQL.append(",cast(T1.TENKI_PM as CHARACTER(3)) as TENKI_PM"); //
         sbSQL.append(",cast(T1.KION_AM as DECIMAL(3, 0)) as KION_AM"); //
@@ -512,48 +515,47 @@ public class Report001Dao extends ItemDao {
         sbSQL.append(",0 as TYOSAN"); // 店長予算案
         sbSQL.append(",cast(" + userId + " as integer) as CD_UPDATE"); // 更新者
         sbSQL.append(",current timestamp as DT_UPDATE"); // 更新日
-        sbSQL.append(" from (values" + values1 + ") as T1(MISECD, DT, EVENT,TENKI_AM,TENKI_PM,KION_AM,KION_PM)");
+        sbSQL.append(" from (values" + values1 + ") as T1(MISECD, DT,TENKI_AM,TENKI_PM,KION_AM,KION_PM)");
         sbSQL.append(" ) as RE on (T.MISECD = RE.MISECD and T.DT = RE.DT) ");
         sbSQL.append(" when matched then ");
         sbSQL.append(" update set");
-        sbSQL.append("  EVENT=RE.EVENT");
-        sbSQL.append(" ,TENKIKBN_AM=RE.TENKI_AM");
+        sbSQL.append(" TENKIKBN_AM=RE.TENKI_AM");
         sbSQL.append(" ,TENKIKBN_PM=RE.TENKI_PM");
         sbSQL.append(" ,MAXKION=RE.KION_AM");
         sbSQL.append(" ,MINKION=RE.KION_PM");
         sbSQL.append(" ,CD_UPDATE=RE.CD_UPDATE");
         sbSQL.append(" ,DT_UPDATE=RE.DT_UPDATE");
-        // sbSQL.append(" when not matched then ");
-        // sbSQL.append(" insert");
-        // sbSQL.append(" values(RE.MISECD,RE.DT,RE.EVENT,RE.TENKI_AM,RE.TENKI_PM,RE.KION_AM,RE.KION_PM,RE.TYOSAN,RE.CD_UPDATE,RE.DT_UPDATE,RE.CD_UPDATE,RE.DT_UPDATE)");
+        sbSQL.append(" when not matched then ");
+        sbSQL.append(" insert");
+        sbSQL.append(" values(RE.MISECD,RE.DT,'',RE.TENKI_AM,RE.TENKI_PM,RE.KION_AM,RE.KION_PM,RE.TYOSAN,null,null,RE.CD_UPDATE,RE.DT_UPDATE,RE.CD_UPDATE,RE.DT_UPDATE)");
         sqlList.add(sbSQL.toString());
         prmList.add(params1);
         lblList.add("店日別情報");
       }
-      // if (values2.length() > 0) {
-      // // 店日別予想客数(TTDKYK)
-      // sbSQL = new StringBuffer();
-      // sbSQL.append("merge into SATYS.TTDKYK as T");
-      // sbSQL.append(" using (select");
-      // sbSQL.append(" cast(T1.MISECD as character(3)) as MISECD"); // 店コード
-      // sbSQL.append(",cast(T1.DT as character(8)) as DT"); // 予算年月日
-      // sbSQL.append(",cast(T1.KYAKUSU as decimal(7, 0)) as KYAKUSU"); // 予想客数
-      // sbSQL.append(",cast(" + userId + " as integer) as CD_UPDATE"); // 更新者
-      // sbSQL.append(",current timestamp as DT_UPDATE"); // 更新日
-      // sbSQL.append(" from (values" + values2 + ") as T1(MISECD, DT, KYAKUSU)");
-      // sbSQL.append(" ) as RE on (T.MISECD = RE.MISECD and T.DT = RE.DT) ");
-      // sbSQL.append(" when matched then ");
-      // sbSQL.append(" update set");
-      // sbSQL.append(" KYAKUSU =RE.KYAKUSU");
-      // sbSQL.append(" ,CD_UPDATE=RE.CD_UPDATE");
-      // sbSQL.append(" ,DT_UPDATE=RE.DT_UPDATE");
-      // sbSQL.append(" when not matched then ");
-      // sbSQL.append(" insert");
-      // sbSQL.append(" values(RE.MISECD,RE.DT,RE.KYAKUSU,RE.CD_UPDATE,RE.DT_UPDATE,RE.CD_UPDATE,RE.DT_UPDATE)");
-      // sqlList.add(sbSQL.toString());
-      // prmList.add(params2);
-      // lblList.add("店日別予想客数");
-      // }
+      if (values2.length() > 0) {
+        // 店日別情報(TTDEVT)
+        sbSQL = new StringBuffer();
+        sbSQL.append("merge into SATYS.TTDEVT as T");
+        sbSQL.append(" using (select");
+        sbSQL.append(" cast(T1.MISECD as character(3)) as MISECD"); // 店コード
+        sbSQL.append(",cast(T1.DT as character(8)) as DT"); // 予算年月日
+        sbSQL.append(",cast(T1.EVENT as varchar(1000)) as EVENT"); // イベント
+        sbSQL.append(",cast(" + userId + " as integer) as CD_UPDATE"); // 更新者
+        sbSQL.append(",current timestamp as DT_UPDATE"); // 更新日
+        sbSQL.append(" from (values" + values2 + ") as T1(MISECD, DT, EVENT)");
+        sbSQL.append(" ) as RE on (T.MISECD = RE.MISECD and T.DT = RE.DT) ");
+        sbSQL.append(" when matched then ");
+        sbSQL.append(" update set");
+        sbSQL.append("  EVENT    =RE.EVENT");
+        sbSQL.append(" ,CD_UPDATE=RE.CD_UPDATE");
+        sbSQL.append(" ,DT_UPDATE=RE.DT_UPDATE");
+        sbSQL.append(" when not matched then ");
+        sbSQL.append(" insert");
+        sbSQL.append(" values(RE.MISECD,RE.DT,RE.EVENT,null,null,null,null,0,null,null,RE.CD_UPDATE,RE.DT_UPDATE,RE.CD_UPDATE,RE.DT_UPDATE)");
+        sqlList.add(sbSQL.toString());
+        prmList.add(params2);
+        lblList.add("店日別情報今年の要因");
+      }
       if (values3.length() > 0) {
         // 店月別情報(TTMEVT)
         sbSQL = new StringBuffer();

@@ -52,7 +52,7 @@
 		gridTitle:[],						// 検索結果
 		commentChangeIdx:999,				// コメントは行単位データではないため、変更時、変更配列に行番号の代わりに特殊な数値を設定し、変更したか否かを判断する
 		yosChangePrefix:1000,				// 予算系と予測客数は異なるテーブルへの更新のため、変更情報は別途保持。どちらを変更したかを判断するための数値
-		//kykChangePrefix:2000,				// 予算系と予測客数は異なるテーブルへの更新のため、変更情報は別途保持。どちらを変更したかを判断するための数値
+		yosEvChangePrefix:2000,				// 予算系と予測客数は異なるテーブルへの更新のため、変更情報は別途保持。どちらを変更したかを判断するための数値
 		initializes : true,
 		initialize: function (reportno){	// （必須）初期化
 			var that = this;
@@ -330,7 +330,7 @@
 						var rowData = {
 								IDX: i+1,		// エラーメッセージ用に行番号を追加
 								F1 : rows[i]["F1"],
-								F2 : $("#F3_"+i).val(),
+							//	F2 : $("#F3_"+i).val(),
 								F3 : $("#F6_"+i).val().replace(/,/g, ''),
 								F4 : $("#F14_"+i).val(),
 								F5 : $("#F16_"+i).val(),
@@ -339,15 +339,16 @@
 							};
 						targetRows.push(rowData);
 					}
-//					var kykIdx = that.kykChangePrefix + i;
-//					if($.inArray(kykIdx+'', changedIndex) !== -1){
-//						var rowData = {
-//								IDX: i+1,		// エラーメッセージ用に行番号を追加
-//								F1 : rows[i]["F1"],
-//								F2 : $("#F14_"+i).val().replace(/,/g, '')
-//							};
-//						targetRows2.push(rowData);
-//					}
+					var kykIdx = that.yosEvChangePrefix + i;
+					if($.inArray(kykIdx+'', changedIndex) !== -1){
+						var rowData = {
+								IDX: i+1,		// エラーメッセージ用に行番号を追加
+								F1 : rows[i]["F1"],
+								F2 : $("#F3_"+i).val(),
+								F3 : $("#F6_"+i).val().replace(/,/g, ''),
+							};
+						targetRows2.push(rowData);
+					}
 				}
 				if($.inArray(that.commentChangeIdx, changedIndex)){
 					txtComment = $('#TxtComment').val();
@@ -673,7 +674,7 @@
 						}
 						$(this).val(newVal);
 						if(newVal!==preVal){
-							var changeIdx = that.yosChangePrefix + id.split("_")[1]*1
+							var changeIdx = that.yosEvChangePrefix + id.split("_")[1]*1
 							$.setChangeIdx(changeIdx);
 							preVal = newVal;
 						}
