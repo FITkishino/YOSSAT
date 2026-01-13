@@ -132,7 +132,7 @@ tr.ctrlRow td {
 	<td>月度計</td>
 	<td style="text-align: right;"><span id="sumF5_T1"></span></td>
 	<td style="text-align: right;"><span id="sumF6_T1"></span></td>
-	<td style="text-align: right;"><span id="sumF7_T1" style="width: 55px; overflow: hidden; display: inline-block;"></span></td>
+	<td style="text-align: right;"><span id="sumF7_T1"></span></td>
 	<td style="text-align: right;"><span id="sumF8_T1"></span></td>
 	<td style="border: 0px;" colspan="2"></td>
 	<td style="text-align: right;"><span id="sumF11_T1"></span></td>
@@ -147,7 +147,7 @@ tr.ctrlRow td {
 	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 65px;">昨年実績</div></td>
 	<td style="text-align: center;" rowspan="2" class="header"><div style="width:100px;">昨年日付</div></td>
 	<td style="text-align: center;" rowspan="2" class="header"><div style="width:170px;">昨年の要因</div></td>
-	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 55px;">昨年<br>客数</div></td>
+	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 62px;">昨年<br>客数</div></td>
 	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 60px;">昨年フロア<br>客数</div></td>
 	<td style="text-align: center;" colspan="2" class="header"><div>昨年天気</div></td>
 	<td style="text-align: center;" colspan="2" class="header"><div>昨年気温</div></td>
@@ -197,12 +197,12 @@ tr.ctrlRow td {
 	<td style="border: 0px;"><div style="width: 66px;"></div></td>
 	<td style="border: 0px;"><div style="width:101px;"></div></td>
 	<td style="border: 0px;"><div style="width:171px;"></div></td>
-	<td style="border: 0px;"><div style="width: 56px;"></div></td>
-	<td style="border: 0px;"><div style="width: 56px;"></div></td>
-	<td style="border: 0px;"><div style="width: 36px;"></div></td>
-	<td style="border: 0px;"><div style="width: 36px;"></div></td>
-	<td style="border: 0px;"><div style="width: 36px;"></div></td>
-	<td style="border: 0px;"><div style="width: 36px;"></div></td>
+	<td style="border: 0px;"><div style="width: 63px;"></div></td>
+	<td style="border: 0px;"><div style="width: 61px;"></div></td>
+	<td style="border: 0px;"><div style="width: 35px;"></div></td>
+	<td style="border: 0px;"><div style="width: 34px;"></div></td>
+	<td style="border: 0px;"><div style="width: 35px;"></div></td>
+	<td style="border: 0px;"><div style="width: 34px;"></div></td>
 	<td style="border: 0px;"><div style="width: 36px;"></div></td>
 	<td style="border: 0px;"><div style="width: 36px;"></div></td>
 </tr>

@@ -532,7 +532,7 @@
 							'<td style="text-align: left;padding-left: 3px;"><span id="F9_'+i+'">'+row['F9']+'</span></td>'+
 							'<td style="text-align: left;"><input type="text" id="F10_'+i+'" style="width:163px;" class="TextDisp" tabindex="-1" readonly="readonly" value="'+row['F10']+'"></td>'+
 							'<td style="text-align: right;"><span id="F11_'+i+'">'+getFormat(row['F11'], '#,##0')+'</span></td>'+
-							'<td style="text-align: right;"><span id="F12_'+i+'"style="width: 58px;">'+getFormat(row['F12'], '#,##0')+'</span></td>'+
+							'<td style="text-align: right;"><span id="F12_'+i+'"style="width: 100px;">'+getFormat(row['F12'], '#,##0')+'</span></td>'+
               //'<td style="text-align: right;"><input type="text" id="F14_'+i+'" style="width: 48px; text-align: right; ime-mode: disabled;" class="TextDisp" tabindex="-1" readonly="readonly" value="'+getFormat(row['F14'], '#,##0')+'"></td>'+
               '';
 //				if(inputF14){
@@ -572,9 +572,9 @@
 	    	} ;
 
          if(inputF3){
-			  view +=	'<td style="text-align: center;" class="yellow"><input type="text" id="F16_'+i+'" style="width: 30px; text-align: right; ime-mode: disabled;" class="TextDisp" tabindex="'+(300+i)+'" value="'+getFormat(row['F16'], '#0')+'"></td>'+
-			  '<td style="text-align: center;" class="yellow"><input type="text" id="F17_'+i+'" style="width: 30px; text-align: right; ime-mode: disabled;" class="TextDisp" tabindex="'+(300+i)+'" value="'+getFormat(row['F17'], '#0')+'"></td>'+
-			  '<td style="text-align: center;" class="yellow"><input type="text" id="F18_'+i+'" style="width: 30px; text-align: right; ime-mode: disabled;" class="TextDisp" tabindex="'+(300+i)+'" value="'+getFormat(row['F18'], '#0')+'"></td>'+
+			  view +=	'<td style="text-align: center;" class="yellow"><input type="text" id="F16_'+i+'" style="width: 27px; text-align: right; ime-mode: disabled;" class="TextDisp" tabindex="'+(300+i)+'" value="'+getFormat(row['F16'], '#0')+'"></td>'+
+			  '<td style="text-align: center;" class="yellow"><input type="text" id="F17_'+i+'" style="width: 29px; text-align: right; ime-mode: disabled;" class="TextDisp" tabindex="'+(300+i)+'" value="'+getFormat(row['F17'], '#0')+'"></td>'+
+			  '<td style="text-align: center;" class="yellow"><input type="text" id="F18_'+i+'" style="width: 29px; text-align: right; ime-mode: disabled;" class="TextDisp" tabindex="'+(300+i)+'" value="'+getFormat(row['F18'], '#0')+'"></td>'+
 							'';
 			  }else{
 				view +=	'<td style="text-align:center;"><span id="F16_'+i+'">'+$.getWeathernews(row['F16'])+'</span></td>'+
