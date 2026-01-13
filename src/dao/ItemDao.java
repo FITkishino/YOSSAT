@@ -29,8 +29,6 @@ import authentication.bean.User;
 import common.CmnDate;
 import common.CmnDate.DATE_FORMAT;
 import common.DefineReport;
-import common.Defines;
-import common.ItemList;
 import common.JsonArrayData;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -1006,7 +1004,7 @@ public class ItemDao implements ItemInterface {
       Date yosandt = CmnDate.getLastDateOfMonth(szKikanF + "01");
 
       String today = CmnDate.dateFormat(inputdt, DATE_FORMAT.DEFAULT_DATETIME);
-      String year = CmnDate.dateFormat(inputdt, DATE_FORMAT.DEFAULT_YEAR);
+      CmnDate.dateFormat(inputdt, DATE_FORMAT.DEFAULT_YEAR);
 
       // 過去の予算は一律変更不可
       if (yosandt.getTime() < inputdt.getTime()) {
@@ -1027,13 +1025,10 @@ public class ItemDao implements ItemInterface {
         // 特殊例：3月と9月は半期分予算の作成に時間がかかる。このため、たとえば3月に入力可能な4月予算は20170301 19:00 - 20170325 23:00まで変更可能
         // 2022/09/08 依頼 20220922に変更
 
-        if (StringUtils.startsWithAny(today, new String[] {year + "03", year + "09"})) {
-          ableDtF = CmnDate.dateFormatYM(CmnDate.getMonthAddedDate(yosandt, -1)) + "011900";
-          ableDtT = CmnDate.dateFormatYM(CmnDate.getMonthAddedDate(yosandt, -1)) + getSimeDay() + "2300";
-        } else {
-          ableDtF = CmnDate.dateFormatYM(CmnDate.getMonthAddedDate(yosandt, -1)) + "011900";
-          ableDtT = CmnDate.dateFormatYM(CmnDate.getMonthAddedDate(yosandt, -1)) + "152300";
-        }
+
+        ableDtF = CmnDate.dateFormatYM(CmnDate.getMonthAddedDate(yosandt, -1)) + "011900";
+        ableDtT = CmnDate.dateFormatYM(CmnDate.getMonthAddedDate(yosandt, -1)) + "152300";
+
         if (Double.valueOf(today) >= Double.valueOf(ableDtF) && Double.valueOf(today) <= Double.valueOf(ableDtT)) {
           return true;
         }
@@ -1041,38 +1036,16 @@ public class ItemDao implements ItemInterface {
         // 通常例：201703の予算は、20170201 19:00 - 20170215 23:00まで変更可能
         // 特殊例：3月と9月は半期分予算の作成に時間がかかる。このため、たとえば3月に入力可能な4月予算は20170301 19:00 - 20170325 23:00まで変更可能
         // 2022/09/08 依頼 20220922に変更
-        if (StringUtils.startsWithAny(today, new String[] {year + "03", year + "09"})) {
-          ableDtF = CmnDate.dateFormatYM(CmnDate.getMonthAddedDate(yosandt, -1)) + "011900";
-          ableDtT = CmnDate.dateFormatYM(CmnDate.getMonthAddedDate(yosandt, -1)) + getSimeDay() + "2300";
-        } else {
-          ableDtF = CmnDate.dateFormatYM(CmnDate.getMonthAddedDate(yosandt, -1)) + "011900";
-          ableDtT = CmnDate.dateFormatYM(CmnDate.getMonthAddedDate(yosandt, -1)) + "152300";
-        }
+
+        ableDtF = CmnDate.dateFormatYM(CmnDate.getMonthAddedDate(yosandt, -1)) + "011900";
+        ableDtT = CmnDate.dateFormatYM(CmnDate.getMonthAddedDate(yosandt, -1)) + "152300";
+
         if (Double.valueOf(today) >= Double.valueOf(ableDtF) && Double.valueOf(today) <= Double.valueOf(ableDtT)) {
           return true;
         }
       }
     }
     return false;
-  }
-
-  /**
-   * 締め日を取得<br>
-   * SATMS.PIMSKB IKBGPID IKBUQID IBKUQVL IBKVSEQ IBKRMRK<br>
-   * 9 0 22 1 予算入力最終日（３月、９月）
-   *
-   * @return
-   */
-  private String getSimeDay() {
-    ItemList iL = new ItemList();
-    String simeDay = "23";
-
-    ArrayList<List<String>> results = iL.selectArray("SELECT IBKUQVL FROM SATMS.PIMSKB WHERE IKBGPID=9 AND IKBUQID=0", new ArrayList<String>(), Defines.STR_JNDI_DS);
-    if (results.size() > 1) {
-      simeDay = results.get(1).get(0);// 締め日
-    }
-    System.out.println("入力可能最終日：" + simeDay);
-    return simeDay;
   }
 
   /**
@@ -1097,7 +1070,7 @@ public class ItemDao implements ItemInterface {
       Date yosandt = CmnDate.getLastDateOfMonth(szKikanF + "01");
 
       String today = CmnDate.dateFormat(inputdt, DATE_FORMAT.DEFAULT_DATETIME);
-      String year = CmnDate.dateFormat(inputdt, DATE_FORMAT.DEFAULT_YEAR);
+      CmnDate.dateFormat(inputdt, DATE_FORMAT.DEFAULT_YEAR);
       // 過去の店長予算案は一律変更不可
       if (yosandt.getTime() < inputdt.getTime()) {
         return false;
@@ -1113,11 +1086,9 @@ public class ItemDao implements ItemInterface {
       } else if (userInfo2.isTentyo()) {
         // 通常例：201703の予算は、20170215 23:00まで変更可能
         // 特殊例：3月と9月は半期分予算の作成に時間がかかる。このため、たとえば3月に入力可能な4月予算は20170325 23:00まで変更可能
-        if (StringUtils.startsWithAny(today, new String[] {year + "03", year + "09"})) {
-          ableDtT = CmnDate.dateFormatYM(CmnDate.getMonthAddedDate(yosandt, -1)) + "272300";
-        } else {
-          ableDtT = CmnDate.dateFormatYM(CmnDate.getMonthAddedDate(yosandt, -1)) + "152300";
-        }
+
+        ableDtT = CmnDate.dateFormatYM(CmnDate.getMonthAddedDate(yosandt, -1)) + "152300";
+
         if (Double.valueOf(today) <= Double.valueOf(ableDtT)) {
           return true;
         }
