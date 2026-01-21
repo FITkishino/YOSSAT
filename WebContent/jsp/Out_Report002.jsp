@@ -45,9 +45,10 @@
 	String prm = request.getSession().getId();
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html style="overflow-x: hidden;">
+<html lang="ja" style="overflow-x: hidden;">
 <head>
 <title></title>
+<meta http-equiv="content-language" content="ja">
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Cache-Control" content="no-cache">
@@ -121,55 +122,51 @@ tr.ctrlRow td {
 <table class="grid" style="border-collapse: collapse;" cellpadding="1">
 <tr>
 	<td style="border: 0px;">&nbsp;</td>
-	<td style="border: 0px;" colspan="3"></td>
 	<td style="text-align: right;"><span id="W2_T2"></span></td>
-	<td style="border: 0px;" colspan="4"></td>
+	<td style="border: 0px;" colspan="8"></td>
 	<td style="text-align: right;"><span id="W8_T2"></span></td>
 	<td style="border: 0px;" colspan="5"></td>
 	<td style="text-align: right;"><span id="W6_T2"></span></td>
-	<td style="border: 0px;" colspan="7"></td>
+	<td style="text-align: right;"><span id="W7_T2"></span></td>
+	<td style="border: 0px;" colspan="4"></td>
 	<td style="text-align: right;"><span id="W11_T2"></span></td>
 	<td style="text-align: right;"><span id="W12_T2"></span></td>
 	<td style="text-align: right;"><span id="W13_T2"></span></td>
 </tr>
 <tr>
 	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 65px;">日付</div></td>
-	<td style="text-align: center;" rowspan="2" class="orange"><div style="width: 35px;">天気</div></td>
-	<td style="text-align: center;" colspan="2" class="orange"><div>気温</div></td>
-
 	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 65px;">日別予算</div></td>
 	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 65px;">予算累計</div></td>
-	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 65px;">売上</div></td>
-	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 65px;">売上累計</div></td>
-
-	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 55px;">売上点数</div></td>
-	<td style="text-align: center;" rowspan="2" class="orange"><div style="width: 55px;">客数</div></td>
-
+	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 65px;">実績</div></td>
+	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 65px;">実績累計</div></td>
 	<td style="text-align: center;" rowspan="2" class="orange"><div style="width: 65px;">予算差異</div></td>
 	<td style="text-align: center;" rowspan="2" class="orange"><div style="width: 55px;">予算比</div></td>
 	<td style="text-align: center;" rowspan="2" class="orange"><div style="width: 55px;">累計<br>予算比</div></td>
-	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 55px;">進捗率</div></td>
+	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 55px;">進行率</div></td>
 
-	<td style="text-align: center;" rowspan="2" class="header"><div style="width:100px;">前年日付</div></td>
-	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 65px;">前年売上</div></td>
-	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 65px;">前年売上<br>累計</div></td>
-	<td style="text-align: center;" rowspan="2" class="orange"><div style="width: 55px;">前年比</div></td>
-	<td style="text-align: center;" rowspan="2" class="orange"><div style="width: 55px;">累計<br>前年比</div></td>
-	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 55px;">売上<br>推移率</div></td>
-
-	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 55px;">前年客数</div></td>
-	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 55px;">前年<br>売上点数</div></td>
-
+	<td style="text-align: center;" rowspan="2" class="header"><div style="width:100px;">昨年日付</div></td>
+	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 65px;">昨年実績</div></td>
+	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 65px;">昨年実績<br>累計</div></td>
+	<td style="text-align: center;" rowspan="2" class="orange"><div style="width: 55px;">昨年対比</div></td>
+	<td style="text-align: center;" rowspan="2" class="orange"><div style="width: 55px;">累計<br>昨年対比</div></td>
+	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 55px;">昨年<br>推行率</div></td>
 	<td style="text-align: center;" rowspan="2" class="header"><div style="width:170px;">今年の要因</div></td>
-	<td style="text-align: center;" rowspan="2" class="orange"><div style="width: 55px;">仕入原価</div></td>
-	<td style="text-align: center;" rowspan="2" class="orange"><div style="width: 55px;">荒利高</div></td>
-	<td style="text-align: center;" rowspan="2" class="orange"><div style="width: 55px;">荒利率</div></td>
+	<td style="text-align: center;" rowspan="2" class="orange"><div style="width: 60px;">店客数</div></td>
+	<td style="text-align: center;" rowspan="2" class="orange"><div style="width: 60px;">フロア客数</div></td>
+	<td style="text-align: center;" colspan="2" class="orange"><div>天気</div></td>
+	<td style="text-align: center;" colspan="2" class="orange"><div>気温</div></td>
+	<td style="text-align: center;" rowspan="2" class="orange"><div style="width: 55px;">仕入高</div></td>
+	<td style="text-align: center;" rowspan="2" class="orange"><div style="width: 55px;">差益高</div></td>
+	<td style="text-align: center;" rowspan="2" class="orange"><div style="width: 55px;">差益率</div></td>
 	<td style="border: 0px;" rowspan="2"><div style="width: 30px;"></div></td>
 </tr>
 <tr>
+  <td style="text-align: center;" class="orange"><div style="width: 70px;">午前</div></td>
+	<td style="text-align: center;" class="orange"><div style="width: 70px;">午後</div></td>
 	<td style="text-align: center;" class="orange"><div style="width: 35px;">最高</div></td>
 	<td style="text-align: center;" class="orange"><div style="width: 35px;">最低</div></td>
 </tr>
+
 </table>
 </div>
 
@@ -201,23 +198,20 @@ tr.ctrlRow td {
 	<td>&nbsp;</td>
 	<td>&nbsp;</td>
 	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
 </tr>
 <%} %>
 
 <%-- 空白行 --%>
 <tr id="emptyRow" style="height: 20px;">
 	<td style="border: 0px;"><div style="width: 66px;"></div></td>
-	<td style="border: 0px;"><div style="width: 36px;"></div></td>
-	<td style="border: 0px;"><div style="width: 36px;"></div></td>
-	<td style="border: 0px;"><div style="width: 36px;"></div></td>
 	<td style="border: 0px;"><div style="width: 66px;"></div></td>
 	<td style="border: 0px;"><div style="width: 66px;"></div></td>
 	<td style="border: 0px;"><div style="width: 66px;"></div></td>
 	<td style="border: 0px;"><div style="width: 66px;"></div></td>
-
-	<td style="border: 0px;"><div style="width: 56px;"></div></td>
-	<td style="border: 0px;"><div style="width: 56px;"></div></td>
-
 	<td style="border: 0px;"><div style="width: 66px;"></div></td>
 	<td style="border: 0px;"><div style="width: 56px;"></div></td>
 	<td style="border: 0px;"><div style="width: 56px;"></div></td>
@@ -228,11 +222,15 @@ tr.ctrlRow td {
 	<td style="border: 0px;"><div style="width: 56px;"></div></td>
 	<td style="border: 0px;"><div style="width: 56px;"></div></td>
 	<td style="border: 0px;"><div style="width: 56px;"></div></td>
-
+  <td style="border: 0px;"><div style="width:171px;"></div></td>
 	<td style="border: 0px;"><div style="width: 56px;"></div></td>
 	<td style="border: 0px;"><div style="width: 56px;"></div></td>
-
-	<td style="border: 0px;"><div style="width:171px;"></div></td>
+	<td style="border: 0px;"><div style="width: 35px;"></div></td>
+	<td style="border: 0px;"><div style="width: 34px;"></div></td>
+	<td style="border: 0px;"><div style="width: 35px;"></div></td>
+	<td style="border: 0px;"><div style="width: 34px;"></div></td>
+	<td style="border: 0px;"><div style="width: 36px;"></div></td>
+	<td style="border: 0px;"><div style="width: 36px;"></div></td>
 	<td style="border: 0px;"><div style="width: 56px;"></div></td>
 	<td style="border: 0px;"><div style="width: 56px;"></div></td>
 	<td style="border: 0px;"><div style="width: 56px;"></div></td>
@@ -240,18 +238,21 @@ tr.ctrlRow td {
 
 <tr id="info_sum_r0">
 	<td style="text-align: center;" class="header" colspan="4"><div>週間計</div></td>
-	<td style="text-align: center;" class="header"><div>予算</div></td>
-	<td style="text-align: center;" class="header"><div>売上</div></td>
+	<td style="text-align: center;" class="header"><div>週間予算</div></td>
+	<td style="text-align: center;" class="header"><div>週間実績</div></td>
 	<td style="text-align: center;" class="header"><div>差異</div></td>
 	<td style="text-align: center;" class="header"><div>予算比</div></td>
-	<td style="text-align: center;" class="header"><div>前年売上</div></td>
-	<td style="text-align: center;" class="header"><div>前年比</div></td>
+	<td style="text-align: center;" class="header"><div>昨年実績</div></td>
+	<td style="text-align: center;" class="header"><div>昨年対比</div></td>
 	<td style="text-align: center;" class="header"><div>客数</div></td>
-	<td style="text-align: center;" class="header"><div>前年客数</div></td>
-	<td style="text-align: center;" class="header"><div>前年比</div></td>
-	<td style="text-align: center;" class="header"><div>仕入原価</div></td>
-	<td style="text-align: center;" class="header"><div>荒利高</div></td>
-	<td style="text-align: center;" class="header"><div>荒利率</div></td>
+	<td style="text-align: center;" class="header"><div>昨年客数</div></td>
+	<td style="text-align: center;" class="header"><div>昨年対比</div></td>
+	<td style="text-align: center;" class="header"><div>フロア客数</div></td>
+	<td style="text-align: center;" class="header"><div>昨年<br>フロア客数</div></td>
+	<td style="text-align: center;" class="header"><div>昨年対比</div></td>
+	<td style="text-align: center;" class="header"><div>週間仕入高</div></td>
+	<td style="text-align: center;" class="header"><div>週間差益高</div></td>
+	<td style="text-align: center;" class="header" colspan="2"><div>週間差益率</div></td>
 </tr>
 <%for(int i = 0; i < 6; i++){ %>
 <tr id="info_sum_r<%=i+1 %>">
@@ -268,6 +269,9 @@ tr.ctrlRow td {
 	<td style="text-align: right;"><span id="W11_<%=i %>" format="#,##0"></span></td>
 	<td style="text-align: right;"><span id="W12_<%=i %>" format="#,##0"></span></td>
 	<td style="text-align: right;"><span id="W13_<%=i %>" format="#,##0.0"></span></td>
+	<td style="text-align: right;"><span id="W14_<%=i %>" format="#,##0"></span></td>
+	<td style="text-align: right;"><span id="W15_<%=i %>" format="#,##0"></span></td>
+	<td style="text-align: right;"colspan="2"><span id="W16_<%=i %>" format="#,##0.0"></span></td>
 </tr>
 <%} %>
 <tr id="info_sum_r7">
@@ -284,6 +288,9 @@ tr.ctrlRow td {
 	<td class="green" style="text-align: right;"><span id="W11_T" format="#,##0"></span></td>
 	<td class="green" style="text-align: right;"><span id="W12_T" format="#,##0"></span></td>
 	<td class="green" style="text-align: right;"><span id="W13_T" format="#,##0.0"></span></td>
+	<td class="green" style="text-align: right;"><span id="W14_T" format="#,##0"></span></td>
+	<td class="green" style="text-align: right;"><span id="W15_T" format="#,##0"></span></td>
+	<td class="green" style="text-align: right;"colspan="2"><span id="W16_T" format="#,##0.0"></span></td>
 </tr>
 </table>
 </div>

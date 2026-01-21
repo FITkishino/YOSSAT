@@ -319,46 +319,79 @@
 				var view = '';
 				view +='<tr class="ctrlRow" style="height: 23px;">'+
 							'<td style="text-align: center;"><span id="F1_'+i+'">'+row['F1']+'</span></td>'+
-							'<td style="text-align: center;"><span id="F2_'+i+'">'+$.getWeathernews(row['F2'])+'</span></td>'+		// 天気
-							'<td style="text-align: right;"><span id="F3_'+i+'">'+getFormat(row['F3'], '#,##0')+'</span></td>'+	// 最高気温
-							'<td style="text-align: right;"><span id="F4_'+i+'">'+getFormat(row['F4'], '#,##0')+'</span></td>'+	// 最低気温
+							'<td style="text-align: right;"><span id="F2_'+i+'">'+$.getWeathernews(row['F2'])+'</span></td>'+
+							'<td style="text-align: right;"><span id="F3_'+i+'">'+getFormat(row['F3'], '#,##0')+'</span></td>'+
+							'<td style="text-align: right;"><span id="F4_'+i+'">'+getFormat(row['F4'], '#,##0')+'</span></td>'+
 							'<td style="text-align: right;"><span id="F5_'+i+'">'+getFormat(row['F5'], '#,##0')+'</span></td>'+
 							'<td style="text-align: right;"><span id="F6_'+i+'">'+getFormat(row['F6'], '#,##0')+'</span></td>'+
-							'<td style="text-align: right;"><span id="F7_'+i+'">'+getFormat(row['F7'], '#,##0')+'</span></td>'+
-							'<td style="text-align: right;"><span id="F8_'+i+'">'+getFormat(row['F8'], '#,##0')+'</span></td>'+
+							'<td style="text-align: right;"><span id="F7_'+i+'">'+getFormat(row['F7'], '#,##0.0')+'%'+'</span></td>'+
+							'<td style="text-align: right;"><span id="F8_'+i+'">'+getFormat(row['F8'], '#,##0.0')+'%'+'</span></td>'+
 
-							'<td style="text-align: right;"><span id="F9_'+i+'">'+getFormat(row['F9'], '#,##0')+'</span></td>'+	// 売上点数
-							'<td style="text-align: right;"><span id="F10_'+i+'">'+getFormat(row['F10'], '#,##0')+'</span></td>'+	// 客数
+							'<td style="text-align: right;"><span id="F9_'+i+'">'+getFormat(row['F9'], '#,##0.0')+'%'+'</span></td>'+
+							'<td style="text-align: right;"><span id="F10_'+i+'">'+row['F10']+'</span></td>'+
 
 							'<td style="text-align: right;"><span id="F11_'+i+'" style="color: '+colorF8+';">'+getFormat(row['F11'], '#,##0')+'</span></td>'+
-							'<td style="text-align: right;"><span id="F12_'+i+'">'+getFormat(row['F12'], '#,##0.0')+'</span></td>'+
-							'<td style="text-align: right;"><span id="F13_'+i+'">'+getFormat(row['F13'], '#,##0.0')+'</span></td>'+
-							'<td style="text-align: right;"><span id="F14_'+i+'">'+getFormat(row['F14'], '#,##0.0')+'</span></td>'+
-							'<td style="text-align: left;padding-left: 3px;"><span id="F15_'+i+'">'+row['F15']+'</span></td>'+
-							'<td style="text-align: right;"><span id="F16_'+i+'">'+getFormat(row['F16'], '#,##0')+'</span></td>'+
-							'<td style="text-align: right;"><span id="F17_'+i+'">'+getFormat(row['F17'], '#,##0')+'</span></td>'+
-							'<td style="text-align: right;"><span id="F18_'+i+'">'+getFormat(row['F18'], '#,##0.0')+'</span></td>'+
-							'<td style="text-align: right;"><span id="F19_'+i+'">'+getFormat(row['F19'], '#,##0.0')+'</span></td>'+
-							'<td style="text-align: right;"><span id="F20_'+i+'">'+getFormat(row['F20'], '#,##0.0')+'</span></td>'+
-
-							'<td style="text-align: right;"><span id="F21_'+i+'">'+getFormat(row['F21'], '#,##0')+'</span></td>'+	// 前年客数
-							'<td style="text-align: right;"><span id="F22_'+i+'">'+getFormat(row['F22'], '#,##0')+'</span></td>'+	// 前年売上点数
-
+							'<td style="text-align: right;"><span id="F12_'+i+'">'+getFormat(row['F12'], '#,##0')+'</span></td>'+
+							'<td style="text-align: right;"><span id="F13_'+i+'">'+getFormat(row['F13'], '#,##0.0')+'%'+'</span></td>'+
+							'<td style="text-align: right;"><span id="F14_'+i+'">'+getFormat(row['F14'], '#,##0.0')+'%'+'</span></td>'+
+							'<td style="text-align: left;padding-left: 3px;"><span id="F15_'+i+'">'+getFormat(row['F15'], '#,##0.0')+'%'+'</span></td>'+
 							'';
-
-				// イベント
+        // イベント
 				if(inputEvent){
-					view +=	'<td style="text-align: left;" class="yellow"><input type="text" id="F23_'+i+'" style="width:163px;" class="TextDisp" tabindex="'+(100+i)+'" value="'+row['F23']+'"></td>'+
+					view +=	'<td style="text-align: left;" class="yellow"><input type="text" id="F16_'+i+'" style="width:163px;" class="TextDisp" tabindex="'+(100+i)+'" value="'+row['F16']+'"></td>'+
+							'<td style="text-align: right;"><span id="F17_'+i+'">'+getFormat(row['F17'], '#,##0')+'</span></td>'+
+							'<td style="text-align: right;"><span id="F18_'+i+'">'+getFormat(row['F18'], '#,##0')+'</span></td>'+
 							'';
 				}else{
-					view +=	'<td style="text-align: left;"><input type="text" id="F23_'+i+'" style="width:163px;" class="TextDisp" tabindex="-1" readonly="readonly" value="'+row['F23']+'"></td>'+
+					view +=	'<td style="text-align: left;"><input type="text" id="F16_'+i+'" style="width:163px;" class="TextDisp" tabindex="-1" readonly="readonly" value="'+row['F16']+'"></td>'+
+							'<td style="text-align: right;"><span id="F17_'+i+'">'+getFormat(row['F17'], '#,##0')+'</span></td>'+
+							'<td style="text-align: right;"><span id="F18_'+i+'">'+getFormat(row['F18'], '#,##0')+'</span></td>'+
 							'';
 				}
 
-				view +=
-							'<td style="text-align: right;"><span id="F24_'+i+'">'+getFormat(row['F24'], '#,##0')+'</span></td>'+
+				if($.getWeathernews(row['F20'])==1  ){
+			    view +='<td style="text-align:center;"><span id="F19_'+i+'" style=" color: red;">☀</span></td>'
+        }else if ($.getWeathernews(row['F20'])==2  ){
+			   view +='<td style="text-align:center;"><span id="F19_'+i+'" style=" color: grey;">☁</span></td>'
+        }else if ($.getWeathernews(row['F20'])==3  ){
+			   view +='<td style="text-align:center;"><span id="F19_'+i+'" style=" color: blue;">☂</span></td>'
+        }else if ($.getWeathernews(row['F20'])==4  ){
+			   view +='<td style="text-align:center;"><span id="F19_'+i+'" style=" color: teal;">☃</span></td>'
+        }else{
+			   view +='<td style="text-align:center;"><span id="F19_'+i+'">'+$.getWeathernews(row['F20'])+'</span></td>';
+	    	} ;
+        if(inputEvent){
+			  view +=	'<td style="text-align: center;" class="yellow"><input type="text" id="F20_'+i+'" style="width: 25px; text-align: right; ime-mode: disabled;" class="TextDisp" tabindex="'+(300+i)+'" value="'+getFormat(row['F20'], '#0')+'"></td>'+
+							'';
+			  }else{
+				view +=		'<td style="text-align:center;"><span id="F20_'+i+'">'+$.getWeathernews(row['F20'])+'</span></td>';
+        }
+				if($.getWeathernews(row['F22'])==1  ){
+			    view +='<td style="text-align:center;"><span id="F21_'+i+'" style=" color: red;">☀</span></td>'
+        }else if ($.getWeathernews(row['F22'])==2  ){
+			   view +='<td style="text-align:center;"><span id="F21_'+i+'" style=" color: grey;">☁</span></td>'
+        }else if ($.getWeathernews(row['F22'])==3  ){
+			   view +='<td style="text-align:center;"><span id="F21_'+i+'" style=" color: blue;">☂</span></td>'
+        }else if ($.getWeathernews(row['F22'])==4  ){
+			   view +='<td style="text-align:center;"><span id="F21_'+i+'" style=" color: teal;">☃</span></td>'
+        }else{
+			   view +='<td style="text-align:center;"><span id="F21_'+i+'">'+$.getWeathernews(row['F22'])+'</span></td>';
+	    	} ;
+
+         if(inputEvent){
+			  view +=	'<td style="text-align: center;" class="yellow"><input type="text" id="F22_'+i+'" style="width: 27px; text-align: right; ime-mode: disabled;" class="TextDisp" tabindex="'+(300+i)+'" value="'+getFormat(row['F22'], '#0')+'"></td>'+
+			  '<td style="text-align: center;" class="yellow"><input type="text" id="F23_'+i+'" style="width: 29px; text-align: right; ime-mode: disabled;" class="TextDisp" tabindex="'+(300+i)+'" value="'+getFormat(row['F23'], '#0')+'"></td>'+
+			  '<td style="text-align: center;" class="yellow"><input type="text" id="F24_'+i+'" style="width: 29px; text-align: right; ime-mode: disabled;" class="TextDisp" tabindex="'+(300+i)+'" value="'+getFormat(row['F24'], '#0')+'"></td>'+
+							'';
+			  }else{
+				view +=	'<td style="text-align:center;"><span id="F22_'+i+'">'+$.getWeathernews(row['F22'])+'</span></td>'+
+				      '<td style="text-align: right;"><span id="F23_'+i+'">'+row['F23']+'</span></td>'+
+							'<td style="text-align: right;"><span id="F24_'+i+'">'+row['F24']+'</span></td>';
+				}
+        view +=
 							'<td style="text-align: right;"><span id="F25_'+i+'">'+getFormat(row['F25'], '#,##0')+'</span></td>'+
-							'<td style="text-align: right;"><span id="F26_'+i+'">'+getFormat(row['F26'], '#,##0.0')+'</span></td>'+
+							'<td style="text-align: right;"><span id="F26_'+i+'">'+getFormat(row['F26'], '#,##0')+'</span></td>'+
+							'<td style="text-align: right;"><span id="F27_'+i+'">'+getFormat(row['F27'], '#,##0.00')+'%'+'</span></td>'+
 						'</tr>';
 
 				$('#emptyRow').before(view);
@@ -390,20 +423,13 @@
 							'<td>&nbsp;</td>'+
 							'<td>&nbsp;</td>'+
 							'<td>&nbsp;</td>'+
+							'<td>&nbsp;</td>'+
+							'<td>&nbsp;</td>'+
+							'<td>&nbsp;</td>'+
+							'<td>&nbsp;</td>'+
+							'<td>&nbsp;</td>'+
 							'';
 
-				if(inputEvent){
-					view +=	'<td class="yellow">&nbsp;</td>'+
-							'';
-				}else{
-					view +=	'<td>&nbsp;</td>'+
-							'';
-				}
-				view +=
-							'<td>&nbsp;</td>'+
-							'<td>&nbsp;</td>'+
-							'<td>&nbsp;</td>'+
-						'</tr>';
 
 				$('#emptyRow').before(view);
 			}
