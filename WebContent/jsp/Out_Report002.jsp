@@ -124,14 +124,14 @@ tr.ctrlRow td {
 	<td style="border: 0px;">&nbsp;</td>
 	<td style="text-align: right;"><span id="W2_T2"></span></td>
 	<td style="border: 0px;" colspan="8"></td>
-	<td style="text-align: right;"><span id="W8_T2"></span></td>
-	<td style="border: 0px;" colspan="5"></td>
 	<td style="text-align: right;"><span id="W6_T2"></span></td>
-	<td style="text-align: right;"><span id="W7_T2"></span></td>
-	<td style="border: 0px;" colspan="4"></td>
+	<td style="border: 0px;" colspan="5"></td>
+	<td style="text-align: right;"><span id="W8_T2"></span></td>
 	<td style="text-align: right;"><span id="W11_T2"></span></td>
-	<td style="text-align: right;"><span id="W12_T2"></span></td>
-	<td style="text-align: right;"><span id="W13_T2"></span></td>
+	<td style="border: 0px;" colspan="4"></td>
+	<td style="text-align: right;"><span id="W14_T2"></span></td>
+	<td style="text-align: right;"><span id="W15_T2"></span></td>
+	<td style="text-align: right;"><span id="W16_T2"></span></td>
 </tr>
 <tr>
 	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 65px;">日付</div></td>

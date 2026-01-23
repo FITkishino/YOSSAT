@@ -33,6 +33,11 @@
 			if(srcTenpo===usrTenpo){return true;}	// 所属店舗ユーザー
 			return false;
 		},
+		isTenpoALl: function(){
+			var srcTenpo = $.getJSONValue(this.jsonString, $.id.SelTenpo);	// 検索店舗
+			if(srcTenpo==='-1'){return false;}	// 全店検索
+			return true;
+		},
 		isTenpoLevelData:function(){		// 検索結果で店舗単位情報かどうか判断
 			var srcBumon = $.getJSONValue(this.jsonString, $.id.SelBumon);	// 検索部門
 			return srcBumon===$.id.valueSel_Head;
@@ -306,7 +311,7 @@
 			$('tr.ctrlRow').remove();
 
 			// 入力可フラグ
-			var inputEvent = canChangeEventKikan && that.usableTenpoData();
+			var inputEvent = canChangeEventKikan && that.usableTenpoData()&&that.isTenpoALl();
 
 			for(var i=0; i<rows.length; i++){
 				var row = rows[i];
@@ -340,7 +345,7 @@
 				if(inputEvent){
 					view +=	'<td style="text-align: left;" class="yellow"><input type="text" id="F16_'+i+'" style="width:163px;" class="TextDisp" tabindex="'+(100+i)+'" value="'+row['F16']+'"></td>'+
 							'<td style="text-align: right;"><span id="F17_'+i+'">'+getFormat(row['F17'], '#,##0')+'</span></td>'+
-							'<td style="text-align: right;"><span id="F18_'+i+'">'+getFormat(row['F18'], '#,##0')+'</span></td>'+
+			        '<td style="text-align: center;" class="yellow"><input type="text" id="F18_'+i+'" style="width: 29px; text-align: right; ime-mode: disabled;" class="TextDisp" tabindex="'+(300+i)+'" value="'+getFormat(row['F18'], '#0')+'"></td>'+
 							'';
 				}else{
 					view +=	'<td style="text-align: left;"><input type="text" id="F16_'+i+'" style="width:163px;" class="TextDisp" tabindex="-1" readonly="readonly" value="'+row['F16']+'"></td>'+
@@ -436,7 +441,7 @@
 
 			// 今年の要因
 			if(inputEvent){
-				var input = $('input[id^=F23_]');
+				var input = $('input[id^=F16_]');
 				input.each(function(){
 					var preVal = $(this).val();
 					$(this).focus(function(){
@@ -464,6 +469,204 @@
 				});
 				setEnterEvent(input);
 			}
+			// フロア客数
+			if(inputEvent){
+				var input = $('input[id^=F18_]');
+				input.each(function(){
+					var preVal = $(this).val();
+					$(this).focus(function(){
+						$(this).val($(this).val());
+						$(this).select();
+
+					}).blur(function(){
+						var id = $(this).attr('id');
+						var newVal = $(this).val().replace(/,/g, '');
+
+						if(newVal!==preVal){
+							// 入力チェック
+							var func = function(){$('#'+id).val(preVal).focus();};
+							if(Number.isInteger(newVal)){
+								$.messager.alert($.message.ID_MESSAGE_TITLE_WARN,"半角整数の値を入力してください。",'warning',func);
+								return false;
+							}
+						}
+						$(this).removeAttr('maxlength');
+						$(this).val(getFormat(newVal, '#,##0'));
+
+						if(newVal!==preVal){
+							$.setChangeIdx(id.split("_")[1]);
+							preVal = newVal;
+							// 合計値計算
+							that.setSum();
+						}
+					});
+				});
+				setEnterEvent(input);
+			}
+			// 天気午前
+			if(inputEvent){
+				var input = $('input[id^=F20_]');
+				input.each(function(){
+					var preVal = $(this).val().replace(/,/g, '');
+					$(this).focus(function(){
+						$(this).val($(this).val().replace(/,/g, ''));
+						$(this).css('color', 'black');
+						$(this).attr('maxlength', '1');
+						$(this).select();
+
+					}).blur(function(){
+						var id = $(this).attr('id');
+						var newVal = $(this).val();
+
+						if(newVal!==preVal){
+							// 入力チェック
+							var func = function(){$('#'+id).val(preVal).focus();};
+							if((newVal+'').length < 1 || ! that.chkInt(newVal, 1)){
+								$.messager.alert($.message.ID_MESSAGE_TITLE_WARN,"1～4の値を半角で入力してください。",'warning',func);
+								return false;
+							}
+							if(newVal>= 5 ||newVal ==0 ){
+								$.messager.alert($.message.ID_MESSAGE_TITLE_WARN,"1～4の値を入力してください。",'warning',func);
+								return false;
+							}
+						}
+
+						$(this).removeAttr('maxlength');
+						$(this).val(getFormat(newVal, '#,##0'));
+
+						if(newVal!==preVal){
+							$.setChangeIdx(id.split("_")[1]);
+							preVal = newVal;
+              //天気マークの更新
+							that.setWeatherMark('F19_'+id.split("_")[1]*1,newVal);
+							// 合計値計算
+							that.setSum();
+						}
+					});
+				});
+				setEnterEvent(input);
+			}
+			// 天気午後
+      if(inputEvent){
+				var input = $('input[id^=F22_]');
+				input.each(function(){
+					var preVal = $(this).val().replace(/,/g, '');
+					$(this).focus(function(){
+						$(this).val($(this).val().replace(/,/g, ''));
+						$(this).css('color', 'black');
+						$(this).attr('maxlength', '1');
+						$(this).select();
+
+					}).blur(function(){
+						var id = $(this).attr('id');
+						var newVal = $(this).val();
+
+						if(newVal!==preVal){
+							// 入力チェック
+							var func = function(){$('#'+id).val(preVal).focus();};
+							if((newVal+'').length < 1 || ! that.chkInt(newVal, 1)){
+								$.messager.alert($.message.ID_MESSAGE_TITLE_WARN,"1～4の値を半角で入力してください。",'warning',func);
+								return false;
+							}
+							if(newVal>= 5 ||newVal ==0 ){
+								$.messager.alert($.message.ID_MESSAGE_TITLE_WARN,"1～4の値を入力してください。",'warning',func);
+								return false;
+							}
+
+						}
+
+						$(this).removeAttr('maxlength');
+						$(this).val(getFormat(newVal, '#,##0'));
+
+						if(newVal!==preVal){
+							$.setChangeIdx(id.split("_")[1]);
+							preVal = newVal;
+							// 合計値計算
+							that.setSum();
+							//天気マークの更新
+							that.setWeatherMark('F21_'+id.split("_")[1]*1,newVal);
+						}
+					});
+				});
+				setEnterEvent(input);
+			}
+			// 気温午前
+      if(inputEvent){
+				var input = $('input[id^=F23_]');
+				input.each(function(){
+					var preVal = $(this).val().replace(/,/g, '');
+					$(this).focus(function(){
+						$(this).val($(this).val().replace(/,/g, ''));
+						$(this).css('color', 'black');
+						$(this).attr('maxlength', '3');
+						$(this).select();
+
+					}).blur(function(){
+						var id = $(this).attr('id');
+						var newVal = $(this).val().replace(/,/g, '');
+
+						if(newVal!==preVal){
+							// 入力チェック
+							var func = function(){$('#'+id).val(preVal).focus();};
+							if(Number.isInteger(newVal)){
+								$.messager.alert($.message.ID_MESSAGE_TITLE_WARN,"半角整数の値を入力してください。",'warning',func);
+								return false;
+							}
+
+
+						}
+
+						$(this).removeAttr('maxlength');
+						$(this).val(getFormat(newVal, '#,##0'));
+
+						if(newVal!==preVal){
+							$.setChangeIdx(id.split("_")[1]);
+							preVal = newVal;
+							// 合計値計算
+							that.setSum();
+						}
+					});
+				});
+				setEnterEvent(input);
+			}
+			// 気温午後
+      if(inputEvent){
+				var input = $('input[id^=F24_]');
+				input.each(function(){
+					var preVal = $(this).val().replace(/,/g, '');
+					$(this).focus(function(){
+						$(this).val($(this).val().replace(/,/g, ''));
+						$(this).css('color', 'black');
+						$(this).attr('maxlength', '3');
+						$(this).select();
+
+					}).blur(function(){
+						var id = $(this).attr('id');
+						var newVal = $(this).val().replace(/,/g, '');
+
+						if(newVal!==preVal){
+							// 入力チェック
+							var func = function(){$('#'+id).val(preVal).focus();};
+							if(Number.isInteger(newVal)){
+								$.messager.alert($.message.ID_MESSAGE_TITLE_WARN,"半角整数の値を半角で入力してください。",'warning',func);
+								return false;
+							}
+
+						}
+
+						$(this).removeAttr('maxlength');
+						$(this).val(getFormat(newVal, '#,##0'));
+
+						if(newVal!==preVal){
+							$.setChangeIdx(id.split("_")[1]);
+							preVal = newVal;
+							// 合計値計算
+							that.setSum();
+						}
+					});
+				});
+				setEnterEvent(input);
+			}
 
 			for(var i=0; i<totals.length; i++){
 				var row = totals[i];
@@ -482,7 +685,9 @@
 					$('#W11_'+i).text(getFormat(row['W11'], '#,##0'));
 					$('#W12_'+i).text(getFormat(row['W12'], '#,##0'));
 					$('#W13_'+i).text(getFormat(row['W13'], '#,##0.0'));
-
+          $('#W14_'+i).text(getFormat(row['W14'], '#,##0'));
+          $('#W15_'+i).text(getFormat(row['W15'], '#,##0'));
+          $('#W16_'+i).text(getFormat(row['W16'], '#,##0.0'));
 					if(row['W4']*1 < 0){
 						$('#W4_'+i).css('color', 'red');
 					}
@@ -502,6 +707,9 @@
 					$('#W11_T').text(getFormat(row['W11'], '#,##0'));
 					$('#W12_T').text(getFormat(row['W12'], '#,##0'));
 					$('#W13_T').text(getFormat(row['W13'], '#,##0.0'));
+					$('#W14_T').text(getFormat(row['W14'], '#,##0'));
+					$('#W15_T').text(getFormat(row['W15'], '#,##0'));
+					$('#W16_T').text(getFormat(row['W16'], '#,##0.0'));
 
 					$('#W2_T2').text(row['W2'] != '' ? getFormat(row['W2'], '#,##0') : '');
 					$('#W6_T2').text(row['W6'] != '' ? getFormat(row['W6'], '#,##0') : '');
@@ -509,6 +717,10 @@
 					$('#W11_T2').text(row['W11'] != '' ? getFormat(row['W11'], '#,##0') : '');
 					$('#W12_T2').text(row['W12'] != '' ? getFormat(row['W12'], '#,##0') : '');
 					$('#W13_T2').text(row['W13'] != '' ? getFormat(row['W13'], '#,##0.0') : '');
+				  $('#W14_T2').text(row['W14'] != '' ? getFormat(row['W14'], '#,##0') : '');
+				  $('#W15_T2').text(row['W14'] != '' ? getFormat(row['W15'], '#,##0') : '');
+				  $('#W16_T2').text(row['W14'] != '' ? getFormat(row['W16'], '#,##0.0') : '');
+
 
 					if(row['W4']*1 < 0){
 						$('#W4_T').css('color', 'red');
@@ -531,7 +743,28 @@
 				$('#W11_'+i).text('');
 				$('#W12_'+i).text('');
 				$('#W13_'+i).text('');
+				$('#W14_'+i).text('');
+				$('#W15_'+i).text('');
+				$('#W16_'+i).text('');
 			}
+		},
+		setWeatherMark: function(id,newVal){ //天気マークの更新
+			        var mark = document.getElementById(id);
+		          if(newVal==1){
+			        mark.textContent='☀' ;
+			        mark.style.color = 'red';
+              }else if(newVal==2){
+				      mark.textContent='☁' ;
+				      mark.style.color= 'grey';
+			        }else if(newVal==3){
+				      mark.textContent='☂' ;
+				      mark.style.color= 'blue';
+			        }else if(newVal==4){
+						  mark.textContent='☃' ;
+						  mark.style.color= 'teal';
+				      }else{
+						  mark.textContent='' ;
+					    };
 		},
 		setKikanYM: function(reportno, id){		// 期間（年月）
 			var that = this;

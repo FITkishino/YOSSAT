@@ -187,7 +187,7 @@ public class Report002Dao extends ItemDao {
     sbSQL.append("  from SATTR.SIBMDD T1 ");
     sbSQL.append("  where T1.COMTOB" + szWhereK + " ");
     if (szTENPO.equals("-1")) {
-      sbSQL.append("  ");
+      sbSQL.append(" and T1.MISECD not in ('783','787')  ");
     } else {
       sbSQL.append(" " + sbWhereT + " ");
     }
@@ -223,7 +223,7 @@ public class Report002Dao extends ItemDao {
     sbSQL.append("  on T1.DT = T2.DT");
     sbSQL.append("  where T1.DT" + szWhereK + " ");
     if (szTENPO.equals("-1")) {
-      sbSQL.append("  ");
+      sbSQL.append(" and T1.MISECD not in ('783','787')  ");
     } else {
       sbSQL.append(" " + sbWhereT + " ");
     }
@@ -301,7 +301,7 @@ public class Report002Dao extends ItemDao {
     sbSQL.append("    from SATTR.HABMDD T1");
     sbSQL.append("    inner join MCLSHA T3 on T1.BUNBMC = T3.BUNBMC " + " ");
     if (szTENPO.equals("-1")) {
-      sbSQL.append("  ");
+      sbSQL.append(" and T1.MISECD not in ('783','787') ");
     } else {
       sbSQL.append(" " + sbWhereT + " ");
     }
@@ -314,7 +314,12 @@ public class Report002Dao extends ItemDao {
     sbSQL.append("  ,sum(T1.URISURYO) AS URISURYO ");
     sbSQL.append("  ,sum(T1.ARKINGAKU ) as ARKINGAKU ");
     sbSQL.append("  from SATTR.HABMDD T1 ");
-    sbSQL.append("  inner join MCALZ T2 on T1.COMTOB = T2.DT_KIJUN and T1.MISECD = T2.MISECD");
+    sbSQL.append("  inner join MCALZ T2 on T1.COMTOB = T2.DT_KIJUN ");
+    if (szTENPO.equals("-1")) {
+      sbSQL.append(" and T1.MISECD not in ('783','787') ");
+    } else {
+      sbSQL.append(" and T1.MISECD = T2.MISECD ");
+    }
     sbSQL.append("  inner join MCLSHA T3 on T1.BUNBMC = T3.BUNBMC");
     sbSQL.append("  where T1.URIKINGAKU <> 0 ");
     sbSQL.append("  group by T2.DT, T2.DT_KIJUN, T3.TOUKATU_CD_S");
@@ -325,7 +330,12 @@ public class Report002Dao extends ItemDao {
     sbSQL.append("  ,sum(T1.URISURYO) AS URISURYO ");
     sbSQL.append("  ,sum(T1.ARKINGAKU ) as ARKINGAKU ");
     sbSQL.append("  from SATTR.HABMDD T1 ");
-    sbSQL.append("  inner join MCALZ T2 on T1.COMTOB = T2.DT_KIJUN and T1.MISECD = T2.MISECD_HT");
+    sbSQL.append("  inner join MCALZ T2 on T1.COMTOB = T2.DT_KIJUN ");
+    if (szTENPO.equals("-1")) {
+      sbSQL.append(" and T1.MISECD not in ('783','787') ");
+    } else {
+      sbSQL.append(" and T1.MISECD = T2.MISECD_HT ");
+    }
     sbSQL.append("  inner join MCLSHA T3 on T1.BUNBMC = T3.BUNBMC");
     sbSQL.append("  where T1.URIKINGAKU <> 0 ");
     sbSQL.append("  group by T2.DT, T2.DT_KIJUN, T3.TOUKATU_CD_S");
@@ -371,12 +381,22 @@ public class Report002Dao extends ItemDao {
     }
     sbSQL.append(" ,M1.CUSTOMER_NUM ");
     sbSQL.append(" ,M1.FLOOR_CUSTOMER_NUM ");// フロア客数
-    sbSQL.append(" ,M1.TENKI_AM "); // 天気
-    sbSQL.append(" ,M1.TENKI_AM "); // 天気
-    sbSQL.append(" ,M1.TENKI_PM "); // 天気
-    sbSQL.append(" ,M1.TENKI_PM "); // 天気
-    sbSQL.append(" ,M1.MAXKION "); // 最高気温
-    sbSQL.append(" ,M1.MINKION "); // 最低気温
+    if (szTENPO.equals("-1")) {
+      sbSQL.append("  , null "); // F15
+      sbSQL.append("  , null "); // F15
+      sbSQL.append("  , null ");
+      sbSQL.append("  , null  ");
+      sbSQL.append("  , null  ");
+      sbSQL.append("  , null ");
+    } else {
+      sbSQL.append("  , null ");
+      sbSQL.append(" ,M1.TENKI_AM "); // 天気
+      sbSQL.append("  , null ");
+      sbSQL.append(" ,M1.TENKI_PM "); // 天気
+      sbSQL.append(" ,M1.MAXKION "); // 最高気温
+      sbSQL.append(" ,M1.MINKION "); // 最低気温
+    }
+
     sbSQL.append(" ,T1.SIIRE ");// 仕入高
     sbSQL.append(" ,round(decimal(T5.URIKINGAKU)/1000,0)-T1.SIIRE ");// 差益高
     sbSQL.append(" ,round(decimal(int(round(decimal(T5.URIKINGAKU)/1000, 0) - T1.SIIRE) )/ decimal(int(round(decimal(T5.URIKINGAKU) / 1000, 0)))*100,2) ");// 差益率
@@ -418,7 +438,12 @@ public class Report002Dao extends ItemDao {
       updUser = ObjectUtils.toString(array1.getJSONObject(0).get("NAME"));
     }
     // 週計/月計情報取得
-    String sqlCommandKei = this.createCommandKei(szWhereK, sbWhereT, sbWhereB, szTENPO, sbWhereTB);
+    String sqlCommandKei = "";
+    if (NumberUtils.isNumber(szBUMON.replaceAll(" ", ""))) {
+      sqlCommandKei = this.createCommandKei(szWhereK, sbWhereT, sbWhereB, szTENPO, sbWhereTB);
+    } else {
+      sqlCommandKei = this.createCommandKei(szWhereK, sbWhereT, sbWhereGB, szTENPO, sbWhereGTB);
+    }
     @SuppressWarnings("static-access")
     JSONArray keiArray = ItemList.selectJSONArray(sqlCommandKei, null, Defines.STR_JNDI_DS);
 
@@ -462,7 +487,12 @@ public class Report002Dao extends ItemDao {
     sbSQL.append("  ,'" + szTENPO + "' as MISECD,T4.MISECD_HT");
     sbSQL.append("  from ");
     sbSQL.append("  (select CALYMD as  DT,CALZDY as  DT_KIJUN from SATYS.TABKNK where CALYMD" + szWhereK + ") T1 ");
-    sbSQL.append("  left outer join SATYS.TSTKNR T4 on T1.DT_KIJUN > T4.NENTUKI_OP||'00'" + sbWhereT.replace("T1", "T4"));
+    sbSQL.append("  left outer join SATYS.TSTKNR T4 on T1.DT_KIJUN > T4.NENTUKI_OP||'00'" + " ");
+    if (szTENPO.equals("-1")) {
+      sbSQL.append(" and T4.MISECD not in ('783','787')  ");
+    } else {
+      sbSQL.append(" " + sbWhereT.replace("T1", "T4") + " ");
+    }
     sbSQL.append("  order by DT ");
     sbSQL.append(") ");
     sbSQL.append(",MCALZ2 as ( ");
@@ -476,37 +506,18 @@ public class Report002Dao extends ItemDao {
     sbSQL.append("  ,sum(T1.AYOSAN) as AYOSAN ");
     sbSQL.append("  ,sum(T1.TYOSAN) as TYOSAN ");
     sbSQL.append("  from SATYS.TTBDYS T1 ");
-    sbSQL.append("  inner join MCAL T2 on T1.DT = T2.DT " + sbWhereT + sbWhereB);
+    sbSQL.append("  inner join MCAL T2 on T1.DT = T2.DT " + " ");
+    if (szTENPO.equals("-1")) {
+      sbSQL.append(" and T1.MISECD not in ('783','787')  ");
+    } else {
+      sbSQL.append(" " + sbWhereT + " ");
+    }
+
+    sbSQL.append(" " + sbWhereB + " ");
     sbSQL.append("  group by grouping sets(T2.WEEK, ()) ");
     sbSQL.append(") ");
-    // sbSQL.append(",HBZ1 as ( ");
-    // sbSQL.append(" select T2.WEEK,T2.DT, T3.BUNBMC ");
-    // sbSQL.append(" ,decimal(sum(T1.UYOSAN))/1000 as UYOSAN ");
-    // sbSQL.append(" from SATTR.HIBYDD T1 ");
-    // sbSQL.append(" inner join MCALZ T2 on T1.COMTOB = T2.DT_KIJUN and T1.MISECD = T2.MISECD");
-    // sbSQL.append(" inner join SATTR.MCLSHB T3 on T1.CLSSGK = T3.CLSSGK"+sbWhereB.replace("T1", "T3"));
-    // sbSQL.append(" group by T2.WEEK,T2.DT, T3.BUNBMC");
-    // sbSQL.append(") ");
-    // sbSQL.append(",HBZ2 as ( ");
-    // sbSQL.append(" select T2.WEEK,T2.DT, T3.BUNBMC ");
-    // sbSQL.append(" ,decimal(sum(T1.UYOSAN))/1000 as UYOSAN ");
-    // sbSQL.append(" from SATTR.HIBYDD T1 ");
-    // sbSQL.append(" inner join MCALZ T2 on T1.COMTOB = T2.DT_KIJUN and T1.MISECD = T2.MISECD_HT");
-    // sbSQL.append(" inner join SATTR.MCLSHB T3 on T1.CLSSGK = T3.CLSSGK"+sbWhereB.replace("T1", "T3"));
-    // sbSQL.append(" group by T2.WEEK,T2.DT, T3.BUNBMC");
-    // sbSQL.append(") ");
-    // sbSQL.append(",HBZ as ( ");
-    // sbSQL.append(" select nvl(nvl(T1.WEEK, T2.WEEK), 999) as WEEK");
-    // sbSQL.append(" ,sum(nvl(T1.UYOSAN, T2.UYOSAN)) as UYOSAN");
-    // sbSQL.append(" from HBZ1 T1 full join HBZ2 T2 on T1.DT = T2.DT and T1.BUNBMC = T2.BUNBMC");
-    // sbSQL.append(" group by grouping sets(nvl(T1.WEEK, T2.WEEK), ())");
-    // sbSQL.append(") ");
     sbSQL.append(",MCLSHA AS (");
     sbSQL.append("  select distinct BUNBMC, TOUKATU_CD_S from SATTR.MCLSHA where TOUKATU_CD_S in (select distinct TOUKATU_CD_S from SATYS.MCLSTT)" + sbWhereTB);
-    if (sbWhereTB.length() == 0) {
-      // 部門「すべて」の場合、統括部門'28'を集計に含める
-      sbSQL.append(" UNION ALL SELECT BUNBMC,TOUKATU_CD_S FROM SATMS.BUMON_KANRI_MST WHERE TOUKATU_CD_S='28' ");
-    }
     sbSQL.append(") ");
     sbSQL.append(",HA as ( ");
     sbSQL.append("  select  ");
@@ -514,7 +525,12 @@ public class Report002Dao extends ItemDao {
     sbSQL.append("  ,sum(T1.URIKINGAKU) as URIKINGAKU ");
     sbSQL.append("  ,sum(T1.ARKINGAKU ) as ARKINGAKU ");
     sbSQL.append("  from SATTR.HABMDD T1 ");
-    sbSQL.append("  inner join MCAL T2 on T1.COMTOB = T2.DT " + sbWhereT);
+    sbSQL.append("  inner join MCAL T2 on T1.COMTOB = T2.DT " + " ");
+    if (szTENPO.equals("-1")) {
+      sbSQL.append(" and T1.MISECD not in ('783','787')  ");
+    } else {
+      sbSQL.append(" " + sbWhereT + " ");
+    }
     sbSQL.append("  inner join MCLSHA T3 on T1.BUNBMC = T3.BUNBMC");
     sbSQL.append("  group by grouping sets(T2.WEEK, ()) ");
     sbSQL.append(") ");
@@ -523,7 +539,12 @@ public class Report002Dao extends ItemDao {
     sbSQL.append("  ,sum(T1.URIKINGAKU) as URIKINGAKU ");
     sbSQL.append("  ,sum(T1.ARKINGAKU ) as ARKINGAKU ");
     sbSQL.append("  from SATTR.HABMDD T1 ");
-    sbSQL.append("  inner join MCALZ T2 on T1.COMTOB = T2.DT_KIJUN and T1.MISECD = T2.MISECD");
+    sbSQL.append("  inner join MCALZ T2 on T1.COMTOB = T2.DT_KIJUN ");
+    if (szTENPO.equals("-1")) {
+      sbSQL.append("  ");
+    } else {
+      sbSQL.append(" and T1.MISECD = T2.MISECD ");
+    }
     sbSQL.append("  inner join MCLSHA T3 on T1.BUNBMC = T3.BUNBMC");
     sbSQL.append("  where T1.URIKINGAKU <> 0");
     sbSQL.append("  group by T2.WEEK,T2.DT, T3.TOUKATU_CD_S");
@@ -547,57 +568,81 @@ public class Report002Dao extends ItemDao {
     sbSQL.append(") ");
     sbSQL.append(",SI as ( ");
     sbSQL.append("  select nvl(T2.WEEK, 999) as WEEK");
-    // sbSQL.append(" ,sum(T1.GENKAKEI) as GENKAKEI ");
+    sbSQL.append(
+        " , round(decimal((sum(nvl(T1.D1SIRG, 0)) + sum(nvl(T1.D1TICG, 0)) + sum(nvl(T1.D1BICG, 0)) - sum(nvl(T1.D1TIHG, 0)) - sum(nvl(T1.D1BIHG, 0)) - sum(nvl(T1.D1SING, 0)) - sum(nvl(T1.D1SIHG, 0))) ) / 1000 , 0) as SIIRE ");
     sbSQL.append("  from SATTR.SIBMDD T1 ");
-    sbSQL.append("  inner join MCAL T2 on T1.COMTOB = T2.DT " + sbWhereT + sbWhereB);
+    sbSQL.append("  inner join MCAL T2 on T1.COMTOB = T2.DT " + " ");
+    if (szTENPO.equals("-1")) {
+      sbSQL.append(" and T1.MISECD not in ('783','787')  ");
+    } else {
+      sbSQL.append(" " + sbWhereT + " ");
+    }
+
+    sbSQL.append(" " + sbWhereB + " ");
     sbSQL.append("  group by grouping sets(T2.WEEK, ()) ");
     sbSQL.append(") ");
     sbSQL.append(",KYK as ( ");
     sbSQL.append("  select  ");
     sbSQL.append("   nvl(T2.WEEK, 999) as WEEK");
-    sbSQL.append("  ,sum(T1.KYAKUSU_1F) as KYAKUSU ");
-    sbSQL.append("  from SATTR.TNKYDD T1 ");
-    sbSQL.append("  inner join MCAL T2 on T1.COMTOB = T2.DT " + sbWhereT);
+    sbSQL.append("  , sum(T1.CUSTOMER_NUM) as CUSTOMER_NUM  ");
+    sbSQL.append("  , sum(T1.FLOOR_CUSTOMER_NUM) as FLOOR_CUSTOMER_NUM  ");
+    sbSQL.append("  from SATYS.TTDEVT T1 ");
+    sbSQL.append("  inner join MCAL T2 on T1.DT = T2.DT " + " ");
+    if (szTENPO.equals("-1")) {
+      sbSQL.append(" and T1.MISECD not in ('783','787')  ");
+    } else {
+      sbSQL.append(" " + sbWhereT + " ");
+    }
     sbSQL.append("  group by grouping sets(T2.WEEK, ()) ");
     sbSQL.append(") ");
     sbSQL.append(",KYKZ1 as ( ");
     sbSQL.append("  select nvl(T2.WEEK, 999) as WEEK");
-    sbSQL.append("  ,sum(T1.KYAKUSU_1F) as KYAKUSU ");
-    sbSQL.append("  from SATTR.TNKYDD T1 ");
-    sbSQL.append("  inner join MCALZ T2 on T1.COMTOB = T2.DT_KIJUN and T1.MISECD = T2.MISECD");
+    sbSQL.append("   , sum(T1.CUSTOMER_NUM) as CUSTOMER_NUM_Z  ");
+    sbSQL.append(" , sum(T1.FLOOR_CUSTOMER_NUM) as FLOOR_CUSTOMER_NUM_Z  ");
+    sbSQL.append("  from SATYS.TTDEVT T1 ");
+    sbSQL.append("  inner join MCALZ T2 on T1.DT = T2.DT_KIJUN ");
+    if (szTENPO.equals("-1")) {
+      sbSQL.append(" ");
+    } else {
+      sbSQL.append(" and T1.MISECD = T2.MISECD ");
+    }
     sbSQL.append("  group by grouping sets(T2.WEEK, ()) ");
     sbSQL.append(") ");
     sbSQL.append(",KYKZ2 as ( ");
     sbSQL.append("  select nvl(T2.WEEK, 999) as WEEK");
-    sbSQL.append("  ,sum(T1.KYAKUSU_1F) as KYAKUSU ");
-    sbSQL.append("  from SATTR.TNKYDD T1 ");
-    sbSQL.append("  inner join MCALZ T2 on T1.COMTOB = T2.DT_KIJUN and T1.MISECD = T2.MISECD_HT");
+    sbSQL.append("   , sum(T1.CUSTOMER_NUM) as CUSTOMER_NUM_Z  ");
+    sbSQL.append(" , sum(T1.FLOOR_CUSTOMER_NUM) as FLOOR_CUSTOMER_NUM_Z  ");
+    sbSQL.append("  from SATYS.TTDEVT T1  ");
+    sbSQL.append("  inner join MCALZ T2 on T1.DT = T2.DT_KIJUN and T1.MISECD = T2.MISECD_HT");
     sbSQL.append("  group by grouping sets(T2.WEEK, ()) ");
     sbSQL.append(") ");
     sbSQL.append(",KYKZ as ( ");
     sbSQL.append("  select nvl(T1.WEEK, T2.WEEK) as WEEK");
-    sbSQL.append("  ,nvl(T1.KYAKUSU, T2.KYAKUSU) as KYAKUSU ");
+    sbSQL.append(", nvl(T1.CUSTOMER_NUM_Z, T2.CUSTOMER_NUM_Z) as CUSTOMER_NUM_Z   ");
+    sbSQL.append(", nvl(T1.FLOOR_CUSTOMER_NUM_Z , T2.FLOOR_CUSTOMER_NUM_Z ) as FLOOR_CUSTOMER_NUM_Z   ");
     sbSQL.append("  from KYKZ1 T1 full outer  join KYKZ2 T2 on T1.WEEK = T2.WEEK");
     sbSQL.append(") ");
     sbSQL.append(" select ");
     sbSQL.append("  M1.TXT as W1"); // F1：期間
     sbSQL.append(" ,truncate(T1.AYOSAN,0) as W2");
-    sbSQL.append(" ,truncate(decimal(T3.URIKINGAKU)/1000,0) as W3");
-    sbSQL.append(" ,truncate(decimal(nvl(T3.URIKINGAKU,0))/1000,0)-truncate(nvl(T1.AYOSAN,0),0) as W4");
-    sbSQL.append(" ,case when nvl(T1.AYOSAN*1000,0)= 0 or nvl(T3.URIKINGAKU,0)= 0 then 0 else truncate(decimal(T3.URIKINGAKU)/(T1.AYOSAN*1000)* 100, 1) end as W5"); // F5:予算比
-    sbSQL.append(" ,truncate(decimal(T4.URIKINGAKU)/1000,0) as W6");
-    sbSQL.append(" ,case when nvl(T4.URIKINGAKU,0) = 0 or nvl(T3.URIKINGAKU,0)= 0 then 0 else truncate(decimal(T3.URIKINGAKU)/T4.URIKINGAKU* 100, 1) end as W7");
-    sbSQL.append(" ,T6.KYAKUSU as W8");
-    sbSQL.append(" ,T7.KYAKUSU as W9");
-    sbSQL.append(" ,case when nvl(T7.KYAKUSU,0)= 0 or nvl(T6.KYAKUSU,0)= 0 then 0 else truncate(decimal(T6.KYAKUSU)/T7.KYAKUSU* 100, 1) end as W10"); // F10:前年比(客数)
-    sbSQL.append(" ,null as W11");
-    // sbSQL.append(" ,truncate(decimal(T5.GENKAKEI )/1000,0) as W11");
-    sbSQL.append(" ,truncate(decimal(T3.ARKINGAKU)/1000,0) as W12");
-    sbSQL.append(" ,case when nvl(T3.URIKINGAKU,0) = 0 or nvl(T3.ARKINGAKU,0) = 0 then 0 else truncate(decimal(T3.ARKINGAKU)/T3.URIKINGAKU* 100, 1) end as W13");
+    sbSQL.append(" ,round(decimal(T3.URIKINGAKU)/1000,0) as W3");
+    sbSQL.append(" ,round(decimal(nvl(T3.URIKINGAKU,0))/1000,0)-truncate(nvl(T1.AYOSAN,0),0) as W4");
+    sbSQL.append(" ,case when nvl(T1.AYOSAN*1000,0)= 0 or nvl(T3.URIKINGAKU,0)= 0 then 0 else round(decimal(round(T3.URIKINGAKU, - 3))/(T1.AYOSAN*1000)* 100, 1) end as W5"); // F5:予算比
+    sbSQL.append(" ,round(decimal(T4.URIKINGAKU)/1000,0) as W6");
+    sbSQL.append(" ,case when nvl(T4.URIKINGAKU,0) = 0 or nvl(T3.URIKINGAKU,0)= 0 then 0 else round(decimal(round(T3.URIKINGAKU, - 3))/T4.URIKINGAKU* 100, 1) end as W7");
+    sbSQL.append(" ,T6.CUSTOMER_NUM as W8");
+    sbSQL.append(" ,T7.CUSTOMER_NUM_Z as W9");
+    sbSQL.append(" ,case when nvl(T6.CUSTOMER_NUM,0)= 0 or nvl(T7.CUSTOMER_NUM_Z,0)= 0 then 0 else round(decimal(T6.CUSTOMER_NUM)/T7.CUSTOMER_NUM_Z* 100, 1) end as W10"); // F10:前年比(客数)
+    sbSQL.append(" ,T6.FLOOR_CUSTOMER_NUM as W11");
+    sbSQL.append(" ,T7.FLOOR_CUSTOMER_NUM_Z as W12");
+    sbSQL.append(" ,case when nvl(T6.FLOOR_CUSTOMER_NUM,0) = 0 or nvl(T7.FLOOR_CUSTOMER_NUM_Z,0) = 0 then 0 else round(decimal(T6.FLOOR_CUSTOMER_NUM)/T7.FLOOR_CUSTOMER_NUM_Z* 100, 1) end as W13");
+    sbSQL.append(" , T5.SIIRE as W14");
+    sbSQL.append(" ,round(decimal(T3.URIKINGAKU)/1000,0)-T5.SIIRE as W15");// 差益高
+    sbSQL.append(" ,round(decimal(int(round(decimal(T3.URIKINGAKU)/1000, 0) - T5.SIIRE) )/ decimal(int(round(decimal(T3.URIKINGAKU) / 1000, 0)))*100,2)as W16 ");// 差益率
+
     sbSQL.append(" from ");
     sbSQL.append("  MCAL2 M1  ");
     sbSQL.append("  left outer join BDYS  T1 on M1.WEEK = T1.WEEK ");
-    // sbSQL.append(" left outer join HBZ T2 on M1.WEEK = T2.WEEK ");
     sbSQL.append("  left outer join HA    T3 on M1.WEEK = T3.WEEK ");
     sbSQL.append("  left outer join HAZ   T4 on M1.WEEK = T4.WEEK ");
     sbSQL.append("  left outer join SI    T5 on M1.WEEK = T5.WEEK ");
