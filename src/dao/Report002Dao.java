@@ -704,9 +704,15 @@ public class Report002Dao extends ItemDao {
       if (data.isEmpty()) {
         continue;
       }
-      values += ",('" + szTenpo + "','" + data.optString("F1") + "',?)";
+      values += ",('" + szTenpo + "','" + data.optString("F1") + "',?,?,?,?,?,?)";
       params.add(data.optString("F2"));
+      params.add(data.optString("F3"));
+      params.add(data.optString("F4"));
+      params.add(data.optString("F5"));
+      params.add(data.optString("F6"));
+      params.add(data.optString("F7"));
     }
+    System.out.print("values:" + values + "\n");
     values = StringUtils.removeStart(values, ",");
 
     if (values.length() == 0) {
@@ -721,19 +727,29 @@ public class Report002Dao extends ItemDao {
     sbSQL.append(" using (select");
     sbSQL.append(" cast(T1.MISECD as character(3)) as MISECD"); // 店コード
     sbSQL.append(",cast(T1.DT as character(8)) as DT"); // 予算年月日
-    sbSQL.append(",cast(T1.EVENT as varchar(1000)) as EVENT"); // イベント
+    sbSQL.append(",cast(T1.EVENT as varchar(1000)) as EVENT "); // イベント
+    sbSQL.append(",cast(T1.FLOOR_CUSTOMER_NUM as INTEGER)as FLOOR_CUSTOMER_NUM ");
+    sbSQL.append(",cast(T1.TENKIKBN_AM as CHARACTER(3))as TENKIKBN_AM ");
+    sbSQL.append(",cast(T1.TENKIKBN_PM as CHARACTER(3))as TENKIKBN_PM ");
+    sbSQL.append(",cast(T1.MAXKION as DECIMAL(3, 0))as MAXKION  ");
+    sbSQL.append(",cast(T1.MINKION as DECIMAL(3, 0))as MINKION ");
     sbSQL.append(",cast(" + userId + " as integer) as CD_UPDATE"); // 更新者
     sbSQL.append(",current timestamp as DT_UPDATE"); // 更新日
-    sbSQL.append(" from (values" + values + ") as T1(MISECD, DT, EVENT)");
+    sbSQL.append(" from (values" + values + ") as T1(MISECD, DT, EVENT,FLOOR_CUSTOMER_NUM,TENKIKBN_AM,TENKIKBN_PM,MAXKION,MINKION)");
     sbSQL.append(" ) as RE on (T.MISECD = RE.MISECD and T.DT = RE.DT) ");
     sbSQL.append(" when matched then ");
     sbSQL.append(" update set");
     sbSQL.append("  EVENT    =RE.EVENT");
+    sbSQL.append(" ,FLOOR_CUSTOMER_NUM    =RE.FLOOR_CUSTOMER_NUM");
+    sbSQL.append(" ,TENKIKBN_AM    =RE.TENKIKBN_AM");
+    sbSQL.append(" ,TENKIKBN_PM    =RE.TENKIKBN_PM");
+    sbSQL.append(" ,MAXKION    =RE.MAXKION");
+    sbSQL.append(" ,MINKION    =RE.MINKION");
     sbSQL.append(" ,CD_UPDATE=RE.CD_UPDATE");
     sbSQL.append(" ,DT_UPDATE=RE.DT_UPDATE");
     sbSQL.append(" when not matched then ");
     sbSQL.append(" insert");
-    sbSQL.append(" values(RE.MISECD,RE.DT,RE.EVENT,0.0,RE.CD_UPDATE,RE.DT_UPDATE,RE.CD_UPDATE,RE.DT_UPDATE)");
+    sbSQL.append(" values(RE.MISECD,RE.DT,RE.EVENT,RE.TENKIKBN_AM,RE.TENKIKBN_PM,RE.MAXKION,RE.MINKION,0,null,RE.FLOOR_CUSTOMER_NUM,CD_UPDATE,RE.DT_UPDATE,RE.CD_UPDATE,RE.DT_UPDATE)");
     // sbSQL.append(";");
 
     int count = super.executeSQL(sbSQL.toString(), params);

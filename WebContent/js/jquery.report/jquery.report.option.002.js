@@ -212,8 +212,16 @@
 				if($.inArray(i+'', changedIndex) !== -1){
 					var rowData = {
 							IDX: i+1,		// エラーメッセージ用に行番号を追加
-							F1 : rows[i]["F27"],	// 隠し日付YYYYMMDD
-							F2 : $("#F23_"+i).val()	// イベント
+							F1 : rows[i]["F28"],	// 隠し日付YYYYMMDD
+							F2 : $("#F16_"+i).val(),	// イベント
+							F3 : $("#F18_"+i).val().replace(/,/g, ''),	// フロア客数
+							F4 : $("#F20_"+i).val(),	// 天気午前
+							F5 : $("#F22_"+i).val(),	// 天気午後
+							F6 : $("#F23_"+i).val(),	// 気温最高
+							F7 : $("#F24_"+i).val()	// 気温最低
+
+
+
 						};
 					targetRows.push(rowData);
 				}
@@ -328,24 +336,24 @@
 							'<td style="text-align: right;"><span id="F3_'+i+'">'+getFormat(row['F3'], '#,##0')+'</span></td>'+
 							'<td style="text-align: right;"><span id="F4_'+i+'">'+getFormat(row['F4'], '#,##0')+'</span></td>'+
 							'<td style="text-align: right;"><span id="F5_'+i+'">'+getFormat(row['F5'], '#,##0')+'</span></td>'+
-							'<td style="text-align: right;"><span id="F6_'+i+'">'+getFormat(row['F6'], '#,##0')+'</span></td>'+
-							'<td style="text-align: right;"><span id="F7_'+i+'">'+getFormat(row['F7'], '#,##0.0')+'%'+'</span></td>'+
-							'<td style="text-align: right;"><span id="F8_'+i+'">'+getFormat(row['F8'], '#,##0.0')+'%'+'</span></td>'+
+							'<td style="text-align: right;"class="orange"><span id="F6_'+i+'">'+getFormat(row['F6'], '#,##0')+'</span></td>'+
+							'<td style="text-align: right;"class="orange""><span id="F7_'+i+'">'+getFormat(row['F7'], '#,##0.0')+'%'+'</span></td>'+
+							'<td style="text-align: right;"class="orange""><span id="F8_'+i+'">'+getFormat(row['F8'], '#,##0.0')+'%'+'</span></td>'+
 
 							'<td style="text-align: right;"><span id="F9_'+i+'">'+getFormat(row['F9'], '#,##0.0')+'%'+'</span></td>'+
 							'<td style="text-align: right;"><span id="F10_'+i+'">'+row['F10']+'</span></td>'+
 
 							'<td style="text-align: right;"><span id="F11_'+i+'" style="color: '+colorF8+';">'+getFormat(row['F11'], '#,##0')+'</span></td>'+
 							'<td style="text-align: right;"><span id="F12_'+i+'">'+getFormat(row['F12'], '#,##0')+'</span></td>'+
-							'<td style="text-align: right;"><span id="F13_'+i+'">'+getFormat(row['F13'], '#,##0.0')+'%'+'</span></td>'+
-							'<td style="text-align: right;"><span id="F14_'+i+'">'+getFormat(row['F14'], '#,##0.0')+'%'+'</span></td>'+
+							'<td style="text-align: right;"class="orange""><span id="F13_'+i+'">'+getFormat(row['F13'], '#,##0.0')+'%'+'</span></td>'+
+							'<td style="text-align: right;"class="orange""><span id="F14_'+i+'">'+getFormat(row['F14'], '#,##0.0')+'%'+'</span></td>'+
 							'<td style="text-align: left;padding-left: 3px;"><span id="F15_'+i+'">'+getFormat(row['F15'], '#,##0.0')+'%'+'</span></td>'+
 							'';
         // イベント
 				if(inputEvent){
 					view +=	'<td style="text-align: left;" class="yellow"><input type="text" id="F16_'+i+'" style="width:163px;" class="TextDisp" tabindex="'+(100+i)+'" value="'+row['F16']+'"></td>'+
 							'<td style="text-align: right;"><span id="F17_'+i+'">'+getFormat(row['F17'], '#,##0')+'</span></td>'+
-			        '<td style="text-align: center;" class="yellow"><input type="text" id="F18_'+i+'" style="width: 29px; text-align: right; ime-mode: disabled;" class="TextDisp" tabindex="'+(300+i)+'" value="'+getFormat(row['F18'], '#0')+'"></td>'+
+			        '<td style="text-align: right;" class="yellow"><input type="text" id="F18_'+i+'" style="width: 29px; text-align: right; ime-mode: disabled;" class="TextDisp" tabindex="'+(300+i)+'" value="'+getFormat(row['F18'], '#0')+'"></td>'+
 							'';
 				}else{
 					view +=	'<td style="text-align: left;"><input type="text" id="F16_'+i+'" style="width:163px;" class="TextDisp" tabindex="-1" readonly="readonly" value="'+row['F16']+'"></td>'+
@@ -676,18 +684,18 @@
 					$('#W2_'+i).text(getFormat(row['W2'], '#,##0'));
 					$('#W3_'+i).text(getFormat(row['W3'], '#,##0'));
 					$('#W4_'+i).text(getFormat(row['W4'], '#,##0'));
-					$('#W5_'+i).text(getFormat(row['W5'], '#,##0.0'));
+					$('#W5_'+i).text(getFormat(row['W5'], '#,##0.0')+'%');
 					$('#W6_'+i).text(getFormat(row['W6'], '#,##0'));
-					$('#W7_'+i).text(getFormat(row['W7'], '#,##0.0'));
+					$('#W7_'+i).text(getFormat(row['W7'], '#,##0.0')+'%');
 					$('#W8_'+i).text(getFormat(row['W8'], '#,##0'));
 					$('#W9_'+i).text(getFormat(row['W9'], '#,##0'));
-					$('#W10_'+i).text(getFormat(row['W10'], '#,##0.0'));
+					$('#W10_'+i).text(getFormat(row['W10'], '#,##0.0')+'%');
 					$('#W11_'+i).text(getFormat(row['W11'], '#,##0'));
 					$('#W12_'+i).text(getFormat(row['W12'], '#,##0'));
-					$('#W13_'+i).text(getFormat(row['W13'], '#,##0.0'));
+					$('#W13_'+i).text(getFormat(row['W13'], '#,##0.0')+'%');
           $('#W14_'+i).text(getFormat(row['W14'], '#,##0'));
           $('#W15_'+i).text(getFormat(row['W15'], '#,##0'));
-          $('#W16_'+i).text(getFormat(row['W16'], '#,##0.0'));
+          $('#W16_'+i).text(getFormat(row['W16'], '#,##0.0')+'%');
 					if(row['W4']*1 < 0){
 						$('#W4_'+i).css('color', 'red');
 					}
@@ -698,28 +706,28 @@
 					$('#W2_T').text(getFormat(row['W2'], '#,##0'));
 					$('#W3_T').text(getFormat(row['W3'], '#,##0'));
 					$('#W4_T').text(getFormat(row['W4'], '#,##0'));
-					$('#W5_T').text(getFormat(row['W5'], '#,##0.0'));
+					$('#W5_T').text(getFormat(row['W5'], '#,##0.0')+'%');
 					$('#W6_T').text(getFormat(row['W6'], '#,##0'));
-					$('#W7_T').text(getFormat(row['W7'], '#,##0.0'));
+					$('#W7_T').text(getFormat(row['W7'], '#,##0.0')+'%');
 					$('#W8_T').text(getFormat(row['W8'], '#,##0'));
 					$('#W9_T').text(getFormat(row['W9'], '#,##0'));
-					$('#W10_T').text(getFormat(row['W10'], '#,##0.0'));
+					$('#W10_T').text(getFormat(row['W10'], '#,##0.0')+'%');
 					$('#W11_T').text(getFormat(row['W11'], '#,##0'));
 					$('#W12_T').text(getFormat(row['W12'], '#,##0'));
-					$('#W13_T').text(getFormat(row['W13'], '#,##0.0'));
+					$('#W13_T').text(getFormat(row['W13'], '#,##0.0')+'%');
 					$('#W14_T').text(getFormat(row['W14'], '#,##0'));
 					$('#W15_T').text(getFormat(row['W15'], '#,##0'));
-					$('#W16_T').text(getFormat(row['W16'], '#,##0.0'));
+					$('#W16_T').text(getFormat(row['W16'], '#,##0.0')+'%');
 
 					$('#W2_T2').text(row['W2'] != '' ? getFormat(row['W2'], '#,##0') : '');
 					$('#W6_T2').text(row['W6'] != '' ? getFormat(row['W6'], '#,##0') : '');
 					$('#W8_T2').text(row['W8'] != '' ? getFormat(row['W8'], '#,##0') : '');
 					$('#W11_T2').text(row['W11'] != '' ? getFormat(row['W11'], '#,##0') : '');
 					$('#W12_T2').text(row['W12'] != '' ? getFormat(row['W12'], '#,##0') : '');
-					$('#W13_T2').text(row['W13'] != '' ? getFormat(row['W13'], '#,##0.0') : '');
+					$('#W13_T2').text(row['W13'] != '' ? getFormat(row['W13'], '#,##0.0')+'%' : '');
 				  $('#W14_T2').text(row['W14'] != '' ? getFormat(row['W14'], '#,##0') : '');
 				  $('#W15_T2').text(row['W14'] != '' ? getFormat(row['W15'], '#,##0') : '');
-				  $('#W16_T2').text(row['W14'] != '' ? getFormat(row['W16'], '#,##0.0') : '');
+				  $('#W16_T2').text(row['W14'] != '' ? getFormat(row['W16'], '#,##0.0')+'%' : '');
 
 
 					if(row['W4']*1 < 0){
