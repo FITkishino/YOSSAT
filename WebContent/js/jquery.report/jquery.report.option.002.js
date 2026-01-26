@@ -353,7 +353,7 @@
 				if(inputEvent){
 					view +=	'<td style="text-align: left;" class="yellow"><input type="text" id="F16_'+i+'" style="width:163px;" class="TextDisp" tabindex="'+(100+i)+'" value="'+row['F16']+'"></td>'+
 							'<td style="text-align: right;"><span id="F17_'+i+'">'+getFormat(row['F17'], '#,##0')+'</span></td>'+
-			        '<td style="text-align: right;" class="yellow"><input type="text" id="F18_'+i+'" style="width: 29px; text-align: right; ime-mode: disabled;" class="TextDisp" tabindex="'+(300+i)+'" value="'+getFormat(row['F18'], '#0')+'"></td>'+
+			        '<td style="text-align: right;" class="yellow"><input type="text" id="F18_'+i+'" style="width: 70px; text-align: right; ime-mode: disabled;" class="TextDisp" tabindex="'+(300+i)+'" value="'+getFormat(row['F18'], '#0')+'"></td>'+
 							'';
 				}else{
 					view +=	'<td style="text-align: left;"><input type="text" id="F16_'+i+'" style="width:163px;" class="TextDisp" tabindex="-1" readonly="readonly" value="'+row['F16']+'"></td>'+
