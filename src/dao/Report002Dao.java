@@ -156,7 +156,7 @@ public class Report002Dao extends ItemDao {
     sbSQL.append(") ");
     sbSQL.append(",MCALZ as ( ");
     sbSQL.append("  select T1.DT, T1.DT_KIJUN");
-    sbSQL.append("  ,max(char(left(T1.DT_KIJUN,4)||'/'||substr(T1.DT_KIJUN,5,2)||'/', 8)||case  when SUBSTR(T1.DT_KIJUN,7,2) = '99' then '1,2' else substr(T1.DT_KIJUN,7,2)||");
+    sbSQL.append("  ,max(char(substr(T1.DT_KIJUN,5,2)||'/', 8)||case  when SUBSTR(T1.DT_KIJUN,7,2) = '99' then '1,2' else substr(T1.DT_KIJUN,7,2)||");
     sbSQL.append(
         "   CASE DAYOFWEEK(TO_DATE(T1.DT_KIJUN, 'yyyymmdd')) WHEN 1 THEN '(日)' WHEN 2 THEN '(月)' WHEN 3 THEN '(火)' WHEN 4 THEN '(水)' WHEN 5 THEN '(木)' WHEN 6 THEN '(金)' WHEN 7 THEN '(土)' END");
     sbSQL.append("   end) as TXT");
@@ -401,6 +401,7 @@ public class Report002Dao extends ItemDao {
     sbSQL.append(" ,round(decimal(T5.URIKINGAKU)/1000,0)-T1.SIIRE ");// 差益高
     sbSQL.append(" ,round(decimal(int(round(decimal(T5.URIKINGAKU)/1000, 0) - T1.SIIRE) )/ decimal(int(round(decimal(T5.URIKINGAKU) / 1000, 0)))*100,2) ");// 差益率
     sbSQL.append(" ,M1.DT "); // 隠し
+    sbSQL.append(" ,M1.week "); // 隠し フロア客数合計値計算用
     sbSQL.append(" from ");
     sbSQL.append("  MCAL M1  ");
     sbSQL.append("  left outer join MCALZ M2 on M1.DT = M2.DT ");

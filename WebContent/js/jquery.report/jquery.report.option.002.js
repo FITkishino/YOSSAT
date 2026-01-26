@@ -347,7 +347,7 @@
 							'<td style="text-align: right;"><span id="F12_'+i+'">'+getFormat(row['F12'], '#,##0')+'</span></td>'+
 							'<td style="text-align: right;"class="orange""><span id="F13_'+i+'">'+getFormat(row['F13'], '#,##0.0')+'%'+'</span></td>'+
 							'<td style="text-align: right;"class="orange""><span id="F14_'+i+'">'+getFormat(row['F14'], '#,##0.0')+'%'+'</span></td>'+
-							'<td style="text-align: left;padding-left: 3px;"><span id="F15_'+i+'">'+getFormat(row['F15'], '#,##0.0')+'%'+'</span></td>'+
+							'<td style="text-align: right;"><span id="F15_'+i+'">'+getFormat(row['F15'], '#,##0.0')+'%'+'</span></td>'+
 							'';
         // イベント
 				if(inputEvent){
@@ -405,6 +405,8 @@
 							'<td style="text-align: right;"><span id="F25_'+i+'">'+getFormat(row['F25'], '#,##0')+'</span></td>'+
 							'<td style="text-align: right;"><span id="F26_'+i+'">'+getFormat(row['F26'], '#,##0')+'</span></td>'+
 							'<td style="text-align: right;"><span id="F27_'+i+'">'+getFormat(row['F27'], '#,##0.00')+'%'+'</span></td>'+
+							'<input type="hidden" id="F28_'+i+'" value="'+row['F28']+'">'+
+								'<input type="hidden" id="F29_'+i+'" value="'+row['F29']+'">'+
 						'</tr>';
 
 				$('#emptyRow').before(view);
@@ -756,6 +758,10 @@
 				$('#W16_'+i).text('');
 			}
 		},
+		chkInt: function(value, param){
+			var re = new RegExp("^[0-9]{1,"+param+"}$");
+			return value.match(re);
+		},
 		setWeatherMark: function(id,newVal){ //天気マークの更新
 			        var mark = document.getElementById(id);
 		          if(newVal==1){
@@ -773,6 +779,108 @@
 				      }else{
 						  mark.textContent='' ;
 					    };
+		},
+		setSum: function(){		// 合計値計算
+			var sumF18_T = 0;
+			var sumF19_T = 0;
+			var sumF20_T = 0;
+
+			var sumF18_W = 0;
+			var sumF19_W = 0;
+			var sumF20_W = 0;
+
+			var weekF = '999999999';
+			var weekT = '0';
+			var num = 0;
+			var weekNum = null;
+
+
+			$('input[id^=F18_]').each(function(){
+				var index = $(this).attr('id').split('_')[1];
+				var valF18 = $('#F18_'+index).val().replace(/,/g, '') * 1;
+
+				// 週間計をセット
+				if(weekNum != null && weekNum != $('#F29_'+index).val()*1){
+				var sumF19_W  = $('#W12_'+num).text().replace(/,/g, '') * 1;
+
+					// 昨年比
+				var sumF20_W = 0;
+				if(sumF19_W*1 > 0){
+					sumF20_W = Math.round(sumF18_W / sumF19_W * 100 * 10) / 1000;
+				}
+
+
+					$('#W1_'+num).text(weekF.substr(5,2)+'/'+weekF.substr(7,2)+' - '+weekT.substr(5,2)+'/'+weekT.substr(7,2));
+
+					$('#W11_'+num).text(getFormat(sumF18_W, '#,##0'));
+					$('#W13_'+num).text(getFormat(sumF20_W,  '#,##0.0%'));
+
+					num++;
+					weekF = '999999999';
+					weekT = '0';
+					sumF18_W = 0;
+					sumF19_W = 0;
+					sumF20_W = 0;
+
+				}
+
+				weekNum = $('#F29_'+index).val()*1;
+				weekF = Math.min(weekF*1, $('#F28_'+index).val()*1 + 100000000)+'';
+				weekT = Math.max(weekT*1, $('#F28_'+index).val()*1 + 100000000)+'';
+
+
+				sumF18_T += valF18;
+				sumF18_W += valF18;
+
+
+
+			});
+
+			// 週間計をセット
+			if(weekNum != null){
+
+				var sumF19_W  = $('#W12_'+num).text().replace(/,/g, '') * 1;
+
+
+				// 昨年比
+				var sumF20_W = 0;
+				if(sumF19_W*1 > 0){
+					sumF20_W = Math.round(sumF18_W / sumF19_W * 100 * 10) / 1000;
+				}
+
+
+				$('#W1_'+num).text(weekF.substr(5,2)+'/'+weekF.substr(7,2)+' - '+weekT.substr(5,2)+'/'+weekT.substr(7,2));
+				$('#W11_'+num).text(getFormat(sumF18_W, '#,##0'));
+				$('#W13_'+num).text(getFormat(sumF20_W, '#,##0.0%'));
+				num++;
+			}
+
+			// 昨年比_合計
+			   sumF19_T = $('#W12_T').text().replace(/,/g, '') * 1;
+				var sumF20_T = 0;
+				if(sumF19_T*1 > 0){
+					sumF20_T = Math.round(sumF18_T / sumF19_T * 100 * 10) / 1000;
+				}
+
+
+			// 合計値をセット
+
+
+	  	$('#W11_T2').text(getFormat(sumF18_T, '#,##0'));
+
+			$('#W11_T').text(getFormat(sumF18_T, '#,##0'));
+			$('#W13_T').text(getFormat(sumF20_T, '#,##0.0%'));
+
+
+			// 空白をセット
+			while(num < 6){
+				$('#W1_'+num).text('　');
+				$('#W11_'+num).text('');
+				$('#w12_'+num).text('');
+				$('#W13_'+num).text('');
+
+				num++;
+			}
 		},
 		setKikanYM: function(reportno, id){		// 期間（年月）
 			var that = this;

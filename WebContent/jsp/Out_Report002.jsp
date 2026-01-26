@@ -134,30 +134,30 @@ tr.ctrlRow td {
 	<td style="text-align: right;"><span id="W16_T2"></span></td>
 </tr>
 <tr>
-	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 65px;">日付</div></td>
-	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 65px;">日別予算</div></td>
-	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 65px;">予算累計</div></td>
-	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 65px;">実績</div></td>
-	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 65px;">実績累計</div></td>
-	<td style="text-align: center;" rowspan="2" class="orange"><div style="width: 65px;">予算差異</div></td>
-	<td style="text-align: center;" rowspan="2" class="orange"><div style="width: 55px;">予算比</div></td>
-	<td style="text-align: center;" rowspan="2" class="orange"><div style="width: 55px;">累計<br>予算比</div></td>
-	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 55px;">進行率</div></td>
+	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 70px;">日付</div></td>
+	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 70px;">日別予算</div></td>
+	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 70px;">予算累計</div></td>
+	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 70px;">実績</div></td>
+	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 70px;">実績累計</div></td>
+	<td style="text-align: center;" rowspan="2" class="orange"><div style="width: 70px;">予算差異</div></td>
+	<td style="text-align: center;" rowspan="2" class="orange"><div style="width: 70px;">予算比</div></td>
+	<td style="text-align: center;" rowspan="2" class="orange"><div style="width: 70px;">累計<br>予算比</div></td>
+	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 70px;">進行率</div></td>
 
-	<td style="text-align: center;" rowspan="2" class="header"><div style="width:100px;">昨年日付</div></td>
-	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 65px;">昨年実績</div></td>
-	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 65px;">昨年実績<br>累計</div></td>
-	<td style="text-align: center;" rowspan="2" class="orange"><div style="width: 55px;">昨年対比</div></td>
-	<td style="text-align: center;" rowspan="2" class="orange"><div style="width: 55px;">累計<br>昨年対比</div></td>
-	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 55px;">昨年<br>推行率</div></td>
+	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 70px;">昨年日付</div></td>
+	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 70px;">昨年実績</div></td>
+	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 70px;">昨年実績<br>累計</div></td>
+	<td style="text-align: center;" rowspan="2" class="orange"><div style="width: 70px;">昨年対比</div></td>
+	<td style="text-align: center;" rowspan="2" class="orange"><div style="width: 70px;">累計<br>昨年対比</div></td>
+	<td style="text-align: center;" rowspan="2" class="header"><div style="width: 70px;">昨年<br>推行率</div></td>
 	<td style="text-align: center;" rowspan="2" class="header"><div style="width:170px;">今年の要因</div></td>
-	<td style="text-align: center;" rowspan="2" class="orange"><div style="width: 60px;">店客数</div></td>
-	<td style="text-align: center;" rowspan="2" class="orange"><div style="width: 60px;">フロア客数</div></td>
+	<td style="text-align: center;" rowspan="2" class="orange"><div style="width: 70px;">店客数</div></td>
+	<td style="text-align: center;" rowspan="2" class="orange"><div style="width: 70px;">フロア客数</div></td>
 	<td style="text-align: center;" colspan="2" class="orange"><div>天気</div></td>
 	<td style="text-align: center;" colspan="2" class="orange"><div>気温</div></td>
-	<td style="text-align: center;" rowspan="2" class="orange"><div style="width: 55px;">仕入高</div></td>
-	<td style="text-align: center;" rowspan="2" class="orange"><div style="width: 55px;">差益高</div></td>
-	<td style="text-align: center;" rowspan="2" class="orange"><div style="width: 55px;">差益率</div></td>
+	<td style="text-align: center;" rowspan="2" class="orange"><div style="width: 70px;">仕入高</div></td>
+	<td style="text-align: center;" rowspan="2" class="orange"><div style="width: 70px;">差益高</div></td>
+	<td style="text-align: center;" rowspan="2" class="orange"><div style="width: 70px;">差益率</div></td>
 	<td style="border: 0px;" rowspan="2"><div style="width: 30px;"></div></td>
 </tr>
 <tr>
@@ -207,33 +207,33 @@ tr.ctrlRow td {
 
 <%-- 空白行 --%>
 <tr id="emptyRow" style="height: 20px;">
-	<td style="border: 0px;"><div style="width: 66px;"></div></td>
-	<td style="border: 0px;"><div style="width: 66px;"></div></td>
-	<td style="border: 0px;"><div style="width: 66px;"></div></td>
-	<td style="border: 0px;"><div style="width: 66px;"></div></td>
-	<td style="border: 0px;"><div style="width: 66px;"></div></td>
-	<td style="border: 0px;"><div style="width: 66px;"></div></td>
-	<td style="border: 0px;"><div style="width: 56px;"></div></td>
-	<td style="border: 0px;"><div style="width: 56px;"></div></td>
-	<td style="border: 0px;"><div style="width: 56px;"></div></td>
-	<td style="border: 0px;"><div style="width:101px;"></div></td>
-	<td style="border: 0px;"><div style="width: 66px;"></div></td>
-	<td style="border: 0px;"><div style="width: 66px;"></div></td>
-	<td style="border: 0px;"><div style="width: 56px;"></div></td>
-	<td style="border: 0px;"><div style="width: 56px;"></div></td>
-	<td style="border: 0px;"><div style="width: 56px;"></div></td>
+	<td style="border: 0px;"><div style="width: 71px;"></div></td>
+	<td style="border: 0px;"><div style="width: 71px;"></div></td>
+	<td style="border: 0px;"><div style="width: 71px;"></div></td>
+	<td style="border: 0px;"><div style="width: 71px;"></div></td>
+	<td style="border: 0px;"><div style="width: 71px;"></div></td>
+	<td style="border: 0px;"><div style="width: 71px;"></div></td>
+	<td style="border: 0px;"><div style="width: 71px;"></div></td>
+	<td style="border: 0px;"><div style="width: 71px;"></div></td>
+	<td style="border: 0px;"><div style="width: 71px;"></div></td>
+	<td style="border: 0px;"><div style="width: 71px;"></div></td>
+	<td style="border: 0px;"><div style="width: 71px;"></div></td>
+	<td style="border: 0px;"><div style="width: 71px;"></div></td>
+	<td style="border: 0px;"><div style="width: 71px;"></div></td>
+	<td style="border: 0px;"><div style="width: 71px;"></div></td>
+	<td style="border: 0px;"><div style="width: 71px;"></div></td>
   <td style="border: 0px;"><div style="width:171px;"></div></td>
-	<td style="border: 0px;"><div style="width: 56px;"></div></td>
-	<td style="border: 0px;"><div style="width: 56px;"></div></td>
+	<td style="border: 0px;"><div style="width: 71px;"></div></td>
+	<td style="border: 0px;"><div style="width: 71px;"></div></td>
 	<td style="border: 0px;"><div style="width: 35px;"></div></td>
 	<td style="border: 0px;"><div style="width: 34px;"></div></td>
 	<td style="border: 0px;"><div style="width: 35px;"></div></td>
 	<td style="border: 0px;"><div style="width: 34px;"></div></td>
 	<td style="border: 0px;"><div style="width: 36px;"></div></td>
 	<td style="border: 0px;"><div style="width: 36px;"></div></td>
-	<td style="border: 0px;"><div style="width: 56px;"></div></td>
-	<td style="border: 0px;"><div style="width: 56px;"></div></td>
-	<td style="border: 0px;"><div style="width: 56px;"></div></td>
+	<td style="border: 0px;"><div style="width: 71px;"></div></td>
+	<td style="border: 0px;"><div style="width: 71px;"></div></td>
+	<td style="border: 0px;"><div style="width: 71px;"></div></td>
 </tr>
 
 <tr id="info_sum_r0">
