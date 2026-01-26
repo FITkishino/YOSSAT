@@ -23,7 +23,7 @@
 	String prm = request.getSession().getId();
 %>
 
-<html>
+<html lang="ja">
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta http-equiv="Pragma" content="no-cache">
@@ -31,6 +31,7 @@
 <meta http-equiv="Expires" content="Thu, 01 Dec 1994 16:00:00 GMT">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="content-language" content="ja">
 <title>ƒƒjƒ…[</title>
 
 <script type="text/javascript">

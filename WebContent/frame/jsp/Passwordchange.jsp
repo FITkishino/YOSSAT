@@ -4,7 +4,7 @@
 <%@ page import="authentication.defines.*" %>
 <%@ page import="authentication.bean.*" %>
 <% User lusr = (User)session.getAttribute(Consts.STR_SES_LOGINUSER);%>
-<html>
+<html lang="ja">
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta http-equiv="Pragma" content="no-cache">
@@ -19,6 +19,7 @@
 <LINK HREF="../frame/css/passwordchange.css" REL="stylesheet" TYPE="text/css">
 <link rel="stylesheet" type="text/css" href="../themes/easyui/default/easyui.css">
 <link rel="stylesheet" type="text/css" href="../themes/easyui/icon.css">
+<meta http-equiv="content-language" content="ja">
 </head>
 
 <body onLoad="document.getElementById('<%= Form.MTN_OLD_PASS %>').focus()">
