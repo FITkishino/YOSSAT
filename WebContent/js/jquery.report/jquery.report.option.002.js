@@ -810,7 +810,7 @@
 				}
 
 
-					$('#W1_'+num).text(weekF.substr(5,2)+'/'+weekF.substr(7,2)+' - '+weekT.substr(5,2)+'/'+weekT.substr(7,2));
+			//		$('#W1_'+num).text(weekF.substr(5,2)+'/'+weekF.substr(7,2)+' - '+weekT.substr(5,2)+'/'+weekT.substr(7,2));
 
 					$('#W11_'+num).text(getFormat(sumF18_W, '#,##0'));
 					$('#W13_'+num).text(getFormat(sumF20_W,  '#,##0.0%'));
@@ -849,7 +849,7 @@
 				}
 
 
-				$('#W1_'+num).text(weekF.substr(5,2)+'/'+weekF.substr(7,2)+' - '+weekT.substr(5,2)+'/'+weekT.substr(7,2));
+		//		$('#W1_'+num).text(weekF.substr(5,2)+'/'+weekF.substr(7,2)+' - '+weekT.substr(5,2)+'/'+weekT.substr(7,2));
 				$('#W11_'+num).text(getFormat(sumF18_W, '#,##0'));
 				$('#W13_'+num).text(getFormat(sumF20_W, '#,##0.0%'));
 				num++;

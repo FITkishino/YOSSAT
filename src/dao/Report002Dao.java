@@ -108,8 +108,8 @@ public class Report002Dao extends ItemDao {
 
     // タイトル情報(任意)設定
     List<String> titleList = new ArrayList<>();
-    titleList.addAll(Arrays.asList("日付", "天気", "最高気温", "最低気温", "日別予算", "予算累計", "売上", "売上累計", "売上点数", "客数", "予算差異", "予算比", "累計予算比", "進捗率", "前年日付", "前年売上", "前年売上累計", "前年比", "累計前年比", "売上推移率", "前年客数",
-        "前年売上点数", "今年の要因", "仕入原価", "荒利高", "荒利率"));
+    titleList.addAll(Arrays.asList("日付", "日別予算", "予算累計", "実績", "実績累計", "予算差異", "予算比", "累計予算比", "進行率", "昨年日付", "昨年実績", "昨年実績累計", "昨年対比", "累計昨年対比", "昨年進行率", "今年の要因", "店客数", "フロア客数", "午前天気図", "午前天気",
+        "午後天気図", "午後天気", "最高気温", "最低気温", "仕入原価", "差益高", "差益率"));
 
 
     // 帳票単位
@@ -156,7 +156,7 @@ public class Report002Dao extends ItemDao {
     sbSQL.append(") ");
     sbSQL.append(",MCALZ as ( ");
     sbSQL.append("  select T1.DT, T1.DT_KIJUN");
-    sbSQL.append("  ,max(char(substr(T1.DT_KIJUN,5,2)||'/', 8)||case  when SUBSTR(T1.DT_KIJUN,7,2) = '99' then '1,2' else substr(T1.DT_KIJUN,7,2)||");
+    sbSQL.append("  ,max(char(substr(T1.DT_KIJUN,5,2)||'/', 3)||case  when SUBSTR(T1.DT_KIJUN,7,2) = '99' then '1,2' else substr(T1.DT_KIJUN,7,2)||");
     sbSQL.append(
         "   CASE DAYOFWEEK(TO_DATE(T1.DT_KIJUN, 'yyyymmdd')) WHEN 1 THEN '(日)' WHEN 2 THEN '(月)' WHEN 3 THEN '(火)' WHEN 4 THEN '(水)' WHEN 5 THEN '(木)' WHEN 6 THEN '(金)' WHEN 7 THEN '(土)' END");
     sbSQL.append("   end) as TXT");
@@ -389,9 +389,10 @@ public class Report002Dao extends ItemDao {
       sbSQL.append("  , null  ");
       sbSQL.append("  , null ");
     } else {
-      sbSQL.append("  , null ");
+      // sbSQL.append(" , null ");
+      sbSQL.append(" , case when M1.TENKI_AM = 1 then '&#9728;' when M1.TENKI_AM = 2 then '&#9729;' when M1.TENKI_AM = 3 then '&#9730;'when M1.TENKI_AM = 4 then '&#9731;' else null end ");
       sbSQL.append(" ,M1.TENKI_AM "); // 天気
-      sbSQL.append("  , null ");
+      sbSQL.append(" , case when M1.TENKI_PM = 1 then '&#9728;' when M1.TENKI_PM = 2 then '&#9729;' when M1.TENKI_PM = 3 then '&#9730;'when M1.TENKI_PM = 4 then '&#9731;' else null end ");
       sbSQL.append(" ,M1.TENKI_PM "); // 天気
       sbSQL.append(" ,M1.MAXKION "); // 最高気温
       sbSQL.append(" ,M1.MINKION "); // 最低気温
@@ -513,8 +514,8 @@ public class Report002Dao extends ItemDao {
     } else {
       sbSQL.append(" " + sbWhereT + " ");
     }
-
     sbSQL.append(" " + sbWhereB + " ");
+    sbSQL.append("  where T1.DT" + szWhereK);
     sbSQL.append("  group by grouping sets(T2.WEEK, ()) ");
     sbSQL.append(") ");
     sbSQL.append(",MCLSHA AS (");

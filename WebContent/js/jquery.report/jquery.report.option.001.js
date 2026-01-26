@@ -1368,8 +1368,8 @@
 
 				var height = gridholderHeight - $('#view1').height();
 
-				$('#view1').css('width', changeWidth - 12);
-				$('#view2').css('height', height - 6).css('width', changeWidth);
+				$('#view1').css('width', changeWidth - 36);
+				$('#view2').css('height', height - 24).css('width', changeWidth);
 
 			}
 		},

@@ -111,7 +111,7 @@ public class Report001Dao extends ItemDao {
 
     // タイトル情報(任意)設定
     List<String> titleList = new ArrayList<>();
-    titleList.addAll(Arrays.asList("日付", "週", "今年の要因", "今年日付", "予算案", "修正予算", "昨年比", "昨年実績", "昨年日付", "昨年の要因", "昨年客数", "昨年のフロア客数", "昨年天気午前", "昨年天気午後", "昨年最高気温", "昨年最低気温"));
+    titleList.addAll(Arrays.asList("日付", "週", "今年の要因", "今年日付", "予算案", "修正予算", "昨年比", "昨年実績", "昨年日付", "昨年の要因", "昨年客数", "昨年のフロア客数", "昨年天気午前図", "昨年天気午前", "昨年天気午後図", "昨年天気午後", "昨年最高気温", "昨年最低気温"));
 
 
     // 帳票単位
@@ -311,9 +311,9 @@ public class Report001Dao extends ItemDao {
       sbSQL.append("  , null  ");
       sbSQL.append("  , null ");
     } else {
-      sbSQL.append("  , null "); // F15
+      sbSQL.append(" , case when M2.TENKI_AM = 1 then '&#9728;' when M2.TENKI_AM = 2 then '&#9729;' when M2.TENKI_AM = 3 then '&#9730;'when M2.TENKI_AM = 4 then '&#9731;' else null end ");
       sbSQL.append("  , M2.TENKI_AM "); // F15
-      sbSQL.append("  , null ");
+      sbSQL.append(" , case when M2.TENKI_PM = 1 then '&#9728;' when M2.TENKI_PM = 2 then '&#9729;' when M2.TENKI_PM = 3 then '&#9730;'when M2.TENKI_PM = 4 then '&#9731;' else null end ");
       sbSQL.append("  , M2.TENKI_PM ");
       sbSQL.append("  , M2.MAXKION ");
       sbSQL.append("  , M2.MINKION ");
